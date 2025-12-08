@@ -1,5 +1,17 @@
 ::ng-deep {
 
+  .p-overlaypanel{
+    padding: 10px 15px !important;
+  }
+
+  .p-tabview-nav{
+    background: none;
+    .p-tabview-nav-link{
+      color: #7d7d7d !important;
+      background: none;
+    }
+  }
+
   .ticket-scroll-container {
     max-height: 650px; // یا هر ارتفاعی که با layoutت سازگار باشه
     overflow-y: auto;
@@ -130,6 +142,10 @@
         opacity: 1;
       }
     }
+  }
+
+  .active-tab {
+    color: #6366F1 !important;
   }
 
 }

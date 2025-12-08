@@ -37,6 +37,19 @@ export class BaseCustomerDetailComponent{
   protected readonly TicketTypeEnum2LabelMapping = TicketTypeEnum2LabelMapping
   protected listOfTag:TagTypeBase[] = [];
   protected selectedTags: any[] = [];
+
+  colors = [
+    'bg-green-100 text-green-600',
+    'bg-blue-100 text-blue-600',
+    'bg-yellow-100 text-yellow-600',
+    'bg-purple-100 text-purple-600',
+    'bg-pink-100 text-pink-600',
+    'bg-orange-100 text-orange-600',
+    'bg-cyan-100 text-cyan-600',
+    'bg-teal-100 text-teal-600',
+    'bg-indigo-100 text-indigo-600',
+    'bg-red-100 text-red-600'
+  ];
   constructor(protected manager: BaseSaveManager<CustomerSpecification>,
               private customerServices: CustomerService,
               private workItemService: WorkItemService,

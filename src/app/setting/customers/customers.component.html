@@ -178,7 +178,7 @@
              (mousemove)="onDrag($event); $event.stopPropagation()"
              (mouseup)="endDrag($event); $event.stopPropagation()"
              (mouseleave)="endDrag($event); $event.stopPropagation()"
-             class="tags-scroll-container mt-3 border-top-1 surface-border pt-3 h-full">
+             class="tags-scroll-container mt-3 border-top-1 surface-border pt-3">
             <span *ngFor="let tag of object.tags"
                   class="inline-flex align-items-center border-round px-2 py-1 text-xs font-medium text-white white-space-nowrap cursor-pointer"
                   [style]="{background: tag.color}">{{tag.title}}</span>

@@ -2,46 +2,79 @@
 
   <div class="col-12 md:col-3">
 
-    <div class="card p-0 ">
+    <div class="card p-0 relative ">
 
       <p class="border-round-top h-3rem flex align-items-center justify-content-center border-bottom-2 border-solid border-black bg-gray-100 border-none mb-0 text-base">
         مشخصات
       </p>
 
       <div class="p-3">
+        <div class="grid">
+          <!-- Row -->
+          <div class="col-12 md:col-6">
+            <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+              <span class="text-600 text-sm">نام و نام خانوادگی:</span>
+              <span class="text-900 font-semibold text-sm text-left">{{ticketInfo?.customer?.family}}</span>
+            </div>
+          </div>
 
-        <p class="mb-1 flex justify-content-between">
-          <span class="font-medium">نام و نام خانوادگی:</span>
-          {{ticketInfo?.customer?.family}}
-        </p>
+          <div class="col-12 md:col-6">
+            <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+              <span class="text-600 text-sm">کدملی:</span>
+              <span class="text-900 font-semibold text-sm text-left">{{ticketInfo?.customer.nationalId ?? 'نامشخص'}}</span>
+            </div>
+          </div>
 
-        <p class="mb-1 flex justify-content-between">
-          <span class="font-medium">کد ملی:</span>
-          {{ticketInfo?.customer.nationalId ?? 'نامشخص'}}
-        </p>
+          <div class="col-12 md:col-6">
+            <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+              <span class="text-600 text-sm">کارشناس:</span>
+              <span class="text-900 font-semibold text-sm text-left">{{ticketInfo?.currentUser?.fullName ?? 'نامشخص'}}</span>
+            </div>
+          </div>
 
-        <p *ngFor="let phone of ticketInfo.customer.customerPhones" class="mb-1 flex justify-content-between">
-          <span class="font-medium">شماره تماس:</span>
-          {{phone?.phoneNumber}}
-        </p>
+          <div class="col-12 md:col-6">
+            <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+              <span class="text-600 text-sm">شروع همکاری:</span>
+              <span class="text-900 font-semibold text-sm text-left">{{ticketInfo?.customerRegisterDateTime | jalaliDate:'date'}}</span>
+            </div>
+          </div>
 
-        <p class="mb-1 flex justify-content-between ">
-          <span class="font-medium">شروع همکاری:</span>
-          {{ticketInfo?.customerRegisterDateTime | jalaliDate:'date'}}
-        </p>
+          <div class="col-12 md:col-6">
+            <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+              <span class="text-600 text-sm">آخرین ارسال:</span>
+              <span class="text-900 font-semibold text-sm text-left">{{ticketInfo?.customerLastBillDateTime | jalaliDate:'date'}}</span>
+            </div>
+          </div>
 
-        <p class="mb-1 flex justify-content-between ">
-          <span class="font-medium">آخرین ارسال:</span>
-          {{ticketInfo?.customerLastBillDateTime | jalaliDate:'date'}}
-        </p>
+          <div class="col-12">
+            <div class="flex flex-wrap align-items-start gap-2">
+              <p class="border-round text-xs px-2 py-1 font-bold flex flex-wrap flex-column"
+                 *ngFor="let phone of ticketInfo.customer.customerPhones; let i = index"
+                 [class]="colors[i % colors.length]">
+                <span class="font-semibold text-xs text-center">{{phone.title}}</span>
+                <p-divider styleClass="m-0 p-0" class="w-full m-0 " align="center" type="solid"></p-divider>
+                <span class="font-semibold text-xs text-right mt-1">{{phone.phoneNumber}}</span>
+            </div>
+          </div>
 
-        <p class="mb-1 flex justify-content-between">
-          <span class="font-medium">کارشناس:</span>
-          {{ticketInfo?.currentUser?.fullName ?? 'نامشخص'}}
-        </p>
+        </div>
+
+        <span class="absolute" style="bottom:5px; left:10px">{{CustomerFeelsEnum2LabelMapping[ticketInfo.customerFeel]}}</span>
 
       </div>
 
+    </div>
+
+    <div *ngIf="ticketInfo.description" class="card p-0 ">
+      <p class="border-round-top h-3rem flex align-items-center justify-content-center border-bottom-2 border-solid border-black bg-gray-100 border-none mb-0 text-base">
+        توضیحات تیکت
+      </p>
+
+      <div class="p-3">
+        <p class="mb-1 flex justify-content-between ">
+          {{ticketInfo?.description}}
+        </p>
+      </div>
     </div>
 
     <div class="card p-0 ">
@@ -85,175 +118,175 @@
     <app-activity-note [expertId]="ticketInfo?.currentUser?.id" [workItemId]="ticketId"></app-activity-note>
   </div>
 
-<!--  <div class="col-12">-->
-<!--    <div-->
-<!--      class="sidebar"-->
-<!--      [class.expanded]="isHovered"-->
-<!--      (mouseenter)="isHovered = true"-->
-<!--      (mouseleave)="isHovered = false">-->
-<!--      <img src="assets/images/back-100.png" (click)="backLocation()" class="cursor-pointer" alt="بازگشت">-->
-<!--    </div>-->
+  <!--  <div class="col-12">-->
+  <!--    <div-->
+  <!--      class="sidebar"-->
+  <!--      [class.expanded]="isHovered"-->
+  <!--      (mouseenter)="isHovered = true"-->
+  <!--      (mouseleave)="isHovered = false">-->
+  <!--      <img src="assets/images/back-100.png" (click)="backLocation()" class="cursor-pointer" alt="بازگشت">-->
+  <!--    </div>-->
 
-<!--  </div>-->
+  <!--  </div>-->
 
-<!--  <div class="col-9">-->
-
-
-<!--    <div class="p-card form-group">-->
-<!--      <div class="p-card-body">-->
-<!--        <p class="text-center">بارنامه اخیر</p>-->
-<!--        <p-table-->
-<!--          [value]="ticketInfo?.pastBills || []"-->
-<!--          styleClass="p-datatable-gridlines"-->
-<!--          [tableStyle]="{ 'min-width': '50rem' }">-->
-<!--          <ng-template pTemplate="header">-->
-<!--            <tr class="text-center">-->
-<!--              <th class="text-center">شماره بارنامه</th>-->
-<!--              <th class="text-center">تاریخ</th>-->
-<!--              <th class="text-center">مبدا</th>-->
-<!--              <th class="text-center">مقصد</th>-->
-<!--              <th class="text-center">گیرنده</th>-->
-<!--            </tr>-->
-<!--          </ng-template>-->
-<!--          <ng-template pTemplate="body" let-product>-->
-<!--            <tr>-->
-<!--              <td class="text-red-500">{{ product.trackingNumber }}</td>-->
-<!--              <td>{{ product.createTime |jalaliDate }}</td>-->
-<!--              <td class="text-indigo-500">{{ product.source }}</td>-->
-<!--              <td class="text-green-700">{{ product.destination }}</td>-->
-<!--              <td class="text-orange-500">{{ product.receiver }}</td>-->
-<!--            </tr>-->
-<!--          </ng-template>-->
-<!--        </p-table>-->
-<!--      </div>-->
-<!--    </div>-->
-
-<!--    </div><div class="col-9">-->
+  <!--  <div class="col-9">-->
 
 
-<!--    <div class="p-card form-group">-->
-<!--      <div class="p-card-body">-->
-<!--        <p class="text-center">بارنامه اخیر</p>-->
-<!--        <p-table-->
-<!--          [value]="ticketInfo?.pastBills || []"-->
-<!--          styleClass="p-datatable-gridlines"-->
-<!--          [tableStyle]="{ 'min-width': '50rem' }">-->
-<!--          <ng-template pTemplate="header">-->
-<!--            <tr class="text-center">-->
-<!--              <th class="text-center">شماره بارنامه</th>-->
-<!--              <th class="text-center">تاریخ</th>-->
-<!--              <th class="text-center">مبدا</th>-->
-<!--              <th class="text-center">مقصد</th>-->
-<!--              <th class="text-center">گیرنده</th>-->
-<!--            </tr>-->
-<!--          </ng-template>-->
-<!--          <ng-template pTemplate="body" let-product>-->
-<!--            <tr>-->
-<!--              <td class="text-red-500">{{ product.trackingNumber }}</td>-->
-<!--              <td>{{ product.createTime |jalaliDate }}</td>-->
-<!--              <td class="text-indigo-500">{{ product.source }}</td>-->
-<!--              <td class="text-green-700">{{ product.destination }}</td>-->
-<!--              <td class="text-orange-500">{{ product.receiver }}</td>-->
-<!--            </tr>-->
-<!--          </ng-template>-->
-<!--        </p-table>-->
-<!--      </div>-->
-<!--    </div>-->
+  <!--    <div class="p-card form-group">-->
+  <!--      <div class="p-card-body">-->
+  <!--        <p class="text-center">بارنامه اخیر</p>-->
+  <!--        <p-table-->
+  <!--          [value]="ticketInfo?.pastBills || []"-->
+  <!--          styleClass="p-datatable-gridlines"-->
+  <!--          [tableStyle]="{ 'min-width': '50rem' }">-->
+  <!--          <ng-template pTemplate="header">-->
+  <!--            <tr class="text-center">-->
+  <!--              <th class="text-center">شماره بارنامه</th>-->
+  <!--              <th class="text-center">تاریخ</th>-->
+  <!--              <th class="text-center">مبدا</th>-->
+  <!--              <th class="text-center">مقصد</th>-->
+  <!--              <th class="text-center">گیرنده</th>-->
+  <!--            </tr>-->
+  <!--          </ng-template>-->
+  <!--          <ng-template pTemplate="body" let-product>-->
+  <!--            <tr>-->
+  <!--              <td class="text-red-500">{{ product.trackingNumber }}</td>-->
+  <!--              <td>{{ product.createTime |jalaliDate }}</td>-->
+  <!--              <td class="text-indigo-500">{{ product.source }}</td>-->
+  <!--              <td class="text-green-700">{{ product.destination }}</td>-->
+  <!--              <td class="text-orange-500">{{ product.receiver }}</td>-->
+  <!--            </tr>-->
+  <!--          </ng-template>-->
+  <!--        </p-table>-->
+  <!--      </div>-->
+  <!--    </div>-->
 
-<!--    </div>-->
-
-<!--  <div class="col-12">-->
-<!--    <div class="mx-4">-->
-<!--      <div class="p-card ticket-info fixed bottom-0 left-0 w-full z-5 shadow-2 layout-main">-->
-<!--        <div class="p-card-body px-4 py-0 flex flex-wrap justify-content-between align-items-center">-->
-
-<!--          <div class="flex flex-wrap align-items-center gap-5">-->
-
-<!--            <div class="flex flex-wrap align-items-center m-0 cursor-pointer">-->
-<!--              <img src="assets/images/icon-company-80.png" pTooltip="شرکت"-->
-<!--                   tooltipPosition="top" >-->
-<!--              <div class="block">-->
-<!--                <p class="font-bold m-0">{{ticketInfo.customerFullName}}</p>-->
-<!--                <p class="font-bold m-0">{{ticketInfo.customerPhone}}</p>-->
-<!--              </div>-->
-<!--            </div>-->
-
-<!--            <p class="flex flex-wrap align-items-center m-0 cursor-pointer">-->
-<!--              <img src="assets/images/post-box-80.png" pTooltip="تاریخ تیکت"-->
-<!--                   tooltipPosition="top" >-->
-<!--              <span class="font-bold">{{calculateDaysDifference(ticketInfo?.createAt)}}</span>-->
-<!--            </p>-->
-<!--            <p class="flex flex-wrap align-items-center m-0 cursor-pointer">-->
-<!--              <img src="assets/images/cooperation-80.png" pTooltip="شروع همکاری"-->
-<!--                   tooltipPosition="top" >-->
-<!--              <span>{{calculateDaysDifference(ticketInfo?.customerRegisterDateTime)}}</span>-->
-<!--            </p>-->
-<!--            <p class="flex flex-wrap align-items-center m-0 cursor-pointer">-->
-<!--              <img src="assets/images/send-80.png" pTooltip="آخرین ارسال"-->
-<!--                   tooltipPosition="top" >-->
-<!--              <span>{{calculateDaysDifference(ticketInfo?.customerLastBillDateTime)}}</span>-->
-<!--            </p>-->
-<!--            <p class="flex flex-wrap align-items-center m-0 cursor-pointer">-->
-
-<!--              <img src="assets/images/order-80.png" pTooltip="تعداد سفارش انجام شده توسط مشتری"-->
-<!--                   tooltipPosition="top" >-->
-<!--              <span>{{ticketInfo?.customerBillCount}}</span>-->
-<!--            </p>-->
-
-<!--            <p class="flex flex-wrap align-items-center m-0 cursor-pointer">-->
-
-<!--              <img src="assets/images/done-80.png" pTooltip="وضعیت"-->
-<!--                   tooltipPosition="top">-->
-<!--              <span>{{TicketTypeEnum2LabelMapping[ticketInfo.ticketType]}}</span>-->
-<!--            </p>-->
-<!--          </div>-->
+  <!--    </div><div class="col-9">-->
 
 
-<!--          <div class="flex gap-2">-->
-<!--            <button #btnRef pButton pRipple (click)="op.toggle($event, btnRef)" label="بارنامه اخیر" class="p-button-warning mt-2"></button>-->
-<!--            <button pButton pRipple (click)="checkTicketClose()" label="بستن تیکت" class="p-button-danger mt-2"></button>-->
-<!--          </div>-->
+  <!--    <div class="p-card form-group">-->
+  <!--      <div class="p-card-body">-->
+  <!--        <p class="text-center">بارنامه اخیر</p>-->
+  <!--        <p-table-->
+  <!--          [value]="ticketInfo?.pastBills || []"-->
+  <!--          styleClass="p-datatable-gridlines"-->
+  <!--          [tableStyle]="{ 'min-width': '50rem' }">-->
+  <!--          <ng-template pTemplate="header">-->
+  <!--            <tr class="text-center">-->
+  <!--              <th class="text-center">شماره بارنامه</th>-->
+  <!--              <th class="text-center">تاریخ</th>-->
+  <!--              <th class="text-center">مبدا</th>-->
+  <!--              <th class="text-center">مقصد</th>-->
+  <!--              <th class="text-center">گیرنده</th>-->
+  <!--            </tr>-->
+  <!--          </ng-template>-->
+  <!--          <ng-template pTemplate="body" let-product>-->
+  <!--            <tr>-->
+  <!--              <td class="text-red-500">{{ product.trackingNumber }}</td>-->
+  <!--              <td>{{ product.createTime |jalaliDate }}</td>-->
+  <!--              <td class="text-indigo-500">{{ product.source }}</td>-->
+  <!--              <td class="text-green-700">{{ product.destination }}</td>-->
+  <!--              <td class="text-orange-500">{{ product.receiver }}</td>-->
+  <!--            </tr>-->
+  <!--          </ng-template>-->
+  <!--        </p-table>-->
+  <!--      </div>-->
+  <!--    </div>-->
 
-<!--        </div>-->
-<!--        <p-overlayPanel #op-->
-<!--                        styleClass="custom-overlay-panel"-->
-<!--                        [style]="{ width: 'auto' }"-->
-<!--                        [showCloseIcon]="true"-->
-<!--                        [dismissable]="true"-->
-<!--                        [autoZIndex]="true"-->
-<!--                        [baseZIndex]="10000"-->
-<!--                        appendTo="body">-->
-<!--          <ng-template pTemplate="content">-->
-<!--            <p-table-->
-<!--              [value]="ticketInfo?.pastBills || []"-->
-<!--              styleClass="p-datatable-gridlines"-->
-<!--              [tableStyle]="{ 'min-width': '50rem' }">-->
-<!--              <ng-template pTemplate="header">-->
-<!--                <tr class="text-center">-->
-<!--                  <th class="text-center">شماره بارنامه</th>-->
-<!--                  <th class="text-center">تاریخ</th>-->
-<!--                  <th class="text-center">مبدا</th>-->
-<!--                  <th class="text-center">مقصد</th>-->
-<!--                  <th class="text-center">گیرنده</th>-->
-<!--                </tr>-->
-<!--              </ng-template>-->
-<!--              <ng-template pTemplate="body" let-product>-->
-<!--                <tr>-->
-<!--                  <td class="text-red-500">{{ product.trackingNumber }}</td>-->
-<!--                  <td>{{ product.createTime |jalaliDate }}</td>-->
-<!--                  <td class="text-indigo-500">{{ product.source }}</td>-->
-<!--                  <td class="text-green-700">{{ product.destination }}</td>-->
-<!--                  <td class="text-orange-500">{{ product.receiver }}</td>-->
-<!--                </tr>-->
-<!--              </ng-template>-->
-<!--            </p-table>-->
-<!--          </ng-template>-->
-<!--        </p-overlayPanel>-->
+  <!--    </div>-->
 
-<!--      </div>-->
-<!--    </div>-->
+  <!--  <div class="col-12">-->
+  <!--    <div class="mx-4">-->
+  <!--      <div class="p-card ticket-info fixed bottom-0 left-0 w-full z-5 shadow-2 layout-main">-->
+  <!--        <div class="p-card-body px-4 py-0 flex flex-wrap justify-content-between align-items-center">-->
 
-<!--  </div>-->
+  <!--          <div class="flex flex-wrap align-items-center gap-5">-->
+
+  <!--            <div class="flex flex-wrap align-items-center m-0 cursor-pointer">-->
+  <!--              <img src="assets/images/icon-company-80.png" pTooltip="شرکت"-->
+  <!--                   tooltipPosition="top" >-->
+  <!--              <div class="block">-->
+  <!--                <p class="font-bold m-0">{{ticketInfo.customerFullName}}</p>-->
+  <!--                <p class="font-bold m-0">{{ticketInfo.customerPhone}}</p>-->
+  <!--              </div>-->
+  <!--            </div>-->
+
+  <!--            <p class="flex flex-wrap align-items-center m-0 cursor-pointer">-->
+  <!--              <img src="assets/images/post-box-80.png" pTooltip="تاریخ تیکت"-->
+  <!--                   tooltipPosition="top" >-->
+  <!--              <span class="font-bold">{{calculateDaysDifference(ticketInfo?.createAt)}}</span>-->
+  <!--            </p>-->
+  <!--            <p class="flex flex-wrap align-items-center m-0 cursor-pointer">-->
+  <!--              <img src="assets/images/cooperation-80.png" pTooltip="شروع همکاری"-->
+  <!--                   tooltipPosition="top" >-->
+  <!--              <span>{{calculateDaysDifference(ticketInfo?.customerRegisterDateTime)}}</span>-->
+  <!--            </p>-->
+  <!--            <p class="flex flex-wrap align-items-center m-0 cursor-pointer">-->
+  <!--              <img src="assets/images/send-80.png" pTooltip="آخرین ارسال"-->
+  <!--                   tooltipPosition="top" >-->
+  <!--              <span>{{calculateDaysDifference(ticketInfo?.customerLastBillDateTime)}}</span>-->
+  <!--            </p>-->
+  <!--            <p class="flex flex-wrap align-items-center m-0 cursor-pointer">-->
+
+  <!--              <img src="assets/images/order-80.png" pTooltip="تعداد سفارش انجام شده توسط مشتری"-->
+  <!--                   tooltipPosition="top" >-->
+  <!--              <span>{{ticketInfo?.customerBillCount}}</span>-->
+  <!--            </p>-->
+
+  <!--            <p class="flex flex-wrap align-items-center m-0 cursor-pointer">-->
+
+  <!--              <img src="assets/images/done-80.png" pTooltip="وضعیت"-->
+  <!--                   tooltipPosition="top">-->
+  <!--              <span>{{TicketTypeEnum2LabelMapping[ticketInfo.ticketType]}}</span>-->
+  <!--            </p>-->
+  <!--          </div>-->
+
+
+  <!--          <div class="flex gap-2">-->
+  <!--            <button #btnRef pButton pRipple (click)="op.toggle($event, btnRef)" label="بارنامه اخیر" class="p-button-warning mt-2"></button>-->
+  <!--            <button pButton pRipple (click)="checkTicketClose()" label="بستن تیکت" class="p-button-danger mt-2"></button>-->
+  <!--          </div>-->
+
+  <!--        </div>-->
+  <!--        <p-overlayPanel #op-->
+  <!--                        styleClass="custom-overlay-panel"-->
+  <!--                        [style]="{ width: 'auto' }"-->
+  <!--                        [showCloseIcon]="true"-->
+  <!--                        [dismissable]="true"-->
+  <!--                        [autoZIndex]="true"-->
+  <!--                        [baseZIndex]="10000"-->
+  <!--                        appendTo="body">-->
+  <!--          <ng-template pTemplate="content">-->
+  <!--            <p-table-->
+  <!--              [value]="ticketInfo?.pastBills || []"-->
+  <!--              styleClass="p-datatable-gridlines"-->
+  <!--              [tableStyle]="{ 'min-width': '50rem' }">-->
+  <!--              <ng-template pTemplate="header">-->
+  <!--                <tr class="text-center">-->
+  <!--                  <th class="text-center">شماره بارنامه</th>-->
+  <!--                  <th class="text-center">تاریخ</th>-->
+  <!--                  <th class="text-center">مبدا</th>-->
+  <!--                  <th class="text-center">مقصد</th>-->
+  <!--                  <th class="text-center">گیرنده</th>-->
+  <!--                </tr>-->
+  <!--              </ng-template>-->
+  <!--              <ng-template pTemplate="body" let-product>-->
+  <!--                <tr>-->
+  <!--                  <td class="text-red-500">{{ product.trackingNumber }}</td>-->
+  <!--                  <td>{{ product.createTime |jalaliDate }}</td>-->
+  <!--                  <td class="text-indigo-500">{{ product.source }}</td>-->
+  <!--                  <td class="text-green-700">{{ product.destination }}</td>-->
+  <!--                  <td class="text-orange-500">{{ product.receiver }}</td>-->
+  <!--                </tr>-->
+  <!--              </ng-template>-->
+  <!--            </p-table>-->
+  <!--          </ng-template>-->
+  <!--        </p-overlayPanel>-->
+
+  <!--      </div>-->
+  <!--    </div>-->
+
+  <!--  </div>-->
 
 </div>
 

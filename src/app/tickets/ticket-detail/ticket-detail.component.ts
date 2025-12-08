@@ -21,7 +21,7 @@ import {ActivityWorkItemType} from "../../work-item/_types/activity-workItem.typ
 import {DomSanitizer} from "@angular/platform-browser";
 import {DialogModule} from "primeng/dialog";
 import {JalaliDatePipe} from "../../_pipes/jalali.date.pipe";
-import {TicketBaseType} from "../_types/ticket-base.type";
+import {TicketBaseType, CustomerFeelsEnum2LabelMapping} from "../_types/ticket-base.type";
 import {TableModule} from "primeng/table";
 import {ActivityNoteComponent} from "../../_components/activity-note/activity-note.component";
 import {TooltipModule} from "primeng/tooltip";
@@ -32,6 +32,7 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
 import {ServerTimeService} from "../../_services/server-time.service";
 import {ChangeLogType} from "../../_types/change-log.type";
 import {WorkItemChangeLogTypesEnum2LableMapping} from "../../_enums/workItem-change-log-types.enum";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'app-ticket-detail',
@@ -57,7 +58,8 @@ import {WorkItemChangeLogTypesEnum2LableMapping} from "../../_enums/workItem-cha
     ActivityNoteComponent,
     TooltipModule,
     RouterLink,
-    OverlayPanelModule
+    OverlayPanelModule,
+    DividerModule
   ],
   templateUrl: './ticket-detail.component.html',
   styleUrl: './ticket-detail.component.scss',
@@ -72,6 +74,21 @@ export class TicketDetailComponent implements OnInit{
   showModalPastBills:boolean = false;
 
   protected readonly TicketTypeEnum2LabelMapping = TicketTypeEnum2LabelMapping
+  protected readonly CustomerFeelsEnum2LabelMapping = CustomerFeelsEnum2LabelMapping;
+
+  colors = [
+    'bg-green-100 text-green-600',
+    'bg-blue-100 text-blue-600',
+    'bg-yellow-100 text-yellow-600',
+    'bg-purple-100 text-purple-600',
+    'bg-pink-100 text-pink-600',
+    'bg-orange-100 text-orange-600',
+    'bg-cyan-100 text-cyan-600',
+    'bg-teal-100 text-teal-600',
+    'bg-indigo-100 text-indigo-600',
+    'bg-red-100 text-red-600'
+  ];
+
   constructor(private service:TicketsService,
               private workItemService: WorkItemService,
               private serverTimeService: ServerTimeService,

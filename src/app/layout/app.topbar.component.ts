@@ -137,13 +137,13 @@ export class AppTopBarComponent implements OnInit{
         permission: ['everyOne'],
         command: () => {this.clearTableDataInLocalStorage('users')},
       },
-      {
-        label: 'مشتریان',
-        icon: 'pi pi-fw pi-user',
-        routerLink: ['/setting/customers'],
-        permission: ['everyOne'],
-        command: () => {this.clearTableDataInLocalStorage('customers')},
-      },
+      // {
+      //   label: 'مشتریان',
+      //   icon: 'pi pi-fw pi-user',
+      //   routerLink: ['/setting/customers'],
+      //   permission: ['everyOne'],
+      //   command: () => {this.clearTableDataInLocalStorage('customers')},
+      // },
       {
         label: 'کاریز ها',
         icon: 'pi pi-fw pi-bolt',
@@ -194,7 +194,7 @@ export class AppTopBarComponent implements OnInit{
       },
       {
         label: 'خودکار سازی فرایند ها',
-        icon: 'pi pi-asterisk',
+        icon: 'pi pi-code',
         permission: ['process'],
         routerLink: ['/setting/process-automation'],
       },

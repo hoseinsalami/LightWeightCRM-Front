@@ -1,5 +1,7 @@
 ::ng-deep{
-
+  .p-divider-horizontal:before{
+    border-color: #000 !important;
+  }
   .custom-overlay-panel {
     position: fixed !important;
     top: auto !important;

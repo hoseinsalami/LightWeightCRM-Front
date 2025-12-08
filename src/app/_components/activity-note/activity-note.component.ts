@@ -50,6 +50,8 @@ import {BadgeModule} from "primeng/badge";
 
 @Component({
   selector: 'app-activity-note',
+  templateUrl: './activity-note.component.html',
+  styleUrl: './activity-note.component.scss',
   standalone: true,
   imports: [
     CommonModule,
@@ -79,8 +81,6 @@ import {BadgeModule} from "primeng/badge";
     NewActivityModalComponent,
     BadgeModule
   ],
-  templateUrl: './activity-note.component.html',
-  styleUrl: './activity-note.component.scss',
   providers:[JalaliDatePipe]
 })
 export class ActivityNoteComponent implements OnInit{
@@ -98,10 +98,10 @@ export class ActivityNoteComponent implements OnInit{
   modalState = 'new' || 'edit';
 
   @Input() workItem?: WorkItemType;
-  @Input() workItemId?: string;
-  @Input() ticketId?: string;
-  @Input() customerId?: string;
-  @Input() expertId?: number;
+  @Input() workItemId?: string | null = null;
+  @Input() ticketId?: string | null = null;
+  @Input() customerId?: string | null = null;
+  @Input() expertId?: number| null = null;
   @Input() pathId?: number | null = null;
   isCollapsed: boolean = true;
   activeContent: string | null = null;
@@ -153,6 +153,10 @@ export class ActivityNoteComponent implements OnInit{
   user:LoginOutputSscrmType|undefined = undefined;
   protected readonly UserTypesEnum = UserTypesEnum
 
+  sendWasSuccessful:boolean = false
+
+  sortAscending = true;
+
   @ViewChild('op') op!: OverlayPanel;
   @ViewChild('uploadFileComponent') uploadFileComponent!: UploadFileComponent;
   @ViewChild('newActivityModal') newActivityModal!: NewActivityModalComponent;
@@ -185,6 +189,7 @@ export class ActivityNoteComponent implements OnInit{
     this.setActive('activities');
     this.getChangeLogData()
     this.reminders = [new TimePeriod()];
+    console.log(this.workItem)
   }
 
 
@@ -209,6 +214,7 @@ export class ActivityNoteComponent implements OnInit{
     }
   }
 
+
   // لیست یادداشت ها
   getListOfNotes(){
     if (this.notePageInfo.isLoading || !this.notePageInfo.hasMore) return;
@@ -219,7 +225,8 @@ export class ActivityNoteComponent implements OnInit{
       id: this.workItemId ? this.workItemId : this.customerId ? this.customerId : null,
       from: this.notePageInfo.from,
       row: this.notePageInfo.rows,
-      state: this.workItemId ? 'workItem' : 'customer'
+      state: this.workItemId ? 'workItem' : 'customer',
+      sort: this.sortAscending,
     };
     this.activeNoteervice.getListOfNote(input).subscribe((res) => {
       this.loading.hide()
@@ -229,6 +236,8 @@ export class ActivityNoteComponent implements OnInit{
 
       this.noteData = [...this.noteData, ...res.items];
       this.notePageInfo.from += res.items.length;
+      console.log(this.noteData)
+
 
     },  error => {
       this.loading.hide();
@@ -249,6 +258,7 @@ export class ActivityNoteComponent implements OnInit{
     };
     this.activeNoteervice.getListOfActivities(input).subscribe((res) => {
       this.loading.hide();
+      console.log(res)
       this.activityPageInfo.isLoading = false;
 
       if (res.items.length < this.activityPageInfo.rows) this.activityPageInfo.hasMore = false;
@@ -439,6 +449,34 @@ export class ActivityNoteComponent implements OnInit{
       this.messagesService.showSuccess('کارشناس فعالیت با موفقیت تغییر یافت');
     }, error => {
       this.loading.hide();
+    })
+  }
+
+  // مرتب سازی یادداشت ها صعودی/نزولی
+  toggleSort() {
+    this.sortAscending = !this.sortAscending;
+    this.notePageInfo = { from: 0, rows: 20, isLoading: false, hasMore: true };
+    this.noteData= []
+    this.getListOfNotes();
+  }
+
+  changeNotePinState(item:any){
+    this.loading.show();
+    const input = {
+      noteId:item.id,
+      pinned: !item.pinned
+    }
+    this.activeNoteervice.putChangeNotePinState(input).subscribe({
+      next: (out) => {
+        this.loading.hide();
+        item.pinned = !item.pinned;
+        this.notePageInfo = { from: 0, rows: 20, isLoading: false, hasMore: true };
+        this.noteData= []
+        this.getListOfNotes();
+      },
+      error: (err) =>{
+        this.loading.hide();
+      }
     })
   }
 
@@ -780,6 +818,8 @@ export class ActivityNoteComponent implements OnInit{
       this.getListOfActivities()
     } else if (item === 'attachment') {
       this.getListOfAttachment()
+    } else if (item === 'sendMessage'){
+
     }
   }
 

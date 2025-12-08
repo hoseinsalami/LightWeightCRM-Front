@@ -1,40 +1,42 @@
 <div class="grid" >
   <div class="col-12">
 
-        <div class="flex justify-content-center">
+    <div class="flex justify-content-center">
 
-          <div class="flex gap-3 p-card p-1 mt-3 bg-white">
-            <!--            <span (click)="setActive('all')" [class.active]="activeItem === 'all'" class="cursor-pointer px-3">همه</span>-->
-            <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200" (click)="setActive('activities')" [class]="{ 'activePanel' : activeItem === 'activities'}">فعالیت ها</button>
-            <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200" (click)="setActive('notes')" [class]="{'activePanel' : activeItem === 'notes'}" >یادداشت ها</button>
-            <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200"
-                    *ngIf="workItemId || ticketId"
-                    (click)="setActive('changeLog')" [class]="{'activePanel' : activeItem === 'changeLog'}">تاریخچه تغییرات</button>
-          </div>
+      <div class="flex gap-3 p-card p-1 mt-3 bg-white">
+        <!--            <span (click)="setActive('all')" [class.active]="activeItem === 'all'" class="cursor-pointer px-3">همه</span>-->
+        <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200" (click)="setActive('activities')" [class]="{ 'activePanel' : activeItem === 'activities'}">
+          فعالیت ها
+          <p-badge styleClass="text-xs mr-2" [value]="workItem?.activityCount ? workItem?.activityCount : 0" severity="success" />
+        </button>
+        <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200" (click)="setActive('notes')" [class]="{'activePanel' : activeItem === 'notes'}" >
+          یادداشت ها
+          <p-badge styleClass="text-xs mr-2" [value]="workItem?.noteCount ? workItem?.noteCount : 0" severity="success" />
+        </button>
+        <!--            <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200" (click)="setActive('sendMessage')" [class]="{'activePanel' : activeItem === 'sendMessage'}" >پیام های ارسالی</button>-->
+        <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200" *ngIf="workItemId || ticketId"
+                (click)="setActive('changeLog')" [class]="{'activePanel' : activeItem === 'changeLog'}">تاریخچه تغییرات</button>
+      </div>
 
-          <div class="flex justify-content-end align-items-end mr-3">
-            <button *ngIf="activeItem === 'notes' "
-                    pButton
-                    class="p-button-success"
-                    (click)="modalNewNote('new')"
-                    style="height:50px">
-              افزودن یادداشت جدید
-            </button>
-            <button *ngIf="activeItem === 'activities' "
-                    pButton
-                    class="p-button-success"
-                    (click)="modalNewActivity('new')"
-                    style="height:50px">
-              افزودن فعالیت جدید
-            </button>
-          </div>
-
-        </div>
+    </div>
     <div class="grid" *ngIf="activeItem == 'activities' || activeItem == 'notes'">
       <div class="col-12">
-        <div class="flex justify-content-center">
-          <span class="m-0 text-white px-5 py-2 font-light border-round mt-5 text-sm"
-                style="background: #808080">فعالیت های برنامه ریزی شده</span>
+        <div class="flex justify-content-center align-items-center gap-3 mt-2">
+
+          <span class="m-0 text-white px-5 py-2 font-light border-round text-sm" style="background: #808080">فعالیت های برنامه ریزی شده</span>
+          <button *ngIf="activeItem === 'notes' "
+                  pButton
+                  class="p-button-success p-2"
+                  (click)="modalNewNote('new')">
+            یادداشت جدید
+          </button>
+
+          <button *ngIf="activeItem === 'activities' "
+                  pButton
+                  class="p-button-success p-2"
+                  (click)="modalNewActivity('new')">
+            فعالیت جدید
+          </button>
         </div>
 
         <div class="overflow-hidden" *ngIf="undoneActivities.length > 0">
@@ -88,7 +90,7 @@
                   </div>
 
 
-<!--                  onShowModalEditActivity(item.id, 'edit')-->
+                  <!--                  onShowModalEditActivity(item.id, 'edit')-->
                   <div (click)="onClickEditActivity(item.id)"
                        class="flex justify-content-center align-items-center hover:bg-green-400 border-round p-2 cursor-pointer hover:text-white"
                        pTooltip="ویرایش"
@@ -187,6 +189,7 @@
                 <p class="m-0 font-light">{{attachment.title}}</p>
               </div>
             </div>
+
             <div class="flex justify-content-between align-items-center my-2">
               <p class="text-xs text-gray-400 font-italic font-light m-0">
                 ایجاد شده توسط {{item?.user?.fullName}}
@@ -226,6 +229,13 @@
 
             </div>
 
+            <div pTooltip="نتیجه فعالیت"
+                 tooltipPosition="top"
+                 *ngIf="item.result"
+                 class="bg-gray-200 px-2 py-1 mx-3 border-round">
+              {{item.result}}
+            </div>
+
           </div>
 
 
@@ -238,35 +248,35 @@
               </div>
             </div>
           </div>
-<!--              <div class="p-card p-3 mt-2">-->
+          <!--              <div class="p-card p-3 mt-2">-->
 
-<!--                <p>{{item.title}}</p>-->
-<!--                <div class="flex justify-content-between align-items-center">-->
-<!--                  <p class="text-xs text-gray-400 font-italic font-light">ایجاد شده توسط {{item?.user?.fullName}}</p>-->
-<!--                  <button (click)="op.toggle($event)" pButton pRipple icon="pi pi-ellipsis-h" class="p-button-rounded p-button-info p-mr-2 m-1"></button>-->
+          <!--                <p>{{item.title}}</p>-->
+          <!--                <div class="flex justify-content-between align-items-center">-->
+          <!--                  <p class="text-xs text-gray-400 font-italic font-light">ایجاد شده توسط {{item?.user?.fullName}}</p>-->
+          <!--                  <button (click)="op.toggle($event)" pButton pRipple icon="pi pi-ellipsis-h" class="p-button-rounded p-button-info p-mr-2 m-1"></button>-->
 
-<!--                </div>-->
-<!--                <p-overlayPanel #op>-->
-<!--                  <div class="flex flex-column gap-3 w-10rem">-->
+          <!--                </div>-->
+          <!--                <p-overlayPanel #op>-->
+          <!--                  <div class="flex flex-column gap-3 w-10rem">-->
 
-<!--                    <div (click)="onShowModalEditActivity(item.id, 'edit')" class="flex justify-content-end align-items-center hover:bg-green-400 border-round p-2 cursor-pointer hover:text-white">-->
-<!--                      <span class="hover:text-white">ویرایش</span>-->
-<!--                      <i class="pi pi-eye text-green-600 ml-2"></i>-->
-<!--                    </div>-->
+          <!--                    <div (click)="onShowModalEditActivity(item.id, 'edit')" class="flex justify-content-end align-items-center hover:bg-green-400 border-round p-2 cursor-pointer hover:text-white">-->
+          <!--                      <span class="hover:text-white">ویرایش</span>-->
+          <!--                      <i class="pi pi-eye text-green-600 ml-2"></i>-->
+          <!--                    </div>-->
 
-<!--                    <div (click)="onOpenCommentModal(item.id)" class="flex justify-content-end align-items-center hover:bg-orange-400 border-round p-2 cursor-pointer hover:text-white">-->
-<!--                      ثبت  نظر-->
-<!--                      <i class="pi pi-book text-orange-600 ml-2"></i>-->
-<!--                    </div>-->
+          <!--                    <div (click)="onOpenCommentModal(item.id)" class="flex justify-content-end align-items-center hover:bg-orange-400 border-round p-2 cursor-pointer hover:text-white">-->
+          <!--                      ثبت  نظر-->
+          <!--                      <i class="pi pi-book text-orange-600 ml-2"></i>-->
+          <!--                    </div>-->
 
-<!--                    <div (click)="deleteItemActiviy(item.id)" class="flex justify-content-end align-items-center hover:bg-red-400 border-round p-2 cursor-pointer hover:text-white">-->
-<!--                      حذف-->
-<!--                      <i class="pi pi-trash danger text-red-600 ml-2"></i>-->
-<!--                    </div>-->
+          <!--                    <div (click)="deleteItemActiviy(item.id)" class="flex justify-content-end align-items-center hover:bg-red-400 border-round p-2 cursor-pointer hover:text-white">-->
+          <!--                      حذف-->
+          <!--                      <i class="pi pi-trash danger text-red-600 ml-2"></i>-->
+          <!--                    </div>-->
 
-<!--                  </div>-->
-<!--                </p-overlayPanel>-->
-<!--              </div>-->
+          <!--                  </div>-->
+          <!--                </p-overlayPanel>-->
+          <!--              </div>-->
 
 
 
@@ -276,12 +286,22 @@
       <!-- begin notes section -->
       <ng-container *ngIf="activeItem == 'notes'">
 
-        <div class="flex justify-content-center">
-          <span class="m-0 font-light text-white px-5 border-round mt-5 text-sm py-2"
+        <div class="flex justify-content-center mt-5 relative">
+          <span class="m-0 font-light text-white px-5 border-round text-sm py-2"
                 style="background: #808080">تاریخچه</span>
+          <span class="m-0 font-light text-base p-2 border-round text-sm cursor-pointer absolute left-0 bg-gray-300"
+                (click)="toggleSort()"
+                [class]="sortAscending ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down-alt'"></span>
         </div>
 
-        <div class="p-card p-3 mt-2" style="background:#f0fda8" *ngFor="let item of noteData">
+        <div class="p-card p-3 mt-2 relative note-card" style="background:#f0fda8" *ngFor="let item of noteData">
+
+          <div class="absolute pin-icon cursor-pointer"
+               [style]="{opacity: item.pinned ? '1' : '0', rotate: item.pinned ? '315deg' : '' }"
+               style="left:5px; top:5px" (click)="changeNotePinState(item)">
+            <img src="./assets/images/pin-25.png" style="width:20px" alt="">
+          </div>
+
           <p [innerHTML]="sanitizeContent(item.content)"></p>
 
           <div class="flex gap-3">
@@ -298,7 +318,7 @@
           <div class="flex justify-content-between align-items-center">
 
             <p class="text-xs text-gray-400 font-italic font-light m-0">ایجاد شده توسط {{item?.user ? item?.user?.fullName : item.thirdPartyEmployeeFullName}}</p>
-<!--            <button (click)="opl.toggle($event)" pButton pRipple icon="pi pi-ellipsis-h" class="p-button-rounded p-button-info p-mr-2 m-1"></button>-->
+            <!--            <button (click)="opl.toggle($event)" pButton pRipple icon="pi pi-ellipsis-h" class="p-button-rounded p-button-info p-mr-2 m-1"></button>-->
 
             <div class="flex gap-2">
               <div (click)="onShowModalEditNote(item.id, 'edit')"
@@ -318,21 +338,21 @@
 
           </div>
 
-<!--          <p-overlayPanel #opl>-->
-<!--            <div class="flex flex-column gap-3 w-10rem">-->
+          <!--          <p-overlayPanel #opl>-->
+          <!--            <div class="flex flex-column gap-3 w-10rem">-->
 
-<!--              <div (click)="onShowModalEditNote(item.id, 'edit')" class="flex justify-content-end align-items-center hover:bg-green-400 border-round p-2 cursor-pointer hover:text-white">-->
-<!--                <span class="hover:text-white">ویرایش</span>-->
-<!--                <i class="pi pi-eye text-green-600 ml-2"></i>-->
-<!--              </div>-->
+          <!--              <div (click)="onShowModalEditNote(item.id, 'edit')" class="flex justify-content-end align-items-center hover:bg-green-400 border-round p-2 cursor-pointer hover:text-white">-->
+          <!--                <span class="hover:text-white">ویرایش</span>-->
+          <!--                <i class="pi pi-eye text-green-600 ml-2"></i>-->
+          <!--              </div>-->
 
-<!--              <div (click)="deleteItemNote(item.id)" class="flex justify-content-end align-items-center hover:bg-red-400 border-round p-2 cursor-pointer hover:text-white">-->
-<!--                حذف-->
-<!--                <i class="pi pi-trash danger text-red-600 ml-2"></i>-->
-<!--              </div>-->
+          <!--              <div (click)="deleteItemNote(item.id)" class="flex justify-content-end align-items-center hover:bg-red-400 border-round p-2 cursor-pointer hover:text-white">-->
+          <!--                حذف-->
+          <!--                <i class="pi pi-trash danger text-red-600 ml-2"></i>-->
+          <!--              </div>-->
 
-<!--            </div>-->
-<!--          </p-overlayPanel>-->
+          <!--            </div>-->
+          <!--          </p-overlayPanel>-->
 
         </div>
       </ng-container>
@@ -341,12 +361,12 @@
       <ng-container *ngIf="activeItem == 'changeLog'">
 
         <div class="flex justify-content-center">
-          <span class="m-0 font-light text-white px-5 border-round mt-5 text-sm py-2"
+          <span class="font-light text-white px-5 border-round mt-2 text-sm py-2"
                 style="background: #808080">تاریخچه تغییرات</span>
         </div>
 
         <div class="flex flex-column align-items-center">
-          <div class="flex gap-1 border-1 border-dashed border-round border-gray-400 p-2 mt-3 w-6" *ngFor="let log of changeLog; let i=index" style="font-size:12px">
+          <div class="flex gap-1 border-1 border-dashed border-round border-gray-400 bg-teal-100 p-2 mt-3 w-6" *ngFor="let log of changeLog; let i=index" style="font-size:12px">
             <span class=" font-light font-italic">{{WorkItemChangeLogTypesEnum2LableMapping[log.logType]}}</span>
             <span class="font-light">به
               <em class="font-light font-italicf font-bold ">{{log.description}}</em>
@@ -357,6 +377,71 @@
             <span class="font-light font-italic">{{log.dateTime | jalaliDate}}</span>
           </div>
         </div>
+
+
+      </ng-container>
+
+      <!-- begin sendMessages -->
+      <ng-container *ngIf="activeItem == 'sendMessage'">
+
+        <div class="flex justify-content-center">
+          <span class="font-light text-white px-5 border-round mt-2 text-sm py-2"
+                style="background: #808080">تاریخچه پیام های ارسالی</span>
+        </div>
+
+        <div class="grid" *ngIf="workItem && workItem.messages.length > 0">
+          <ng-container *ngFor="let message of workItem.messages; let i=index">
+            <div class="col-2"></div>
+            <div class="co-10"></div>
+          </ng-container>
+
+        </div>
+
+        <div class="flex flex-column align-items-center">
+          <div class="flex flex-column align-items-start gap-1 border-1 border-dashed border-round border-gray-200 py-3 mt-3 w-6 bg-whatsapp">
+
+            <div class="chat-container">
+              <!-- پیام خود کاربر -->
+              <div class="chat-message sent grid align-items-end"
+                   *ngFor="let message of workItem.messages; let i=index">
+                <div class="col-1 flex justify-content-center">
+                  <span class="pi pi-user p-avatar-icon avatar" [pTooltip]="message?.currentUser?.fullName"
+                        tooltipPosition="right"></span>
+                </div>
+
+                <div class="col-11">
+                  <div [pTooltip]="message.phoneNumber"
+                       tooltipPosition="left">
+                    <!--                  <p class="m-0 text-left text-xs text-color-secondary">0915</p>-->
+                    <div class="bubble">
+                      <p class="text">{{message.message}}</p>
+                      <span class="time">
+                      <ng-container *ngIf="message.sendWasSuccessful; else pendingIcon">
+                      <i class="pi pi-check text-blue-400 ml-1"></i>
+                    </ng-container>
+                      <span class="text-nowrap">{{message.sendWasSuccessful ? (message.lastSend | jalaliDate:'hour') : ''}}</span>
+                    </span>
+
+                      <ng-template #pendingIcon>
+                        <img src="assets/images/exclamation-25.png" alt=""
+                             class="ml-1"
+                             style="width:17px"
+                             pTooltip="ارسال نشد"
+                             tooltipPosition="top">
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+
+
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
 
 
       </ng-container>
@@ -924,7 +1009,7 @@
 </p-dialog>
 <!--************************** end Change Expert modal *************************************-->
 
-<app-new-activity-modal #newActivityModal
+<app-new-activity-modal *ngIf="expertId" #newActivityModal
                         [workItemId]="workItemId"
                         [customerId]="customerId"
                         [expertId]="expertId"
