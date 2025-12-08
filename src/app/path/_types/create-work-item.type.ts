@@ -71,7 +71,7 @@ export class CustomerSpecification extends GenericType<CustomerSpecification>{
   mobile?: string;
   companyName?: string;
   fullName?: string;
-  gender?: string;
+  gender?: number;
   group?: string;
   nationalId?: string;
   branches?: string[];

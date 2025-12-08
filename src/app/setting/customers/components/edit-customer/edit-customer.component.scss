@@ -1,4 +1,11 @@
 ::ng-deep{
+  .p-divider-horizontal:before{
+    border-color: #000 !important;
+  }
+
+  .p-overlaypanel-content{
+    padding: 0px;
+  }
 
   .p-button{
     &:focus{

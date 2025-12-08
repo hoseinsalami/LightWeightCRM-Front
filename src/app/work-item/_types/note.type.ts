@@ -11,7 +11,7 @@ export class NoteType extends GenericType<NoteType>{
   user?: UserTypeBase;
   attachments?: AttachmentType[];
   thirdPartyEmployeeFullName?: string;
-
+  pinned?: boolean;
   constructor(model?: Partial<NoteType>) {
     super(model)
 

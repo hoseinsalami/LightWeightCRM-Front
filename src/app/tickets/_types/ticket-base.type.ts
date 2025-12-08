@@ -24,7 +24,10 @@ export class TicketBaseType extends GenericType<TicketBaseType>{
   ticketType?: TicketTypeEnum;
   title?: string;
   deadline?: string;
-  customer?: CustomerSpecification
+  customer?: CustomerSpecification;
+  registerEmployee:string;
+  customerFeel?:CustomerFeelsEnum;
+  description?:string
 
   constructor(model?:Partial<TicketBaseType>) {
     super(model);
@@ -61,4 +64,23 @@ export class PastBills extends GenericType<PastBills>{
   constructor(model?: Partial<PastBills>) {
     super(model);
   }
+}
+
+
+export enum CustomerFeelsEnum {
+  Unknown,
+  Neutral,
+  Angry,
+  VeryAngry,
+  Happy,
+  VeryHappy
+}
+
+export const CustomerFeelsEnum2LabelMapping: Record<CustomerFeelsEnum, string> = {
+  [CustomerFeelsEnum.Unknown]: '❓',
+  [CustomerFeelsEnum.Neutral]: '😐',
+  [CustomerFeelsEnum.Angry]: '😠',
+  [CustomerFeelsEnum.VeryAngry]: '🤬',
+  [CustomerFeelsEnum.Happy]: '😊',
+  [CustomerFeelsEnum.VeryHappy]: '😁',
 }

@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import {TicketsService} from "./tickets.service";
 import {LoadingService} from "../_services/loading.service";
-import {TicketBaseType} from "./_types/ticket-base.type";
+import {TicketBaseType, CustomerFeelsEnum2LabelMapping} from "./_types/ticket-base.type";
 import {CommonModule, NgFor} from "@angular/common";
 import {JalaliDatePipe} from "../_pipes/jalali.date.pipe";
 import {ButtonModule} from "primeng/button";
@@ -82,6 +82,7 @@ export class TicketsComponent implements OnInit, AfterViewInit{
   paginationData = { from: 0, rows: 20, isLoading: false, hasMore: true };
   user:LoginOutputSscrmType|undefined = undefined;
   protected readonly UserTypesEnum = UserTypesEnum
+  protected readonly CustomerFeelsEnum2LabelMapping = CustomerFeelsEnum2LabelMapping;
 
   tabs = [
     { key: 'all', title: 'همه', loader:() => this.setActive(null) },
@@ -109,6 +110,7 @@ export class TicketsComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit() {
+    console.log(this.router.url)
     this.activatedRoute.params.subscribe((res) =>{
       if (res['id']){
         this.ticketTypeId = res['id']
@@ -273,4 +275,9 @@ export class TicketsComponent implements OnInit, AfterViewInit{
     this.ticketId = id;
     this.selectedUser = null
   }
+
+  navigateToSepidbal(){
+    window.open('https://sbpn.ir/complaint', '_blank');
+  }
+
 }

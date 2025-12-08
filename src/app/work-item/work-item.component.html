@@ -24,14 +24,14 @@
           <p-overlayPanel #op>
             <ul class="list-none p-2 m-0 flex flex-column gap-2" style="min-width:140px">
               <li (click)="onChangeTitleWorkItem(workItem)"
-                  class="cursor-pointer flex align-items-center gap-2 p-2 border-round hover:bg-orange-200 text-orange-500">
-                <i class="pi pi-pencil"></i>
+                  class="cursor-pointer flex align-items-center gap-2 p-2 border-round hover:bg-orange-100 hover:text-orange-500 text-color-secondary">
+                <i class="pi pi-pencil text-orange-500"></i>
                 ویرایش عنوان معامله
               </li>
 
               <li (click)="onDeleteWorkItem(workItem)"
-                  class="cursor-pointer flex align-items-center gap-2 p-2 border-round hover:bg-red-200 text-red-500">
-                <i class="pi pi-trash"></i>
+                  class="cursor-pointer flex align-items-center gap-2 p-2 border-round hover:bg-red-100 hover:text-red-500 text-color-secondary">
+                <i class="pi pi-trash text-red-500"></i>
                 حذف
               </li>
 
@@ -72,18 +72,10 @@
 
       <div class="p-card-body">
         <div class="relative">
-          <button
-            (click)="scrollStepper('left')"
-            class="scroll-btn left-btn">
-            ◀
-          </button>
+          <button (click)="scrollStepper('left')" class="scroll-btn left-btn">◀</button>
 
           <!-- دکمه اسکرول به راست -->
-          <button
-            (click)="scrollStepper('right')"
-            class="scroll-btn right-btn">
-            ▶
-          </button>
+          <button (click)="scrollStepper('right')" class="scroll-btn right-btn">▶</button>
 
           <div #stepperContainer class="stepper overflow-hidden" *ngIf="listOfStep">
             <div class="step"
@@ -108,13 +100,8 @@
             کارشناس:
             {{ workItem?.currentUser?.fullName }}
             <i *ngIf="userType == 1 || userType == 2"
-               class="pi pi-user-edit text-orange-500 text-xl border-1 border-solid border-orange-500 border-round p-1 cursor-pointer mr-2" (click)="showChangeExpertModal = true"></i>
-
-            <!--            <span class="flex align-items-center mt-2" pTooltip="کاریز"-->
-            <!--                  tooltipPosition=left>-->
-            <!--            <img src="assets/images/destination-40.png" class="w-2rem" alt="">-->
-            <!--              {{workItem?.path.title}}-->
-            <!--          </span>-->
+               class="pi pi-user-edit text-orange-500 text-xl border-1 border-solid border-orange-500 border-round p-1 cursor-pointer mr-2"
+               (click)="showChangeExpertModal = true"></i>
           </p>
 
         </div>
@@ -164,7 +151,7 @@
           </div>
 
           <div class="form-group">
-            <p class="m-0 flex align-items-center justify-content-end" *ngFor="let item of workItem?.customer?.customerPhones; let last = last">
+            <p class="m-0 flex align-items-center justify-content-end" [pTooltip]="item.title" *ngFor="let item of workItem?.customer?.customerPhones; let last = last">
               <i *ngIf="last" class="pi pi-plus m-1 text-green-500 cursor-pointer text-sm" (click)="addNewCustomerPhone($event)"></i>
               <span class="text-sm">{{item.phoneNumber}}</span>
               <i class="pi pi-phone m-1 text-teal-500" style="font-size: 1.1rem"></i>

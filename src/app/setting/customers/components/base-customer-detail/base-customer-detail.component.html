@@ -10,40 +10,63 @@
 
         <div class="p-3">
 
-          <p class="mb-1 flex justify-content-between">
-            <span class="font-medium">نام و نام خانوادگی:</span>
-            {{manager.oneObject.name + ' ' +manager.oneObject.family}}
-          </p>
+          <div class="grid">
+            <!-- Row -->
+            <div class="col-12 md:col-6">
+              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+                <span class="text-600 text-sm">نام و نام خانوادگی:</span>
+                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject.name + ' ' +manager.oneObject.family}}</span>
+              </div>
+            </div>
 
-          <p class="mb-1 flex justify-content-between">
-            <span class="font-medium">کد ملی:</span>
-            {{manager.oneObject.nationalId ?? 'نامشخص'}}
-          </p>
+            <div class="col-12 md:col-6">
+              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+                <span class="text-600 text-sm">کد ملی:</span>
+                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject.nationalId ?? 'نامشخص'}}</span>
+              </div>
+            </div>
 
-          <p class="mb-1 flex justify-content-between">
-            <span class="font-medium">جنسیت:</span>
-            {{manager.oneObject?.gender ?? 'نامشخص'}}
-          </p>
+            <div class="col-12 md:col-6">
+              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+                <span class="text-600 text-sm">جنسیت:</span>
+                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject?.gender == 0 ? 'زن' : 'مرد' }}</span>
+              </div>
+            </div>
 
-          <p class="mb-1 flex justify-content-between" *ngFor="let field of manager.oneObject.customerPhones">
-            <span class="font-medium">شماره تماس({{field.title}}):</span>
-            {{field.phoneNumber}}
-          </p>
+            <div class="col-12 md:col-6">
+              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+                <span class="text-600 text-sm">شرکت:</span>
+                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject.companyName}}</span>
+              </div>
+            </div>
 
-          <p class="mb-1 flex justify-content-between">
-            <span class="font-medium">شرکت:</span>
-            {{manager.oneObject.companyName}}
-          </p>
+            <div class="col-12 md:col-6">
+              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+                <span class="text-600 text-sm">شیوه آشنایی:</span>
+                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject?.accustomMethod?.title}}</span>
+              </div>
+            </div>
 
-          <p class="mb-1 flex justify-content-between">
-            <span class="font-medium">شیوه آشنایی:</span>
-            {{manager.oneObject?.accustomMethod?.title}}
-          </p>
+            <div class="col-12 md:col-6">
+              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+                <span class="text-600 text-sm">گروه:</span>
+                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject?.group ?? 'نامشخص'}}</span>
+              </div>
+            </div>
 
-          <p class="mb-1 flex justify-content-between">
-            <span class="font-medium">گروه:</span>
-            {{manager.oneObject?.group ?? 'نامشخص'}}
-          </p>
+            <div class="col-12">
+              <div class="flex flex-wrap align-items-start gap-2 ">
+                <p class="border-round text-xs px-2 py-1 font-bold flex flex-wrap flex-column"
+                   *ngFor="let field of manager.oneObject.customerPhones; let i = index"
+                   [class]="colors[i % colors.length]">
+                  <span class="font-semibold text-xs text-center">{{field.title}}</span>
+                  <p-divider styleClass="m-0 p-0" class="w-full m-0 " align="center" type="solid" ></p-divider>
+                  <span class="font-semibold text-xs text-right mt-1">{{field.phoneNumber}}</span>
+                </p>
+              </div>
+            </div>
+
+          </div>
 
         </div>
 
@@ -433,6 +456,77 @@
 
         </div>
 
+        <!--        <p-fieldset>-->
+
+        <!--          <ng-template pTemplate="header">-->
+        <!--            <div>-->
+        <!--              <i class=" ml-2 pi pi-info-circle"></i>-->
+        <!--              <span>شماره تماس</span>-->
+        <!--            </div>-->
+        <!--          </ng-template>-->
+
+        <!--          <div class="flex-column">-->
+
+        <!--            <div class="grid">-->
+
+        <!--              <div class="col-12 mt-2">-->
+        <!--                <button type="submit"-->
+        <!--                        pButton-->
+        <!--                        class="p-button-success"-->
+        <!--                        (click)="addField()">اضافه کردن شماره جدید</button>-->
+        <!--                <div class="flex gap-3 align-items-center my-3" *ngFor="let field of manager.oneObject.customerPhones; let i = index">-->
+        <!--                  <div>-->
+        <!--                    <label class="font-bold text-900 text-lg">عنوان</label>-->
+        <!--                    <div class="field">-->
+        <!--                      <input-->
+        <!--                        [(ngModel)]="field.title"-->
+        <!--                        [style]="{'width':'220px'}"-->
+        <!--                        pInputText-->
+        <!--                        type="text"-->
+        <!--                        id="title"-->
+        <!--                        name="title-{{i}}"-->
+        <!--                        placeholder="عنوان تماس مشتری را وارد نمایید."-->
+        <!--                        class="p-fieldset"/>-->
+        <!--                    </div>-->
+        <!--                  </div>-->
+
+        <!--                  <div>-->
+        <!--                    <label class="font-bold text-900 text-lg">شماره تماس</label>-->
+        <!--                    <div class="field">-->
+        <!--                      <input-->
+        <!--                        [style]="{'width':'220px'}"-->
+        <!--                        pInputText-->
+        <!--                        type="text"-->
+        <!--                        id="phoneNumber"-->
+        <!--                        name="phoneNumber-{{i}}"-->
+        <!--                        placeholder="شماره تماس مشتری را وارد نمایید."-->
+        <!--                        class="p-fieldset"-->
+        <!--                        [(ngModel)]="field.phoneNumber"-->
+        <!--                        [pKeyFilter]="'num'" />-->
+        <!--                    </div>-->
+        <!--                  </div>-->
+
+        <!--                  <div>-->
+        <!--                    <button-->
+        <!--                      type="button"-->
+        <!--                      pButton-->
+        <!--                      pRipple-->
+        <!--                      class="p-button-danger mt-3"-->
+        <!--                      (click)="removeField(i)"-->
+        <!--                      [disabled]="manager.oneObject.customerPhones.length === 1">-->
+        <!--                      حذف-->
+        <!--                    </button>-->
+        <!--                  </div>-->
+
+        <!--                </div>-->
+
+        <!--              </div>-->
+
+        <!--            </div>-->
+
+        <!--          </div>-->
+        <!--        </p-fieldset>-->
+
       </div>
 
       <div class="form-group">
@@ -446,6 +540,17 @@
         <div class="grid">
 
           <div class="col-12 mt-2">
+
+            <!--            <div class="grid">-->
+            <!--              <div class="col-12">-->
+            <!--                <div class="mb-3 mb-3">-->
+            <!--                  <button type="submit"-->
+            <!--                          pButton-->
+            <!--                          class="p-button-warning"-->
+            <!--                          (click)="addField()">اضافه کردن شماره جدید</button>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
 
             <div class="flex gap-3 align-items-center my-3" *ngFor="let field of customerJson.customerPhones; let i = index; let last = last">
               <button

@@ -98,4 +98,8 @@ export class ActivityNoteService extends BaseCrudService{
     return this.http.put(environment.apiUrl + 'CRM/Activity/ChangeUser', input);
   }
 
+  putChangeNotePinState(input:{noteId:number, pinned:boolean}){
+    return this.http.put(environment.apiUrl + 'CRM/Note/ChangeNotePinState', input)
+  }
+
 }
