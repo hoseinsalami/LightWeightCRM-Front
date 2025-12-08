@@ -4,7 +4,7 @@ import { LayoutService } from "./service/app.layout.service";
 import {Router, RouterLink} from '@angular/router';
 import {CommonModule, DatePipe, NgClass, NgIf} from '@angular/common';
 import {AuthenticationService} from "../_services/authentication.service";
-import {take} from "rxjs/operators";
+import {distinctUntilChanged, take} from "rxjs/operators";
 import {LoginOutputSscrmType, LoginOutputType} from "../_types/login-output.type";
 import {TooltipModule} from "primeng/tooltip";
 import {AvatarModule} from "primeng/avatar";
@@ -22,6 +22,7 @@ import {PathService} from "../path/path.service";
 import {ActivityNoteService} from "../_components/activity-note/activity-note.service";
 import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
+import {debounceTime} from "rxjs";
 
 @Component({
     selector: 'app-topbar',
@@ -288,6 +289,14 @@ export class AppTopBarComponent implements OnInit{
         }
       });
 
+      this.pathService.searchSubject
+        .pipe(
+          debounceTime(300),          // ۳۰۰ میلی‌ثانیه صبر کن بعد درخواست بزن
+          distinctUntilChanged()      // فقط وقتی متن تغییر کرد
+        )
+        .subscribe(query => {
+          this.searchAll(query);
+        });
 
       if (this.user.userType !== this.UserTypesEnum.SystemAdmin) {
         this.getMenuInfo()
