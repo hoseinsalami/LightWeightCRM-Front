@@ -235,20 +235,17 @@ export class NewActivityModalComponent implements OnInit{
       return this.messagesService.showError('عنوان فعالیت اجباری می باشد.')
     }
 
-    this.newActivity.userId = this.newActivity.userId ? this.newActivity.userId : null
+    // this.newActivity.userId = this.newActivity.userId ? this.newActivity.userId : this.expertId
 
-    // if (
-    //       (this.user.userType === this.UserTypesEnum.Admin || this.user.userType === this.UserTypesEnum.SuperAdmin)
-    //       &&
-    //       (this.newActivity.userId === undefined || this.newActivity.userId == null)
-    //   )
-    // {
-    //   // this.newActivity.userId = this.expertId
-    //   return this.messagesService.showError('مسئول انجام فعالیت اجباری می باشد.')
-    // }
-    // else {
-      // اگه کارشناس بود
-      // this.newActivity.userId == null
+
+    if (
+      (this.user.userType === this.UserTypesEnum.Admin || this.user.userType === this.UserTypesEnum.SuperAdmin)){
+      this.newActivity.userId = this.newActivity.userId ?? null
+    }
+    else {
+      // کارشناس
+      this.newActivity.userId = this.expertId ?? this.user.id
+    }
 
     if (this.selectedIndex !== null && this.activityList[this.selectedIndex]) {
       this.newActivity.iconClass = this.activityList[this.selectedIndex].iconClass ?? ''

@@ -21,7 +21,7 @@ import {
   ChangeStep,
   CreateProcessType,
   IActionParameter,
-  IAppAction, IEvent,
+  IAppAction, IEvent, ProcessTypeBase,
   SendSms
 } from "../_types/CreateProcess.type";
 import {TreeSelectModule} from "primeng/treeselect";
@@ -129,21 +129,13 @@ export interface ITreeNodeModal {
     MultiSelectModule,
     TabViewModule,
     FieldsetModule,
-
     ToolbarModule,
     SharedModule,
-    // ButtonModule,
     TableModule,
     RouterLink,
-    // DialogModule,
-    // FormsModule,
-    // InputTextModule,
-    // InputTextareaModule,
-    // FieldsetModule,
-    // CommonModule,
     OrderListModule,
-    // ReactiveFormsModule,
-    JalaliDatePipe
+    JalaliDatePipe,
+    DividerModule
   ],
   templateUrl: './process-automation.component.html',
   styleUrl: './process-automation.component.scss'
@@ -151,7 +143,7 @@ export interface ITreeNodeModal {
 export class ProcessAutomationComponent extends BaseListComponent<CreateProcessType> implements OnInit{
 
   @ViewChild('sendDateTimeInput') sendDateTimeInput!: ElementRef<HTMLInputElement>;
-
+  listProcess:ProcessTypeBase[] = []
   oneObject: CreateProcessType = new CreateProcessType({})
   listOfEvent: IEvent[];
   oneObjectSendSms: SendSms = {}
@@ -218,7 +210,7 @@ export class ProcessAutomationComponent extends BaseListComponent<CreateProcessT
   // نگه داشتن ایندکس بلاک و فیلدی که مودال تاریخ برایش باز شده
   selectedDateContext: { blockIndex: number; fieldIndex: number } | null = null;
 
-
+  paginationData = { from: 0, rows: 20, hasMore: true}
   constructor(
     private processService: ProcessAutmationService,
     private router: Router,
@@ -238,6 +230,7 @@ export class ProcessAutomationComponent extends BaseListComponent<CreateProcessT
     // this.addActionBlock()
     // this.onGetActionData();
     // this.getListOfEvent();
+    this.getListOfProccess()
 
   }
 
@@ -1046,6 +1039,29 @@ export class ProcessAutomationComponent extends BaseListComponent<CreateProcessT
 //     // block.actionParameters[index].valueFormat = event.gregorian;
 //   }
 //   //************************************************ start Date functions ***************************************
+
+  getListOfProccess(){
+    this.loading.show();
+    this.processService.getAutomatedProcess(this.paginationData).subscribe({
+      next: (out) =>{
+        this.loading.hide();
+
+        if (out.items.length < this.paginationData.rows) this.paginationData.hasMore = false;
+        this.listProcess = [...this.listProcess, ...out.items];
+        this.paginationData.from += out.items.length;
+      },
+      error: (err) =>{
+        this.loading.hide();
+      }
+    })
+  }
+
+
+  formatActions(actions: any[]): string {
+    if (!actions || actions.length === 0) return '';
+    if (actions.length === 1) return actions[0];   // فقط یکی بود همان را بده
+    return actions.join(' | ');                    // چندتا بود با | جدا کن
+  }
 
 
 }

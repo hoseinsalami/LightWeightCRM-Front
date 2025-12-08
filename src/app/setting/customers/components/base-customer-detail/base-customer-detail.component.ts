@@ -29,7 +29,6 @@ export class BaseCustomerDetailComponent{
   customerId:string;
   accustom : AccustomType[] = [];
 
-  showModalTicket:boolean = false
   showModalWorkItem:boolean = false
   showModalBranches:boolean = false
 
@@ -215,9 +214,7 @@ export class BaseCustomerDetailComponent{
 
 
   showModal(item:string){
-    if (item === 'ticket') {
-      this.showModalTicket = true;
-    } else if (item === 'workItem') {
+    if (item === 'workItem') {
       this.showModalWorkItem = true;
     } else if (item === 'branches') {
       this.showModalBranches = true;

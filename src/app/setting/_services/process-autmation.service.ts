@@ -3,8 +3,16 @@ import {BaseCrudService} from "../../_services/base-crud.service";
 import {FatapHttpClientService} from "../../_services/fatap-http-client.service";
 import {environment} from "../../../environments/environment";
 import {Observable} from "rxjs";
-import {CreateProcessType, IEvent, IEventProcess, IProcessActionType} from "../_types/CreateProcess.type";
+import {
+  CreateProcessType,
+  IEvent,
+  IEventProcess,
+  IProcessActionType,
+  ProcessTypeBase
+} from "../_types/CreateProcess.type";
 import {FieldFilterDescriptor} from "../_types/filter.type";
+import {IStructureData} from "../../work-item/_types/activity-workItem.type";
+import {ActivitiesType} from "../../activities/type/activities.type";
 
 
 @Injectable({
@@ -15,6 +23,10 @@ export class ProcessAutmationService extends BaseCrudService{
   override baseUrl = environment.apiUrl + 'Management/AutomatedProcess'
   constructor(private http: FatapHttpClientService) {
     super(http , '')
+  }
+
+  getAutomatedProcess(input:any):Observable<IStructureData<ProcessTypeBase>>{
+    return this.http.post<any>(this.baseUrl + '/list', input)
   }
 
   getDataJson(entity:string):Observable<any>{

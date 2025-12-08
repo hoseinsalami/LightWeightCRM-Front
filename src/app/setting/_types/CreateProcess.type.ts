@@ -3,6 +3,18 @@ import {EventTypesEnum} from "../../_enums/event-types-enum";
 import {ActionTypesEnum} from "../../_enums/action-types.enum";
 import {FilterGroup, IFilterParameters, ValuePathAccess} from "./filter.type";
 
+export class ProcessTypeBase extends GenericType<ProcessTypeBase> {
+  actions?:string[]
+  active?: boolean;
+  description?: string;
+  title?: string;
+  triggerEvent?: string;
+  constructor(model?:Partial<ProcessTypeBase>) {
+    super(model);
+  }
+}
+
+
 export class CreateProcessType extends GenericType<CreateProcessType> {
   title?: string;
   description?: string;
