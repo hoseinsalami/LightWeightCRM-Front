@@ -1,0 +1,41 @@
+::ng-deep{
+  .p-message-wrapper{
+    //display: block !important;
+  }
+  .p-message-icon{
+    display: flex;
+    margin-right: 0px !important;
+    margin-left: 0.5rem !important;
+  }
+  .p-message-close.p-link{
+    margin-left: 0px !important;
+    margin-right: auto !important;
+  }
+
+  .notification-wrapper {
+    position: relative;
+    margin-bottom: 10px;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+    background: transparent;
+    border: none;
+    //font-size: 1.5em;
+    cursor: pointer;
+    img{
+      width: 20px;
+      border: 2px solid black;
+      border-radius: 50%;
+    }
+  }
+
+}
+.gauge-chart{
+  position: relative;
+  height: 165px;
+  //width: 400px;
+  bottom: 40px;
+}

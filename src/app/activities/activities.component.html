@@ -1,0 +1,919 @@
+<div class="grid">
+  <div class="col-12">
+    <p-tabView (onChange)="onTabChanged($event)">
+
+      <p-tabPanel *ngFor="let t of tabs; let i = index">
+        <ng-template pTemplate="header">
+          <div class="flex gap-2">
+            <span class="text-gray-500" [class]="{'active-tab':activeTabIndex === i}">{{t.title}}</span>
+            <span
+              *ngIf="t.key == 'all'"
+              [class]="{'bg-primary':activeTabIndex === i}"
+              class="flex align-items-center justify-content-center border-round-3xl bg-gray-200 text-gray-500"
+              style="min-width:1.55rem">
+              {{listOfActivity?.counts?.doneDateActivitesCount + listOfActivity?.counts?.notArrivedActivitesCount + listOfActivity?.counts?.overDuedActivitesCount ?? 0}}
+            </span>
+            <span
+              *ngIf="t.key == 'done'"
+              [class]="{'bg-primary':activeTabIndex === i}"
+              class="flex align-items-center justify-content-center border-round-3xl bg-gray-200 text-gray-500"
+              style="min-width:1.55rem">
+              {{listOfActivity?.counts?.doneDateActivitesCount ?? 0}}
+            </span>
+
+            <span
+              *ngIf="t.key == 'notArrived'"
+              [class]="{'bg-primary':activeTabIndex === i}"
+              class="flex align-items-center justify-content-center border-round-3xl bg-gray-200 text-gray-500"
+              style="min-width:1.55rem">
+              {{listOfActivity?.counts?.notArrivedActivitesCount ?? 0}}
+            </span>
+
+            <span
+              *ngIf="t.key == 'overdue'"
+              [class]="{'bg-primary':activeTabIndex === i}"
+              class="flex align-items-center justify-content-center border-round-3xl bg-gray-200 text-gray-500"
+              style="min-width:1.55rem">
+              {{listOfActivity?.counts?.overDuedActivitesCount ?? 0}}
+            </span>
+
+
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="content">
+          <div class="grid">
+            <div class="col-12">
+
+              <div class="flex">
+                <ul class="list-none flex gap-2 p-1 p-card shadow-none m-0" style="background:none">
+                  <li class="cursor-pointer p-2 border-1 border-solid border-gray-200 border-round-2xl flex gap-1 align-items-center text-sm text-gray-600 bg-white"
+                      (click)="setActive(i)"
+                      [ngClass]="{'selected': activeItem.includes(i)}"
+                      *ngFor="let item of activityList;let i = index">
+                    <i [class]="item.iconClass"></i>
+                    {{item.title}}
+                  </li>
+                </ul>
+              </div>
+
+              <div class="flex">
+                <ul class="list-none flex gap-3 p-1 p-card shadow-none m-0" style="background:none">
+                  <li class="cursor-pointer p-2 border-1 border-solid border-gray-200 border-round-2xl flex justify-content-center align-items-center text-sm text-gray-600 bg-white min-w-4rem"
+                      (click)="allDate()"
+                      [ngClass]="{'selected-date': selectedDate === 'all'}">همه</li>
+                  <li class="cursor-pointer p-2 border-1 border-solid border-gray-200 border-round-2xl flex justify-content-center align-items-center text-sm text-gray-600 bg-white min-w-4rem"
+                      (click)="setToday()"
+                      [ngClass]="{'selected-date': selectedDate === 'today'}">امروز</li>
+                  <li class="cursor-pointer p-2 border-1 border-solid border-gray-200 border-round-2xl flex justify-content-center align-items-center text-sm text-gray-600 bg-white min-w-4rem"
+                      (click)="setTomorrow()"
+                      [ngClass]="{'selected-date': selectedDate === 'tomorrow'}">فردا</li>
+                  <li class="cursor-pointer p-2 border-1 border-solid border-gray-200 border-round-2xl flex justify-content-center align-items-center text-sm text-gray-600 bg-white min-w-4rem"
+                      (click)="setUntilEndOfWeek()"
+                      [ngClass]="{'selected-date': selectedDate === 'untilWeekend'}">تا اخر هفته</li>
+                  <li class="cursor-pointer p-2 border-1 border-solid border-gray-200 border-round-2xl flex justify-content-center align-items-center text-sm text-gray-600 bg-white min-w-4rem"
+                      (click)="setNextWeek()"
+                      [ngClass]="{'selected-date': selectedDate === 'nextWeek'}">هفته بعد</li>
+                  <li class="cursor-pointer p-2 border-1 border-solid border-gray-200 border-round-2xl flex justify-content-center align-items-center text-sm text-gray-600 bg-white min-w-4rem"
+                      (click)="pastDate()"
+                      [ngClass]="{'selected-date': selectedDate === 'pastDate'}">تاریخ گذشته</li>
+                  <li class="cursor-pointer p-2 border-1 border-solid border-gray-200 border-round-2xl flex justify-content-center align-items-center text-sm text-gray-600 bg-white min-w-4rem"
+                      (click)="op.toggle($event)" [ngClass]="{'selected-date': selectedDate === 'otherDate'}">تاریخ دیگر</li>
+                  <p-overlayPanel #op>
+                    <div class="flex gap-3 w-full">
+                      <div class="datePickerContainer relative">
+                        <label class="text-right font-bold text-md mb-2" for="startDate">
+                          از تاریخ</label>
+                        <ng-persian-datepicker
+                          (dateOnSelect)="selectStartDate($event)"
+                          (dateOnInit)="initialStartDatePicker($event)"
+                          [dateGregorianFormat]="'YYYY-MM-DD '"
+                          [dateFormat]="'YYYY-MM-DD '">
+                          <input [formControl]="startDateTimeControl" id="startDate" name="startDate" class="font-bold w-10rem" pInputText type="text" autocomplete="off"/>
+                        </ng-persian-datepicker>
+                      </div>
+                      <div class="datePickerContainer relative">
+                        <label class="text-right font-bold text-md mb-2" for="finishDate">
+                          تا تاریخ</label>
+                        <div class="flex gap-2">
+                          <ng-persian-datepicker
+                            class="w-full"
+                            (dateOnInit)="initialFinishDatePicker($event)"
+                            (dateOnSelect)="selectFinishDate($event)"
+                            [dateGregorianFormat]="'YYYY-MM-DD' "
+                            [dateFormat]="'YYYY-MM-DD '">
+                            <input [formControl]="finishDateTimeControl" id="finishDate" name="finishDate" class="font-bold w-10rem" pInputText type="text" autocomplete="off"/>
+                          </ng-persian-datepicker>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <button pButton pRipple (click)="otherDate()" label="تایید" class="p-button-success mt-2" pTooltip="تایید"></button>
+                    </div>
+                  </p-overlayPanel>
+                </ul>
+              </div>
+
+              <div class="flex">
+                <ul class="list-none flex gap-3 p-1 p-card shadow-none m-0" style="background:none">
+                  <li *ngFor="let expert of userList; let index=index"
+                      (click)="selectExpert(expert, index)"
+                      class="cursor-pointer p-2 border-1 border-solid border-gray-200 border-round-2xl flex justify-content-center align-items-center text-sm text-gray-600 bg-white min-w-4rem"
+                      [ngClass]="{'selected-expert': selectedExpert === index}">{{expert.fullName}}</li>
+                </ul>
+              </div>
+
+            </div>
+
+            <div class="col-12 md:col-3 lg:col-2 md:p-3" *ngFor="let object of many">
+              <div class="p-card h-full p-3 border-round-2xl border-1 border-gray-200 shadow-none hover:shadow-2 flex flex-column gap-3 ">
+                <!-- Header -->
+                <div class="flex justify-content-between align-items-start">
+                  <div class="flex flex-column gap-1">
+
+                    <h3 class="text-base font-bold text-900 cursor-pointer" [routerLink]="getLink(object)">{{object.title}}</h3>
+
+                    <div class="flex align-items-center gap-2 text-sm text-secondary">
+                      <i class="pi pi-calendar"></i>
+                      <span> {{object.dueDate | jalaliDate:'date'}}</span>
+                    </div>
+
+                    <div class="flex align-items-center gap-2 text-sm text-secondary">
+                      <i class="pi pi-clock"></i>
+                      <span> {{object.dueDate | jalaliDate:'hour'}}</span>
+                    </div>
+                  </div>
+                  <button (click)="op.toggle($event)" class="p-button p-button-text p-2 rounded-circle text-secondary hover:bg-black-10">
+                    <i class="pi pi-ellipsis-v"></i>
+                  </button>
+                </div>
+                <p-overlayPanel #op>
+                  <div class="flex flex-column gap-3 ">
+
+                    <div *ngIf="!object.doneDate" (click)="doneActivityModal(object.id)"
+                         class="flex justify-content-between align-items-center hover:bg-blue-300 border-round p-2 cursor-pointer hover:text-white">
+                      فعالیت انجام شد
+                      <i class="pi pi-file-edit text-blue-600"></i>
+                    </div>
+
+                    <div *ngIf="!object.doneDate" (click)="onClickEditActivity(object.id)"
+                         class="flex justify-content-between align-items-center hover:bg-green-300 border-round p-2 cursor-pointer hover:text-white">
+                      ویرایش فعالیت
+                      <i class="pi pi-eye text-green-600"></i>
+                    </div>
+
+                    <div *ngIf="object.doneDate" (click)="onClickHistoryActivity(object.id)"
+                         class="flex justify-content-between align-items-center hover:bg-cyan-300 border-round p-2 cursor-pointer hover:text-white">
+                      مشاهده جزییات فعالیت
+                      <i class="pi pi-bell text-cyan-600"></i>
+                    </div>
+
+                    <div *ngIf="object.doneDate" (click)="onResultActivity(object)"
+                         class="flex justify-content-between align-items-center hover:bg-purple-300 border-round p-2 cursor-pointer hover:text-white">
+                      نتیجه فعالیت انجام شده
+                      <i class="pi pi-megaphone text-purple-600"></i>
+                    </div>
+
+                    <div (click)="deleteItemActiviy(object.id)"
+                         class="flex justify-content-between align-items-center hover:bg-red-300 border-round p-2 cursor-pointer hover:text-white">
+                      حذف
+                      <i class="pi pi-trash text-red-600"></i>
+                    </div>
+
+                  </div>
+                </p-overlayPanel>
+
+                <!-- Body -->
+                <div class="flex flex-column gap-3">
+                  <div class="flex align-items-center gap-3 text-sm">
+                    <div class="flex-shrink-0 border-circle overflow-hidden" style="width:2rem; height:2rem;">
+                      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAleRvZ0DIERcDn1ywRPH_zjCCL_WUQvnPSgvynsQIWgjG4EYk12Qa2J9jIGWDGOqoj-IWvdusRTQshUs2hIPvpu2DKWpfYxJ3JW05PFaBSfgRNN-pLNnK136rLPUzrreVBjncBW1y4KnytDX1wHg3JVXPnSyE7KogbVnL1-rRmtZaYl2ZpGwY7Ktm36YAcv0LP-_MubF9WANsIb4ZlmLLFcBQHtumulyUJ02d0v4JC5qnHKC-c19D-eZcJuJjARfKG7SyCvnx-BDy3" alt="avatar" class="w-full h-full"/>
+                    </div>
+                    <div class="flex flex-column">
+                      <span class="font-medium text-900">{{object?.user?.fullName ?? 'نامشخص'}}</span>
+                      <span class="text-xs text-secondary">مسئول انجام</span>
+                    </div>
+                  </div>
+
+                  <div class="flex align-items-center gap-2 text-sm">
+                    <span *ngIf="object.isExpired && object.doneDate == null;" class="px-3 py-1 border-round text-xs font-medium bg-red-100 text-red-700">
+                      مهلت انجام فعالیت گذشته است
+                    </span>
+                    <span *ngIf="object.doneDate" class="px-3 py-1 border-round text-xs font-medium bg-green-100 text-green-700">
+                      انجام شده
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="text-center">
+            <button
+              *ngIf="paginationData.hasMore"
+              pButton
+              pRipple
+              label="نمایش بیشتر..."
+              [text]="true"
+              class="p-button-info p-button-sm p-mr-2"
+              (click)="getListOfActivites()"></button>
+          </div>
+
+        </ng-template>
+
+      </p-tabPanel>
+
+    </p-tabView>
+  </div>
+
+
+  <!--  <div class="col-12 flex justify-content-between align-items-center">-->
+
+  <!--    <ul class="list-none flex gap-3 p-1 p-card bg-white">-->
+  <!--      <li class="cursor-pointer p-3 mx-1 hover:bg-yellow-300 hover:text-gray-600 border-round flex align-items-center text-sm"-->
+  <!--          (click)="allDate()"-->
+  <!--          [ngClass]="{'selected-date': selectedDate === 'all'}">همه</li>-->
+  <!--      <li class="cursor-pointer p-3 mx-1 hover:bg-yellow-300 hover:text-gray-600 border-round flex align-items-center text-sm"-->
+  <!--      (click)="pastDate()"-->
+  <!--            [ngClass]="{'selected-date': selectedDate === 'pastDate'}">تاریخ گذشته</li>-->
+  <!--      <li class="cursor-pointer p-3 mx-1 hover:bg-yellow-300 hover:text-gray-600 border-round flex align-items-center text-sm"-->
+  <!--      (click)="setToday()"-->
+  <!--            [ngClass]="{'selected-date': selectedDate === 'today'}">امروز</li>-->
+  <!--      <li class="cursor-pointer p-3 mx-1 hover:bg-yellow-300 hover:text-gray-600 border-round flex align-items-center text-sm"-->
+  <!--      (click)="setTomorrow()"-->
+  <!--            [ngClass]="{'selected-date': selectedDate === 'tomorrow'}">فردا</li>-->
+  <!--      <li class="cursor-pointer p-3 mx-1 hover:bg-yellow-300 hover:text-gray-600 border-round flex align-items-center text-sm"-->
+  <!--      (click)="setUntilEndOfWeek()"-->
+  <!--            [ngClass]="{'selected-date': selectedDate === 'untilWeekend'}">تا اخر هفته</li>-->
+  <!--      <li class="cursor-pointer p-3 mx-1 hover:bg-yellow-300 hover:text-gray-600 border-round flex align-items-center text-sm"-->
+  <!--      (click)="setNextWeek()"-->
+  <!--            [ngClass]="{'selected-date': selectedDate === 'nextWeek'}">هفته بعد</li>-->
+  <!--      <li class="cursor-pointer p-3 mx-1 hover:bg-yellow-300 hover:text-gray-600 border-round flex align-items-center text-sm"-->
+  <!--      (click)="op.toggle($event)" [ngClass]="{'selected-date': selectedDate === 'otherDate'}">-->
+  <!--        تاریخ دیگر-->
+  <!--      </li>-->
+  <!--      <p-overlayPanel #op>-->
+  <!--        <div class="flex gap-3 w-full">-->
+  <!--          <div class="datePickerContainer relative">-->
+  <!--            <label class="text-right font-bold text-md mb-2" for="startDate">-->
+  <!--              از تاریخ</label>-->
+  <!--            <ng-persian-datepicker-->
+  <!--              (dateOnSelect)="selectStartDate($event)"-->
+  <!--              (dateOnInit)="initialStartDatePicker($event)"-->
+  <!--              [dateGregorianFormat]="'YYYY-MM-DD '"-->
+  <!--              [dateFormat]="'YYYY-MM-DD '">-->
+  <!--              <input [formControl]="startDateTimeControl" id="startDate" name="startDate" class="font-bold w-10rem" pInputText type="text" autocomplete="off"/>-->
+  <!--            </ng-persian-datepicker>-->
+  <!--          </div>-->
+  <!--          <div class="datePickerContainer relative">-->
+  <!--            <label class="text-right font-bold text-md mb-2" for="finishDate">-->
+  <!--              تا تاریخ</label>-->
+  <!--            <div class="flex gap-2">-->
+  <!--              <ng-persian-datepicker-->
+  <!--                class="w-full"-->
+  <!--                (dateOnInit)="initialFinishDatePicker($event)"-->
+  <!--                (dateOnSelect)="selectFinishDate($event)"-->
+  <!--                [dateGregorianFormat]="'YYYY-MM-DD' "-->
+  <!--                [dateFormat]="'YYYY-MM-DD '">-->
+  <!--                <input [formControl]="finishDateTimeControl" id="finishDate" name="finishDate" class="font-bold w-10rem" pInputText type="text" autocomplete="off"/>-->
+  <!--              </ng-persian-datepicker>-->
+  <!--            </div>-->
+  <!--          </div>-->
+  <!--        </div>-->
+  <!--        <div class="form-group">-->
+  <!--          <button pButton pRipple (click)="otherDate()" label="تایید" class="p-button-success mt-2" pTooltip="تایید"></button>-->
+  <!--        </div>-->
+  <!--      </p-overlayPanel>-->
+  <!--    </ul>-->
+
+
+  <!--    <div class="flex gap-3">-->
+  <!--      <button-->
+  <!--        pButton-->
+  <!--        pRipple-->
+  <!--        label="افزودن فعالیت"-->
+  <!--        class="p-button-success button p-mr-2"-->
+  <!--        (click)="addNewActivity('new')"-->
+  <!--      ></button>-->
+  <!--    </div>-->
+  <!--  </div>-->
+
+  <!--  <div class="col-12">-->
+  <!--    <div class="flex justify-content-between">-->
+
+  <!--      <ul class="list-none flex gap-3 p-1 p-card bg-white">-->
+  <!--        <li class="cursor-pointer p-3 mx-1 hover:bg-yellow-300 hover:text-gray-600 border-round flex gap-1 align-items-center text-sm"-->
+  <!--            (click)="setActive(i)"-->
+  <!--            [ngClass]="{'selected': activeItem.includes(i)}"-->
+  <!--            *ngFor="let item of activityList;let i = index">-->
+  <!--          <i [class]="item.iconClass"></i>-->
+  <!--          {{item.title}}-->
+  <!--        </li>-->
+  <!--      </ul>-->
+
+  <!--      <div class="flex align-items-center gap-3">-->
+  <!--        <div class="flex gap-3 p-1">-->
+  <!--          <ul class="list-none flex gap-3 p-1 p-card bg-white">-->
+  <!--            <li class="cursor-pointer p-3 mx-1 hover:bg-yellow-300 hover:text-gray-600 border-round flex gap-1 align-items-center text-sm"-->
+  <!--                (click)="setFilterType(null)"-->
+  <!--                [class]="{'selected-date': filterType === null}">-->
+  <!--              <p-badge styleClass="text-xs" [value]="listOfActivity?.counts?.doneDateActivitesCount + listOfActivity?.counts?.notArrivedActivitesCount + listOfActivity?.counts?.overDuedActivitesCount" severity="info" />-->
+  <!--              همه فعالیت ها-->
+  <!--            </li>-->
+  <!--            <li class="cursor-pointer p-3 mx-1 hover:bg-yellow-300 hover:text-gray-600 border-round flex gap-1 align-items-center text-sm"-->
+  <!--                [class]="{'selected-date': filterType === 0}"-->
+  <!--                (click)="setFilterType(0)">-->
+  <!--              <p-badge styleClass="text-xs" [value]="listOfActivity?.counts?.doneDateActivitesCount" severity="success" />-->
+  <!--              انجام شده-->
+  <!--            </li>-->
+  <!--            <li class="cursor-pointer p-3 mx-1 hover:bg-yellow-300 hover:text-gray-600 border-round flex gap-1 align-items-center text-sm"-->
+  <!--                [class]="{'selected-date': filterType === 1}"-->
+  <!--                (click)="setFilterType(1)">-->
+  <!--              <p-badge styleClass="text-xs" [value]="listOfActivity?.counts?.notArrivedActivitesCount" severity="danger" />-->
+  <!--              فرانرسیده-->
+  <!--            </li>-->
+
+  <!--            <li class="cursor-pointer p-3 mx-1 hover:bg-yellow-300 hover:text-gray-600 border-round flex gap-1 align-items-center text-sm"-->
+  <!--                [class]="{'selected-date': filterType === 2}"-->
+  <!--                (click)="setFilterType(2)">-->
+  <!--              <p-badge styleClass="text-xs" [value]="listOfActivity?.counts?.overDuedActivitesCount" severity="warning" />-->
+  <!--              معوق شده-->
+  <!--            </li>-->
+  <!--          </ul>-->
+
+  <!--        </div>-->
+
+  <!--        <div class="form-group" *ngIf="user.userType == 1 || user.userType == 2">-->
+  <!--&lt;!&ndash;          <label class="font-bold text-900 text-sm">مسئول</label>&ndash;&gt;-->
+  <!--          <div class="p-card">-->
+  <!--            <p-dropdown-->
+  <!--              [styleClass]="'clear-icon'"-->
+  <!--              [showClear]="true"-->
+  <!--              [options]="userList"-->
+  <!--              [(ngModel)]="selectedUser"-->
+  <!--              (onChange)="changeExpertUser()"-->
+  <!--              class="mt-2 border-white"-->
+  <!--              [style]="{'width':'220px'}"-->
+  <!--              optionLabel="fullName"-->
+  <!--              optionValue="id"-->
+  <!--              name="id"-->
+  <!--              placeholder="مسئول انجام">-->
+  <!--            </p-dropdown>-->
+  <!--          </div>-->
+  <!--        </div>-->
+
+  <!--      </div>-->
+
+  <!--    </div>-->
+  <!--  </div>-->
+
+</div>
+
+<!--<div class="grid  overflow-y-auto h-45rem" (scroll)="onScroll($event)">-->
+<!--  <div class="col-12">-->
+
+<!--    <p-table-->
+<!--      [rows]="10"-->
+<!--      [value]="many?many:[]"-->
+<!--      [paginator]="false"-->
+<!--      [rowHover]="true"-->
+<!--      dataKey="id"-->
+<!--      [showCurrentPageReport]="true"-->
+<!--      [rowsPerPageOptions]="[10,25,50,100,200,500]"-->
+<!--      currentPageReportTemplate=" از {first}  تا {last} از مجموع {totalRecords} نتیجه"-->
+<!--      responsiveLayout="scroll"-->
+<!--      styleClass="p-datatable-responsive-demo p-datatable-sm">-->
+
+<!--      <ng-template pTemplate="header">-->
+<!--        <tr>-->
+
+<!--          <th>ردیف</th>-->
+
+<!--&lt;!&ndash;          pSortableColumn="title"&ndash;&gt;-->
+<!--          <th>-->
+<!--&lt;!&ndash;            <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>&ndash;&gt;-->
+<!--            عنوان فعالیت-->
+<!--&lt;!&ndash;            <p-sortIcon field="title"></p-sortIcon>&ndash;&gt;-->
+<!--          </th>-->
+
+<!--          &lt;!&ndash;pSortableColumn="expert"&ndash;&gt;-->
+<!--          <th>-->
+<!--&lt;!&ndash;            <p-columnFilter matchMode="contains" type="text" field="expert" display="menu"></p-columnFilter>&ndash;&gt;-->
+<!--            مسئول انجام فعالیت-->
+<!--&lt;!&ndash;            <p-sortIcon field="expert"></p-sortIcon>&ndash;&gt;-->
+<!--          </th>-->
+
+<!--          <th> انتساب دهنده </th>-->
+
+<!--          &lt;!&ndash;pSortableColumn="date"&ndash;&gt;-->
+<!--          <th>-->
+<!--&lt;!&ndash;            <p-columnFilter matchMode="contains" type="text" field="date" display="menu"></p-columnFilter>&ndash;&gt;-->
+<!--            تاریخ فعالیت-->
+<!--&lt;!&ndash;            <p-sortIcon field="date"></p-sortIcon>&ndash;&gt;-->
+<!--          </th>-->
+
+
+<!--          &lt;!&ndash;pSortableColumn="user"&ndash;&gt;-->
+<!--          <th>-->
+<!--&lt;!&ndash;            <p-columnFilter matchMode="contains" type="text" field="user" display="menu"></p-columnFilter>&ndash;&gt;-->
+<!--            اشخاص و افراد مرتبط-->
+<!--&lt;!&ndash;            <p-sortIcon field="user"></p-sortIcon>&ndash;&gt;-->
+<!--          </th>-->
+
+
+<!--          &lt;!&ndash;pSortableColumn="workItem"&ndash;&gt;-->
+<!--          <th>-->
+<!--&lt;!&ndash;            <p-columnFilter matchMode="contains" type="text" field="workItem" display="menu"></p-columnFilter>&ndash;&gt;-->
+<!--            معامله مرتبط-->
+<!--&lt;!&ndash;            <p-sortIcon field="workItem"></p-sortIcon>&ndash;&gt;-->
+<!--          </th>-->
+
+<!--          <th></th>-->
+<!--        </tr>-->
+
+<!--      </ng-template>-->
+
+<!--      <ng-template pTemplate="body" let-object let-i="rowIndex">-->
+<!--        <tr>-->
+
+<!--          <td>{{i+1}}</td>-->
+
+<!--          <td class="w-30rem">-->
+<!--            <span class="p-column-title">فعالیت</span>-->
+<!--            <div class="flex align-items-center justify-content-start gap-2 w-30rem">-->
+<!--              <img src="assets/images/exclamation-25.png" alt=""-->
+<!--                   *ngIf="object.isExpired && object.doneDate == null;"-->
+<!--                   pTooltip="مهلت زمانی انجام این قلم کاری گذشته است"-->
+<!--                   tooltipPosition="top">-->
+
+<!--                <img src="assets/images/check-mark-25.png" alt=""-->
+<!--                     *ngIf="object.doneDate"-->
+<!--                     pTooltip="انجام شده"-->
+<!--                     tooltipPosition="top">-->
+<!--&lt;!&ndash;              <span [routerLink]="object?.workItem ? ['/workItem', object?.workItem.id] : object.customer?.length ? ['/setting/customers/edit', object?.customer?.id] : null"&ndash;&gt;-->
+<!--              <span [routerLink]="getLink(object)"-->
+<!--                    class="cursor-pointer">{{object.title}}</span>-->
+<!--            </div>-->
+
+<!--          </td>-->
+<!--          <td>-->
+<!--            <span class="p-column-title">مسئول انجام فعالیت</span>-->
+<!--            {{object?.user?.fullName ?? 'نامشخص'}}-->
+<!--          </td>-->
+<!--          <td>-->
+<!--            <span class="p-column-title">انتساب دهنده</span>-->
+<!--            <span *ngIf="object.assignedUser?.fullName else notFound">{{object.assignedUser?.fullName}}</span>-->
+<!--          </td>-->
+<!--          <td>-->
+<!--            <span class="p-column-title">تاریخ فعالیت</span>-->
+<!--            {{object.dueDate | jalaliDate}}-->
+<!--          </td>-->
+<!--          <td>-->
+<!--            <span class="p-column-title">اشخاص و افراد مرتبط</span>-->
+<!--            <span *ngIf="object.customer?.companyName else notFound">{{object.customer?.companyName}}</span>-->
+<!--          </td>-->
+
+<!--          <td>-->
+<!--            <span class="p-column-title">معامله مرتبط</span>-->
+<!--            {{object.workItem?.title}}-->
+<!--          </td>-->
+
+<!--          <td>-->
+<!--            <button  (click)="op.toggle($event)" pButton pRipple icon="pi pi-ellipsis-h" class="p-button-rounded p-button-info p-mr-2 m-1"></button>-->
+<!--            <p-overlayPanel #op>-->
+<!--              <div class="flex flex-column gap-3 ">-->
+
+<!--                <div *ngIf="!object.doneDate" (click)="doneActivityModal(object.id)"-->
+<!--                     class="flex justify-content-end align-items-center hover:bg-blue-400 border-round p-2 cursor-pointer hover:text-white">-->
+<!--                  فعالیت انجام شد-->
+<!--                  <i class="pi pi-file-edit text-blue-600 ml-2"></i>-->
+<!--                </div>-->
+
+<!--                <div *ngIf="!object.doneDate" (click)="onClickEditActivity(object.id)"-->
+<!--                     class="flex justify-content-end align-items-center hover:bg-green-400 border-round p-2 cursor-pointer hover:text-white">-->
+<!--                  ویرایش فعالیت-->
+<!--                  <i class="pi pi-eye text-green-600 text-lg ml-2"></i>-->
+<!--                </div>-->
+
+<!--                <div *ngIf="object.doneDate" (click)="onClickHistoryActivity(object.id)"-->
+<!--                     class="flex justify-content-end align-items-center hover:bg-cyan-400 border-round p-2 cursor-pointer hover:text-white">-->
+<!--                  مشاهده جزییات فعالیت-->
+<!--                  <i class="pi pi-bell text-cyan-600 text-lg ml-2"></i>-->
+<!--                </div>-->
+
+<!--                <div *ngIf="object.doneDate" (click)="onResultActivity(object)"-->
+<!--                     class="flex justify-content-end align-items-center hover:bg-purple-400 border-round p-2 cursor-pointer hover:text-white">-->
+<!--                  نتیجه فعالیت انجام شده-->
+<!--                  <i class="pi pi-megaphone text-purple-600 text-lg ml-2"></i>-->
+<!--                </div>-->
+
+<!--                <div (click)="deleteItemActiviy(object.id)"-->
+<!--                     class="flex justify-content-end align-items-center hover:bg-red-400 border-round p-2 cursor-pointer hover:text-white">-->
+<!--                  حذف-->
+<!--                  <i class="pi pi-trash text-red-600 text-lg ml-2"></i>-->
+<!--                </div>-->
+
+<!--              </div>-->
+<!--            </p-overlayPanel>-->
+<!--          </td>-->
+
+<!--        </tr>-->
+<!--      </ng-template>-->
+
+<!--    </p-table>-->
+
+
+
+<!--  </div>-->
+<!--</div>-->
+
+
+<!--************************** begin Done Activity modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showDoneActivityModal"
+  [appendTo]="'body'"
+  header="نتیجه انجام فعالیت"
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12">
+      <div class="form-group mt-3">
+        <label class="block mb-2">توضیحات</label>
+        <div class="field">
+              <textarea
+                [(ngModel)]="resultActivity"
+                [style]="{'width':'100%'}"
+                rows="5"
+                id="description"
+                name="description"
+                pInputTextarea
+                placeholder="توضیحات خودرا وارد نمایید."
+                class="p-fieldset">
+              </textarea>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success p-mr-2"
+      (click)="onDoneActivity()"></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="showDoneActivityModal= false"
+    ></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end Done Activity modal *************************************-->
+
+<!--************************** begin Result Activity modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showResultActivityModal"
+  [appendTo]="'body'"
+  header="نتیجه فعالیت"
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12">
+      <p>{{showResult}}</p>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success p-mr-2"
+      (click)="showResultActivityModal = false"></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end Result Activity modal *************************************-->
+
+
+
+
+
+<!--&lt;!&ndash;************************** begin new-activity modal *************************************&ndash;&gt;-->
+<!--<p-dialog-->
+<!--  [styleClass]="'modal-medium'"-->
+<!--  [style]="{direction:'rtl'}"-->
+<!--  [(visible)]="showModalNewActivity"-->
+<!--  [appendTo]="'body'"-->
+<!--  [header]="modalState  == 'new' ? 'افزودن فعالیت جدید' : 'ویرایش فعالیت'"-->
+<!--  [modal]="true"-->
+<!--  [closable]="false">-->
+
+<!--  <div class="grid">-->
+
+<!--    <div class="col-12">-->
+<!--      <ul class="flex flex-wrap list-none p-0">-->
+<!--        <li *ngFor="let item of activityList; let i = index"-->
+<!--            [class]="{ 'green-bg': selectedIndex === i }"-->
+<!--            (click)="onSetValue(item,i)"-->
+<!--            class="border-1 border-gray-500 py-2 px-3 m-2 cursor-pointer border-radius-3 flex align-items-center">-->
+<!--          <span [class]="item.iconClass" class="text-lg"></span>-->
+<!--        </li>-->
+
+<!--      </ul>-->
+
+<!--      <div class="form-group">-->
+<!--        <label class="font-bold text-900">عنوان </label>-->
+<!--        <div class="field">-->
+<!--          <input-->
+<!--            pInputText-->
+<!--            type="text"-->
+<!--            id="title"-->
+<!--            name="title"-->
+<!--            class="p-fieldset w-full"-->
+<!--            placeholder="عنوان فعالیت خود را وارد نمایید"-->
+<!--            [(ngModel)]="newActivity.title">-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--    <div class="col-12 flex flex-wrap gap-3">-->
+
+<!--      <div class="datePickerContainer relative">-->
+<!--        <label class="text-right font-bold text-md mb-2" for="startDate">تاریخ</label>-->
+<!--        <ng-persian-datepicker-->
+<!--          [style]="{'width':'220px'}"-->
+<!--          (dateOnSelect)="selectStartDateActivity($event)"-->
+<!--          (dateOnInit)="initialStartDatePickerActivity($event)"-->
+<!--          [dateGregorianFormat]="'YYYY-MM-DD '"-->
+<!--          [dateFormat]="'YYYY-MM-DD '">-->
+<!--          <input [formControl]="startDateActivityTimeControl" id="startDateActivity" name="startDateActivity" class="font-bold w-full" pInputText type="text" autocomplete="off"/>-->
+<!--        </ng-persian-datepicker>-->
+<!--      </div>-->
+
+<!--      <div class="datePickerContainer relative">-->
+<!--        <label class="text-right font-bold text-md mb-2" for="startDate">-->
+<!--          ساعت</label>-->
+<!--        <div>-->
+<!--          <p-dropdown-->
+<!--            [styleClass]="'clear-icon'"-->
+<!--            [showClear]="true"-->
+<!--            [options]="hourTime"-->
+<!--            [(ngModel)]="selectedHourTime"-->
+<!--            class="mt-2"-->
+<!--            [style]="{'width':'155px'}"-->
+<!--            placeholder="ساعت">-->
+<!--          </p-dropdown>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="datePickerContainer relative">-->
+<!--        <label class="text-right font-bold text-md mb-2" for="startDate">-->
+<!--          دقیقه</label>-->
+<!--        <div>-->
+<!--          <p-dropdown-->
+<!--            [styleClass]="'clear-icon'"-->
+<!--            [showClear]="true"-->
+<!--            [options]="minuteTime"-->
+<!--            [(ngModel)]="selectedMinuteTime"-->
+<!--            class="mt-2"-->
+<!--            [style]="{'width':'155px'}"-->
+<!--            placeholder="دقیقه">-->
+<!--          </p-dropdown>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="form-group">-->
+<!--        <label class="font-bold text-900">مدت انجام فعالیت </label>-->
+<!--        <div class="field">-->
+<!--          <input-->
+<!--            pInputText-->
+<!--            type="text"-->
+<!--            id="defaultDuration"-->
+<!--            name="defaultDuration"-->
+<!--            class="p-fieldset"-->
+<!--            placeholder="مدت انجام فعالیت را وارد نمایید"-->
+<!--            [style]="{'width':'155px'}"-->
+<!--            [(ngModel)]="newActivity.duration"-->
+<!--            [pKeyFilter]="'num'">-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="form-group">-->
+<!--        <label class="text-right font-bold text-md mb-2">-->
+<!--          <i class="pi pi-bell"></i>-->
+<!--          افزودن یادآور برای فعالیت-->
+<!--          <span *ngIf="!shouldShowReminderFields()"-->
+<!--                class="text-red-500 font-bold">-->
+<!--            <i class="pi pi-question-circle" pTooltip="زمانی که انتخاب میکنید می بایست جلو تر از زمان فعلی باشد" tooltipPosition="top" placeholder="Top"></i>-->
+<!--          </span>-->
+<!--        </label>-->
+<!--        <ng-container *ngIf="shouldShowReminderFields()">-->
+<!--          <div *ngFor="let item of reminders; let i = index;let last = last" class="field flex align-items-baseline gap-4">-->
+<!--            <button type="button" [disabled]="isReminderDisabled"-->
+<!--                    [style]="{'cursor': isReminderDisabled ? 'no-drop' : ''}"-->
+<!--                    (click)="deleteReminder(i)"-->
+<!--                    class="p-button p-button-danger p-button-sm border-round-3xl p-2 pi pi-times"></button>-->
+<!--            <input-->
+<!--              pInputText-->
+<!--              type="text"-->
+<!--              id="reminder"-->
+<!--              name="reminder"-->
+<!--              class="p-fieldset"-->
+<!--              placeholder="مدت زمان"-->
+<!--              [style]="{'width':'150px'}"-->
+<!--              [(ngModel)]="item.value"-->
+<!--              [pKeyFilter]="'int'"-->
+<!--              [disabled]="isReminderDisabled">-->
+<!--            <p-dropdown-->
+<!--              [styleClass]="'clear-icon'"-->
+<!--              [showClear]="true"-->
+<!--              [options]="TimeUnits"-->
+<!--              [(ngModel)]="item.periodTimeUnit"-->
+<!--              optionLabel="title"-->
+<!--              optionValue="value"-->
+<!--              class="mt-2"-->
+<!--              [style]="{'width':'150px'}"-->
+<!--              [required]="true"-->
+<!--              placeholder="زمان"-->
+<!--              [disabled]="isReminderDisabled">-->
+<!--            </p-dropdown>-->
+<!--            <button type="button" *ngIf="last && !isReminderDisabled" (click)="addReminder()"-->
+<!--                    class="p-button p-button-success border-round-3xl p-2 p-button-sm pi pi-plus cursor-pointer"></button>-->
+<!--          </div>-->
+<!--        </ng-container>-->
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--    <div class="col-12">-->
+<!--      <app-upload-file #uploadFileComponent [multi]="true" (photos)="changeMainPhoto($event)" [addLabel]="'پیوست'"></app-upload-file>-->
+<!--    </div>-->
+
+<!--    <div class="col-12" >-->
+
+<!--      <div class="form-group" *ngIf="user.userType === UserTypesEnum.Admin || user.userType === UserTypesEnum.SuperAdmin">-->
+<!--        <label class="font-bold text-900">مسئول اتجام این فعالیت </label>-->
+<!--        <div class="field">-->
+<!--          <p-dropdown-->
+<!--            [styleClass]="'clear-icon'"-->
+<!--            [showClear]="true"-->
+<!--            [options]="userList"-->
+<!--            [(ngModel)]="newActivity.userId"-->
+<!--            optionLabel="fullName"-->
+<!--            optionValue="id"-->
+<!--            class="mt-2"-->
+<!--            [style]="{'width':'100%'}"-->
+<!--            [required]="true"-->
+<!--            placeholder="مسئول انجام فعالیت را انتخاب نمایید">-->
+<!--          </p-dropdown>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="form-group font-bold text-orange-500 mb-3">این فعالیت مرتبط است با:</div>-->
+
+<!--      <div class="field">-->
+<!--        <p-autoComplete-->
+<!--          [inputStyle]="{'width':'100%'}"-->
+<!--          [style]="{'width':'100%'}"-->
+<!--          [suggestions]="filteredCustomer"-->
+<!--          (completeMethod)="filterCustomer($event)"-->
+<!--          (onSelect)="selectedSearchCustomer($event)"-->
+<!--          [(ngModel)]="companyName"-->
+<!--          [showClear]="true"-->
+<!--          [autofocus]="true"-->
+<!--          [showEmptyMessage]="true"-->
+<!--          emptyMessage="موردی یافت نشد"-->
+<!--          appendTo="body"-->
+<!--          optionLabel="fullName"-->
+<!--          styleClass="w-full mx-auto"-->
+<!--          scrollHeight="400px"-->
+<!--          class="p-autocomplete w-full mx-auto"-->
+<!--          placeholder="نام خانوادگی | شماره تلفن | شرکت">-->
+
+<!--          <ng-template let-filteredCustomers pTemplate="item">-->
+<!--            <div class="grid align-items-end justify-content-between" style="direction: rtl">-->
+
+
+<!--              <div class="col-12 overflow-hidden flex gap-2">-->
+<!--                <p class=" my-0 ">{{filteredCustomers.name}}</p>-->
+<!--                <p-->
+<!--                  class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">-->
+<!--                  {{filteredCustomers.family}} ({{filteredCustomers.companyName ? filteredCustomers.companyName :''}})-->
+<!--                </p>-->
+<!--              </div>-->
+
+
+<!--            </div>-->
+<!--          </ng-template>-->
+
+<!--        </p-autoComplete>-->
+<!--      </div>-->
+
+<!--      <div class="field">-->
+<!--        <p-autoComplete-->
+<!--          [inputStyle]="{'width':'100%'}"-->
+<!--          [style]="{'width':'100%'}"-->
+<!--          [(ngModel)]="workItemTitle"-->
+<!--          [suggestions]="filteredWorkItem"-->
+<!--          (completeMethod)="filterWorkItems($event)"-->
+<!--          (onSelect)="selectedSearchWorkItems($event)"-->
+<!--          [showClear]="true"-->
+<!--          [autofocus]="true"-->
+<!--          [showEmptyMessage]="true"-->
+<!--          emptyMessage="موردی یافت نشد"-->
+<!--          appendTo="body"-->
+<!--          optionLabel="title"-->
+<!--          styleClass="w-full mx-auto"-->
+<!--          scrollHeight="400px"-->
+<!--          class="p-autocomplete w-full mx-auto"-->
+<!--          placeholder="جستجو قلم کاری">-->
+
+<!--          <ng-template let-filteredWorkItems pTemplate="item">-->
+
+<!--            <div class="grid align-items-end justify-content-between" style="direction: rtl">-->
+<!--              <div class="col-12 overflow-hidden flex gap-2">-->
+<!--              <p class=" my-0 ">-->
+<!--                <span class="font-light">قلم کاری:</span>-->
+<!--                {{filteredWorkItems.title}}</p>-->
+<!--              <p-->
+<!--                class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">-->
+<!--                - -->
+<!--                <span class="font-light">مشتری:</span>-->
+<!--                {{filteredWorkItems.customer.family}} ({{filteredWorkItems.customer.companyName ? filteredWorkItems.customer.companyName :''}})-->
+<!--              </p>-->
+<!--            </div>-->
+<!--            </div>-->
+
+
+<!--&lt;!&ndash;            <div class="grid align-items-end justify-content-between" style="direction: rtl">&ndash;&gt;-->
+<!--&lt;!&ndash;              <div class="col-12 overflow-hidden flex gap-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                <p class=" my-0 ">{{filteredWorkItems.title}}</p>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+
+<!--          </ng-template>-->
+
+<!--        </p-autoComplete>-->
+<!--      </div>-->
+
+<!--      <div class="form-group">-->
+<!--        <label class="font-bold text-900">توضیحات </label>-->
+<!--        <div class="field">-->
+<!--                <textarea-->
+<!--                  rows="5"-->
+<!--                  [style]="{'width':'100%'}"-->
+<!--                  pInputTextarea-->
+<!--                  placeholder="توضیحات مورد نیاز برای این فعالیت را وارد نمایید"-->
+<!--                  [(ngModel)]="newActivity.description">-->
+<!--              </textarea>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--  </div>-->
+
+
+<!--  <ng-template pTemplate="footer">-->
+
+<!--    <button-->
+<!--      pButton-->
+<!--      pRipple-->
+<!--      label="تایید"-->
+<!--      class="p-button-success button p-mr-2"-->
+<!--      (click)="onRegisterActivity(modalState)"-->
+<!--    ></button>-->
+
+<!--    <button-->
+<!--      pButton-->
+<!--      pRipple-->
+<!--      label="انصراف"-->
+<!--      class="p-button-danger p-mr-2"-->
+<!--      (click)="closePanel()"-->
+<!--    ></button>-->
+
+<!--  </ng-template>-->
+
+<!--</p-dialog>-->
+<!--&lt;!&ndash;************************** end new-activity modal *************************************&ndash;&gt;-->
+<app-new-activity-modal #newActivityModal
+                        [isDisabled]="false"
+                        [userList]="userList"
+                        [expertId]="user.id"
+                        (activityRegistered)="callListOfActivity($event)"></app-new-activity-modal>
+<ng-template #notFound>
+  <span  class="text-gray-400">نامشخص</span>
+</ng-template>

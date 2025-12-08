@@ -1,0 +1,289 @@
+<div class="grid">
+  <div class="col-12">
+
+    <p-tabView (onChange)="changeTabTicket($event)">
+      <p-tabPanel *ngFor="let t of tabs; let i = index">
+        <ng-template pTemplate="header">
+          <div class="flex gap-2">
+            <span class="text-gray-500" [class]="{'active-tab':activeTabIndex === i}">{{t.title}}</span>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="content">
+          <div class="grid">
+            <div class="col-12">
+              <div class="flex justify-content-between">
+
+                <form class="search">
+                  <div class="search__wrapper">
+                    <input (keydown)="onInputChange($event);" type="text" name="" placeholder="جستجو براساس نام مشتری | نام شرکت" class="search__field">
+                    <button class="shadow-2 pi pi-search search__icon"></button>
+                  </div>
+                </form>
+
+                <!--            <div class="">-->
+                <!--              <div class="flex gap-3 p-1 p-card bg-white">-->
+                <!--                <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200 white-space-nowrap" (click)="setActive(0)" [class]="{ 'activePanel' : activeItem == 0 }">جدید</button>-->
+                <!--                <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200 white-space-nowrap" (click)="setActive(1)" [class]="{'activePanel' : activeItem === 1}" >جاری</button>-->
+                <!--                <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200 white-space-nowrap" (click)="setActive(2)" [class]="{'activePanel' : activeItem === 2}" >بسته شده</button>-->
+                <!--              </div>-->
+                <!--            </div>-->
+
+              </div>
+            </div>
+
+            <div class="col-12 md:col-3 lg:col-2 md:p-3"
+                 *ngFor="let item of ticket; let i=index" [attr.data-index]="i"
+                 #ticketItem>
+              <div
+                class="p-card h-full p-3 border-round-2xl border-1 border-gray-200 shadow-none hover:shadow-2 flex flex-column gap-3 cursor-pointer"
+                [routerLink]="['/tickets', ticketTypeId, item.id]">
+                <!-- Header -->
+                <div class="flex justify-content-between align-items-start">
+                  <div class="flex flex-column gap-1">
+
+                    <h3 class="text-base font-bold text-900 cursor-pointer">{{item.customer?.family}}</h3>
+
+                    <div class="flex align-items-center gap-2 text-sm text-secondary">
+                      <i class="pi pi-user"></i>
+                      <span tooltipPosition="left" pTooltip="کارشناس">{{ item.currentUser?.fullName ?? 'نامشخص'}}</span>
+                    </div>
+
+                    <!--                    <div class="flex align-items-center gap-2 text-sm text-secondary">-->
+                    <!--                      <i class="pi pi-user"></i>-->
+                    <!--                      <span tooltipPosition="left" pTooltip="مشتری">{{(item.customer.name + '' +item.customer?.family) ?? 'نامشخص'}}</span>-->
+                    <!--                    </div>-->
+
+                    <div class="flex align-items-center gap-2 text-sm text-secondary">
+                      <i class="pi pi-building"></i>
+                      <span>{{item.customer?.companyName ?? 'نامشخص'}}</span>
+                    </div>
+
+                    <div class="flex align-items-center gap-2 text-sm text-secondary">
+                      <i class="pi pi-calendar"></i>
+                      <span>{{calculateDaysDifference(item.createAt)}}</span>
+                    </div>
+
+                    <div class="flex align-items-center gap-2 text-sm text-secondary">
+                      <i class="pi pi-globe"></i>
+                      <span tooltipPosition="left" pTooltip="شماره بارنامه" class="bg-green-100 text-green-700 p-1 border-round">{{item.bill?.trackingNumber ?? 'ندارد'}}</span>
+                    </div>
+
+                  </div>
+                  <span [class]="item.readDateTime && item.closeDateTime ? 'bg-green-100 text-green-600' : item.readDateTime ? 'bg-orange-100 text-orange-500' : 'bg-purple-100 text-purple-500'"
+                        class="px-3 py-1 border-round text-xs font-medium">
+                    {{ item.readDateTime && item.closeDateTime ? 'بسته شده' : item.readDateTime ? 'جاری' : 'جدید'}}
+                  </span>
+                </div>
+                <div class="flex flex-column mt-3">
+                  <div class="relative">
+                    <i
+                      *ngIf="isDeadlinePassed(item.deadline)"
+                      class="absolute left-0 bottom-0 text-lg pi pi-info-circle text-red-500"
+                      pTooltip="زمان بررسی تیکت گذشته است" tooltipPosition="top"></i>
+
+                    <div *ngIf="user.userType !== UserTypesEnum.Expert && !item.closeDateTime" (click)="modalAssignmentPolicy(item.id)"
+                         class="absolute right-0 bottom-0 flex align-items-center gap-2 cursor-pointer hover:bg-blue-100 hover:text-blue-600 border-round px-2">
+                      <i class="pi pi-user-edit text-blue-600 ml-2"></i>
+                      ویرایش کارشناس
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+
+              <!--              <div class="card p-0 cursor-pointer" [class]="item.readDateTime && item.closeDateTime ? 'hover:bg-green-200' : item.readDateTime ? 'hover:bg-orange-200' : 'hover:bg-red-200'">-->
+              <!--                <div class=" border-round-top h-5rem flex align-items-center justify-content-center text-white text-xl relative"-->
+              <!--                     [class]="item.readDateTime && item.closeDateTime ? 'bg-green-500' : item.readDateTime ? 'bg-orange-500' : 'bg-red-500'">-->
+
+              <!--                  <img src="assets/images/warning-48.png"-->
+              <!--                       *ngIf="isDeadlinePassed(item.deadline)"-->
+              <!--                       class="absolute right-0 mr-3"-->
+              <!--                       pTooltip="زمان بررسی تیکت گذشته است"-->
+              <!--                       tooltipPosition="top">-->
+
+              <!--                  <span class="mx-auto">{{item.customer?.family}}</span>-->
+              <!--                </div>-->
+
+              <!--                <div class="p-3">-->
+              <!--                  <p class="mb-1 flex justify-content-between">-->
+              <!--                    <span class="font-medium">کارشناس:</span>-->
+              <!--                    {{ item.currentUser?.fullName ?? 'نامشخص'}}-->
+              <!--                  </p>-->
+              <!--                  <p class="mb-1 flex justify-content-between">-->
+              <!--                    <span class="font-medium">نام مشتری:</span>-->
+              <!--                    {{(item.customer.name + '' +item.customer?.family) ?? 'نامشخص'}}-->
+              <!--                  </p>-->
+              <!--                  <p class="mb-1 flex justify-content-between">-->
+              <!--                    <span class="font-medium">نام شرکت:</span>-->
+              <!--                    {{item.customer?.companyName ?? 'نامشخص'}}-->
+              <!--                  </p>-->
+              <!--                  &lt;!&ndash;                  <p class="mb-1 flex justify-content-between">&ndash;&gt;-->
+              <!--                  &lt;!&ndash;                    <span class="font-medium">شماره تماس:</span>&ndash;&gt;-->
+              <!--                  &lt;!&ndash;                    {{item.customerPhone ?? 'ندارد'}}&ndash;&gt;-->
+              <!--                  &lt;!&ndash;                  </p>&ndash;&gt;-->
+              <!--                  <p class="mb-1 flex justify-content-between">-->
+              <!--                    <span class="font-medium">شماره بارنامه:</span>-->
+              <!--                    {{item.bill?.trackingNumber ?? 'ندارد'}}-->
+              <!--                  </p>-->
+              <!--                  <p class="mb-1 flex justify-content-between">-->
+              <!--                    <span class="font-medium">تاریخ ثبت بارنامه:</span>-->
+              <!--                    {{calculateDaysDifference(item.createAt)}}-->
+              <!--                  </p>-->
+              <!--                  <div class="text-left">-->
+              <!--                    <button *ngIf="user.userType !== UserTypesEnum.Expert && !item.closeDateTime"-->
+              <!--                            pButton pRipple icon="pi pi-pencil"-->
+              <!--                            class="p-button-rounded p-button-help p-mr-2 m-1"-->
+              <!--                            (click)="modalAssignmentPolicy(item.id)"-->
+              <!--                            pTooltip="ویرایش کارشناس تیکت"-->
+              <!--                            tooltipPosition="right"></button>-->
+
+              <!--                    <button pButton pRipple icon="pi pi-tag"-->
+              <!--                            class="p-button-rounded p-button-warning p-mr-2 m-1"-->
+              <!--                            (click)="ticketDetails(item.id)"-->
+              <!--                            pTooltip="جزییات تیکت"-->
+              <!--                            tooltipPosition="right"></button>-->
+              <!--                  </div>-->
+
+              <!--                </div>-->
+              <!--              </div>-->
+            </div>
+
+          </div>
+          <div class="text-center">
+            <button
+              *ngIf="paginationData.hasMore"
+              pButton
+              pRipple
+              label="نمایش بیشتر..."
+              [text]="true"
+              class="p-button-info p-button-sm p-mr-2"
+              (click)="loadMoreTickets()"></button>
+          </div>
+
+
+          <!--          <div class="ticket-scroll-container " (scroll)="onScroll($event)">-->
+          <!--            <div class="grid">-->
+          <!--              <div class="col-12 md:col-3" *ngFor="let item of ticket; let i=index" [attr.data-index]="i" #ticketItem>-->
+          <!--                <div class="card p-0 cursor-pointer" [class]="item.readDateTime && item.closeDateTime ? 'hover:bg-green-200' : item.readDateTime ? 'hover:bg-orange-200' : 'hover:bg-red-200'">-->
+          <!--                  <div class=" border-round-top h-5rem flex align-items-center justify-content-center text-white text-xl relative"-->
+          <!--                       [class]="item.readDateTime && item.closeDateTime ? 'bg-green-500' : item.readDateTime ? 'bg-orange-500' : 'bg-red-500'">-->
+
+          <!--                    <img src="assets/images/warning-48.png"-->
+          <!--                         *ngIf="isDeadlinePassed(item.deadline)"-->
+          <!--                         class="absolute right-0 mr-3"-->
+          <!--                         pTooltip="زمان بررسی تیکت گذشته است"-->
+          <!--                         tooltipPosition="top">-->
+
+          <!--                    <span class="mx-auto">{{item.customer?.family}}</span>-->
+          <!--                  </div>-->
+
+          <!--                  <div class="p-3">-->
+          <!--                    <p class="mb-1 flex justify-content-between">-->
+          <!--                      <span class="font-medium">کارشناس:</span>-->
+          <!--                      {{ item.currentUser?.fullName ?? 'نامشخص'}}-->
+          <!--                    </p>-->
+          <!--                    <p class="mb-1 flex justify-content-between">-->
+          <!--                      <span class="font-medium">نام مشتری:</span>-->
+          <!--                      {{(item.customer.name + '' +item.customer?.family) ?? 'نامشخص'}}-->
+          <!--                    </p>-->
+          <!--                    <p class="mb-1 flex justify-content-between">-->
+          <!--                      <span class="font-medium">نام شرکت:</span>-->
+          <!--                      {{item.customer?.companyName ?? 'نامشخص'}}-->
+          <!--                    </p>-->
+          <!--                    &lt;!&ndash;                  <p class="mb-1 flex justify-content-between">&ndash;&gt;-->
+          <!--                    &lt;!&ndash;                    <span class="font-medium">شماره تماس:</span>&ndash;&gt;-->
+          <!--                    &lt;!&ndash;                    {{item.customerPhone ?? 'ندارد'}}&ndash;&gt;-->
+          <!--                    &lt;!&ndash;                  </p>&ndash;&gt;-->
+          <!--                    <p class="mb-1 flex justify-content-between">-->
+          <!--                      <span class="font-medium">شماره بارنامه:</span>-->
+          <!--                      {{item.bill?.trackingNumber ?? 'ندارد'}}-->
+          <!--                    </p>-->
+          <!--                    <p class="mb-1 flex justify-content-between">-->
+          <!--                      <span class="font-medium">تاریخ ثبت بارنامه:</span>-->
+          <!--                      {{calculateDaysDifference(item.createAt)}}-->
+          <!--                    </p>-->
+          <!--                    <div class="text-left">-->
+          <!--                      <button *ngIf="user.userType !== UserTypesEnum.Expert && !item.closeDateTime"-->
+          <!--                              pButton pRipple icon="pi pi-pencil"-->
+          <!--                              class="p-button-rounded p-button-help p-mr-2 m-1"-->
+          <!--                              (click)="modalAssignmentPolicy(item.id)"-->
+          <!--                              pTooltip="ویرایش کارشناس تیکت"-->
+          <!--                              tooltipPosition="right"></button>-->
+
+          <!--                      <button pButton pRipple icon="pi pi-tag"-->
+          <!--                              class="p-button-rounded p-button-warning p-mr-2 m-1"-->
+          <!--                              (click)="ticketDetails(item.id)"-->
+          <!--                              pTooltip="جزییات تیکت"-->
+          <!--                              tooltipPosition="right"></button>-->
+          <!--                    </div>-->
+
+          <!--                  </div>-->
+          <!--                </div>-->
+          <!--              </div>-->
+          <!--            </div>-->
+
+          <!--          </div>-->
+        </ng-template>
+
+      </p-tabPanel>
+
+    </p-tabView>
+
+
+  </div>
+</div>
+
+<!--************************** begin Done Activity modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showModal"
+  [appendTo]="'body'"
+  header="ویرایش کارشناس تیکت"
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12">
+      <div class="flex flex-column flex-1">
+        <label>کارشناس</label>
+        <div class="">
+          <p-dropdown
+            [styleClass]="'clear-icon'"
+            [showClear]="true"
+            [options]="userList"
+            [(ngModel)]="selectedUser"
+            class="mt-2 border-white"
+            [style]="{'width':'100%'}"
+            [appendTo]="'body'"
+            optionLabel="fullName"
+            optionValue="id"
+            placeholder="مسئول انجام">
+          </p-dropdown>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success p-mr-2"
+      (click)="onSave()"></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="showModal= false"
+    ></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end Done Activity modal *************************************-->
+

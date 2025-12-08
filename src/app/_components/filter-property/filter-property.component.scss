@@ -1,0 +1,14 @@
+::ng-deep  {
+  .p-dialog-mask{
+    overflow-y: auto !important;
+  }
+  .p-dropdown-item{
+    white-space: break-spaces;
+    span{
+      white-space: break-spaces;
+    }
+  }
+}
+
+
+

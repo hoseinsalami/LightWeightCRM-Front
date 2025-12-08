@@ -1,0 +1,698 @@
+<div class="grid">
+<!--  <div class="col-2">-->
+
+<!--    <p-panel [toggleable]="true">-->
+
+<!--        <div class="grid">-->
+
+<!--          <div class="col-12">-->
+<!--            <div class="form-group">-->
+<!--              <p-divider styleClass="px-5 py-2" class="w-full divider m-0" align="center" type="dashed">-->
+<!--                <b class="px-2 text-lg ">شرط های گزارش</b>-->
+<!--              </p-divider>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; users &ndash;&gt;-->
+<!--          <div class="col-12 md:col-12">-->
+<!--            <div class="form-group">-->
+<!--              <label class="text-right font-bold text-md mb-2">کارشناس</label>-->
+<!--              <div class="field">-->
+<!--                <p-multiSelect [style]="{'width':'100%'}"-->
+<!--                               name="userType"-->
+<!--                               class="w-full"-->
+<!--                               placeholder ="کارشناس خود را انتخاب نمایید"-->
+<!--                               scrollHeight="250px"-->
+<!--                               display="chip"-->
+<!--                               optionLabel="fullName"-->
+<!--                               optionValue="id"-->
+<!--                               [(ngModel)]="oneObject.filters.employeeIds"-->
+<!--                               [options]="expertUsers">-->
+<!--                </p-multiSelect>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; customers &ndash;&gt;-->
+<!--          <div class="col-12 md:col-12">-->
+<!--            <div class="form-group field">-->
+<!--              <label class="text-right font-bold text-md m-0" for="">جستجو مشتری</label>-->
+<!--              <div class="field">-->
+
+<!--                <p-autoComplete-->
+<!--                  inputStyleClass="w-full"-->
+<!--                  appendTo="body"-->
+<!--                  [multiple]="true"-->
+<!--                  name="selectedCustomers"-->
+<!--                  [(ngModel)]="selectedCustomers"-->
+<!--                  [showEmptyMessage]="true"-->
+<!--                  [suggestions]="filteredCustomer"-->
+<!--                  (completeMethod)="searchCustomerReport($event)"-->
+<!--                  #customerSenderIds-->
+<!--                  [minLength]="1"-->
+<!--                  [style]="{width: '100%', display:'block'}"-->
+<!--                  [autoHighlight]="true"-->
+<!--                  [inputStyle]="{width: '100%'}"-->
+<!--                  field="id"-->
+<!--                  placeholder="نام خانوادگی / نام شرکت"-->
+<!--                  id="customerSenderIds"-->
+<!--                  inputId="customerSenderIds"-->
+<!--                  class="w-full text-center"-->
+<!--                  styleClass="w-full"-->
+<!--                  emptyMessage="موردی یافت نشد"-->
+<!--                  (onFocus)="customerSenderIds.show()">-->
+
+<!--                  <ng-template let-customer pTemplate="item">-->
+<!--                    <div (mousedown)="$event.preventDefault(); $event.stopPropagation()"-->
+<!--                         class="w-full flex flex-wrap flex-row-reverse justify-content-between items-center px-2 py-1"-->
+<!--                         style="cursor: default;">-->
+<!--                      <p-checkbox-->
+<!--                        [binary]="true"-->
+<!--                        [ngModel]="isSelected(customer)"-->
+<!--                        [ngModelOptions]="{standalone: true}"-->
+<!--                        (onChange)="toggleCustomer(customer)"-->
+<!--                        class="z-5">-->
+<!--                      </p-checkbox>-->
+<!--                      <div>{{customer.name}}</div>-->
+<!--                      <div>{{customer.family}}</div>-->
+<!--                      <div>{{customer.companyName}}</div>-->
+<!--                    </div>-->
+<!--                  </ng-template>-->
+
+<!--                  <ng-template let-value pTemplate="selectedItem">-->
+<!--                    <div class="w-full flex flex-wrap flex-row-reverse justify-content-between">-->
+<!--                      <div>{{value.name}}</div>-->
+<!--                      <div>{{value.family}}</div>-->
+<!--                      <div>{{value.companyName}}</div>-->
+<!--                    </div>-->
+<!--                  </ng-template>-->
+
+<!--                </p-autoComplete>-->
+
+<!--&lt;!&ndash;                <p-autoComplete&ndash;&gt;-->
+<!--&lt;!&ndash;                  [inputStyle]="{'width':'100%'}"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [style]="{'width':'100%'}"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [(ngModel)]="selectedCustomers"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [suggestions]="filteredCustomer"&ndash;&gt;-->
+<!--&lt;!&ndash;                  (completeMethod)="searchCustomerReport($event)"&ndash;&gt;-->
+<!--&lt;!&ndash;                  (onSelect)="selectCustomer($event)"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [showClear]="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [autofocus]="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [showEmptyMessage]="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [multiple]="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                  emptyMessage="موردی یافت نشد"&ndash;&gt;-->
+<!--&lt;!&ndash;                  appendTo="body"&ndash;&gt;-->
+<!--&lt;!&ndash;                  optionLabel="fullName"&ndash;&gt;-->
+<!--&lt;!&ndash;                  styleClass="w-full mx-auto block"&ndash;&gt;-->
+<!--&lt;!&ndash;                  scrollHeight="400px"&ndash;&gt;-->
+<!--&lt;!&ndash;                  class="p-autocomplete w-full mx-auto"&ndash;&gt;-->
+<!--&lt;!&ndash;                  placeholder="نام خانوادگی | شماره تلفن | شرکت">&ndash;&gt;-->
+
+<!--&lt;!&ndash;                  <ng-template let-filteredCustomers pTemplate="item">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="grid align-items-end justify-content-between" style="direction: rtl">&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;                      <div class="col-12 overflow-hidden flex gap-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <p class=" my-0 ">{{filteredCustomers.name}}</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <p&ndash;&gt;-->
+<!--&lt;!&ndash;                          class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">&ndash;&gt;-->
+<!--&lt;!&ndash;                          {{filteredCustomers.family}} ({{filteredCustomers.companyName ? filteredCustomers.companyName :''}})&ndash;&gt;-->
+<!--&lt;!&ndash;                        </p>&ndash;&gt;-->
+<!--&lt;!&ndash;                      </div>&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                  </ng-template>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                </p-autoComplete>&ndash;&gt;-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; startDate &ndash;&gt;-->
+<!--          <div class="col-12 md:col-12">-->
+<!--            <div class="datePickerContainer relative z-5">-->
+<!--              <label class="text-right font-bold text-md mb-2" for="startDate">از تاریخ</label>-->
+<!--              <ng-persian-datepicker-->
+<!--                (dateOnSelect)="selectStartDate($event)"-->
+<!--                (dateOnInit)="initialStartDatePicker($event)"-->
+<!--                [dateGregorianFormat]="'YYYY-MM-DD '"-->
+<!--                [dateFormat]="'YYYY-MM-DD '">-->
+<!--                <input [formControl]="startDateTimeControl" id="startDate" name="startDate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>-->
+<!--              </ng-persian-datepicker>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; finishDate &ndash;&gt;-->
+<!--          <div class="col-12 md:col-12">-->
+<!--            <div class="datePickerContainer relative z-5">-->
+<!--              <label class="text-right font-bold text-md mb-2" for="finishDate">تا تاریخ</label>-->
+<!--              <div class="flex gap-2">-->
+<!--                <ng-persian-datepicker-->
+<!--                  class="w-full"-->
+<!--                  (dateOnInit)="initialFinishDatePicker($event)"-->
+<!--                  (dateOnSelect)="selectFinishDate($event)"-->
+<!--                  [dateGregorianFormat]="'YYYY-MM-DD' "-->
+<!--                  [dateFormat]="'YYYY-MM-DD '">-->
+<!--                  <input [formControl]="finishDateTimeControl" id="finishDate" name="finishDate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>-->
+<!--                </ng-persian-datepicker>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; ticketType &ndash;&gt;-->
+<!--          <div class="col-12 md:col-12">-->
+<!--            <div class="form-group">-->
+<!--              <label class="text-right font-bold text-md mb-2">نوع تیکت</label>-->
+<!--              <div class="field">-->
+<!--                <p-multiSelect [style]="{'width':'100%'}"-->
+<!--                               name="userType"-->
+<!--                               class="w-full"-->
+<!--                               placeholder ="نوع تیکت خود را انتخاب نمایید"-->
+<!--                               scrollHeight="250px"-->
+<!--                               display="chip"-->
+<!--                               optionLabel="title"-->
+<!--                               optionValue="value"-->
+<!--                               [(ngModel)]="oneObject.filters.ticketTypes"-->
+<!--                               [options]="ticketType">-->
+<!--                </p-multiSelect>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; status &ndash;&gt;-->
+<!--          <div class="col-12 md:col-12">-->
+<!--            <div class="form-group">-->
+<!--              <label class="text-right font-bold text-md mb-2">وضعیت تیکت</label>-->
+<!--              <div class="field">-->
+<!--                <p-multiSelect [style]="{'width':'100%'}"-->
+<!--                               name="userType"-->
+<!--                               class="w-full"-->
+<!--                               placeholder ="وضعیت تیکت را انتخاب نمایید"-->
+<!--                               scrollHeight="250px"-->
+<!--                               display="chip"-->
+<!--                               optionLabel="title"-->
+<!--                               optionValue="value"-->
+<!--                               [(ngModel)]="oneObject.filters.ticketStates"-->
+<!--                               [options]="ticketState">-->
+<!--                </p-multiSelect>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="col-12">-->
+<!--            <div class="grid">-->
+
+<!--              <div class="col-12 md:col-12">-->
+<!--                <div class="form-group">-->
+<!--                  <p-divider styleClass="px-5 py-2" class="w-full divider" align="center" type="dashed">-->
+<!--                    <b class="px-2 text-lg ">مبنای گزارش</b>-->
+<!--                  </p-divider>-->
+<!--                </div>-->
+
+<!--                <div class="flex flex-column gap-4">-->
+<!--                  <div class="datePickerContainer relative flex-1">-->
+<!--                    <label class="text-right font-bold text-md mb-2">مبنای اصلی</label>-->
+<!--                    <div>-->
+<!--                      <p-dropdown-->
+<!--                        [styleClass]="'clear-icon'"-->
+<!--                        [showClear]="true"-->
+<!--                        [options]="dimension"-->
+<!--                        [(ngModel)]="oneObject.primaryDimension"-->
+<!--                        (onChange)="onPrimaryChange()"-->
+<!--                        class="mt-2"-->
+<!--                        [style]="{'width':'100%'}"-->
+<!--                        optionLabel="title"-->
+<!--                        optionValue="value"-->
+<!--                        placeholder="مبنای اصلی خود انتخاب کنید">-->
+<!--                      </p-dropdown>-->
+<!--                    </div>-->
+<!--                  </div>-->
+
+<!--                  <div class="datePickerContainer relative flex-1">-->
+<!--                    <label class="text-right font-bold text-md mb-2">مبنای فرعی</label>-->
+<!--                    <div>-->
+<!--                      <p-dropdown-->
+<!--                        [styleClass]="'clear-icon'"-->
+<!--                        [showClear]="true"-->
+<!--                        [options]="secondaryOptions"-->
+<!--                        [(ngModel)]="oneObject.secondaryDimension"-->
+<!--                        [disabled]="oneObject.primaryDimension === null || oneObject.primaryDimension === undefined"-->
+<!--                        class="mt-2"-->
+<!--                        [style]="{'width':'100%'}"-->
+<!--                        optionLabel="title"-->
+<!--                        optionValue="value"-->
+<!--                        placeholder="مبنای فرعی خود انتخاب کنید">-->
+<!--                      </p-dropdown>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+
+<!--              </div>-->
+
+<!--              <div class="col-12 md:col-12">-->
+<!--                <div class="form-group">-->
+<!--                  <p-divider styleClass="px-5 py-2" class="w-full divider" align="center" type="dashed">-->
+<!--                    <b class="px-2 text-lg ">مبنای خروجی</b>-->
+<!--                  </p-divider>-->
+<!--                </div>-->
+
+<!--                <div class="flex">-->
+<!--                  <div class="datePickerContainer relative">-->
+<!--                    <label class="text-right font-bold text-md mb-2">خروجی گزارش</label>-->
+<!--                    <div>-->
+<!--                      <p-dropdown-->
+<!--                        [styleClass]="'clear-icon'"-->
+<!--                        [showClear]="true"-->
+<!--                        [options]="metric"-->
+<!--                        [(ngModel)]="oneObject.Metric"-->
+<!--                        class="mt-2"-->
+<!--                        [style]="{'width':'100%'}"-->
+<!--                        optionLabel="title"-->
+<!--                        optionValue="value"-->
+<!--                        placeholder="خروجی گزارش خود انتخاب کنید">-->
+<!--                      </p-dropdown>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+
+<!--              </div>-->
+
+<!--            </div>-->
+
+<!--          </div>-->
+
+<!--        </div>-->
+
+<!--      <ng-template pTemplate="footer">-->
+<!--        <div class="flex">-->
+<!--          <button-->
+<!--            pButton-->
+<!--            pRipple-->
+<!--            label="مشاهده"-->
+<!--            class="p-button-info p-mr-2"-->
+<!--            (click)="onRegisterReportTickets()"-->
+<!--          ></button>-->
+
+<!--        </div>-->
+<!--      </ng-template>-->
+<!--    </p-panel>-->
+
+<!--  </div>-->
+
+
+
+<!--  <div class="col-10">-->
+<!--    <div>-->
+<!--      &lt;!&ndash; آیکون همبرگر &ndash;&gt;-->
+<!--      <div class="hamburger" (click)="toggleMenu()">-->
+<!--        &#9776;-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; منوی کناری &ndash;&gt;-->
+<!--      <div class="side-menu" [class.open]="menuOpen">-->
+<!--        <div class="menu-header">-->
+<!--          <span class="close-btn" (click)="toggleMenu()">✕</span>-->
+<!--          <h3>منوی اصلی</h3>-->
+<!--        </div>-->
+<!--        <ul>-->
+<!--          <li><a (click)="navigate('home')">خانه</a></li>-->
+<!--          <li><a (click)="navigate('profile')">پروفایل</a></li>-->
+<!--          <li><a (click)="navigate('settings')">تنظیمات</a></li>-->
+<!--        </ul>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; یک لایه نیمه‌شفاف برای تار کردن پس‌زمینه &ndash;&gt;-->
+<!--      <div class="overlay" *ngIf="menuOpen" (click)="toggleMenu()"></div>-->
+<!--    </div>-->
+
+<!--    <div class="p-card px-4 py-3 shadow-2">-->
+<!--      <div class="flex gap-4 px-2 py-3">-->
+<!--        <span pTooltip="نمایش ستونی"-->
+<!--              tooltipPosition="top" (click)="typeOfChart('bar');">-->
+<!--          <img src="./assets/images/bar-30.png" [class]="{'active': type == 'bar'}" class="span cursor-pointer " alt="">-->
+<!--        </span>-->
+<!--        <span pTooltip="نمایش خطی"-->
+<!--              tooltipPosition="top" (click)="typeOfChart('line'); " >-->
+<!--          <img src="./assets/images/line-30.png" [class]="{'active': type == 'line'}" class="span cursor-pointer " alt="">-->
+<!--        </span>-->
+<!--        <span pTooltip="نمایش دایره ای"-->
+<!--              tooltipPosition="top" (click)="typeOfChart('pie'); " *ngIf="oneObject.secondaryDimension == null || oneObject.secondaryDimension == undefined">-->
+<!--          <img src="./assets/images/pie-chart-30.png" [class]="{'active': type == 'pie'}" class="span cursor-pointer " alt="">-->
+<!--        </span>-->
+<!--      </div>-->
+
+<!--      <p-chart #chart *ngIf="showChart" class="chart" [type]="type" [data]="chartData" [options]="options"></p-chart>-->
+<!--    </div>-->
+<!--  </div>-->
+
+
+
+
+
+  <div class="col-12 flex flex-row overflow-hidden">
+
+    <!-- منوی همبرگر -->
+    <div class="side-menu bg-white shadow-2 border-round" [class.closed]="!menuOpen">
+      <div class="menu-header ">
+        <div class="flex">
+          <button
+            pButton
+            pRipple
+            label="مشاهده"
+            class="p-button-info p-mr-2"
+            (click)="onRegisterReportTickets()"
+          ></button>
+        </div>
+        <span class="close-btn" (click)="toggleMenu()">✕</span>
+      </div>
+
+      <div class="grid">
+        <div class="col-12">
+          <p-accordion [style]="{'margin-top':'10px'}" class="mt-3">
+            <p-accordionTab>
+              <ng-template  pTemplate="header">
+                <span  class="flex align-items-center gap-2 w-full">
+                  شرط های گزارش
+                </span>
+              </ng-template>
+
+              <div class="grid">
+                <!-- users -->
+                <div class="col-12 md:col-12">
+                  <div class="form-group">
+                    <label class="text-right font-bold text-md mb-2">کارشناس</label>
+                    <div class="field">
+                      <p-multiSelect [style]="{'width':'100%'}"
+                                     name="userType"
+                                     class="w-full"
+                                     placeholder ="کارشناس را انتخاب نمایید"
+                                     scrollHeight="250px"
+                                     display="chip"
+                                     optionLabel="fullName"
+                                     optionValue="id"
+                                     [(ngModel)]="oneObject.filters.employeeIds"
+                                     [options]="expertUsers">
+                      </p-multiSelect>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- customers -->
+                <div class="col-12 md:col-12">
+                  <div class="form-group field">
+                    <label class="text-right font-bold text-md m-0" for="">جستجو مشتری</label>
+                    <div class="field">
+
+                      <p-autoComplete
+                        inputStyleClass="w-full"
+                        appendTo="body"
+                        [multiple]="true"
+                        name="selectedCustomers"
+                        [(ngModel)]="selectedCustomers"
+                        [showEmptyMessage]="true"
+                        [suggestions]="filteredCustomer"
+                        (completeMethod)="searchCustomerReport($event)"
+                        #customerSenderIds
+                        [minLength]="1"
+                        [style]="{width: '100%', display:'block'}"
+                        [autoHighlight]="true"
+                        [inputStyle]="{width: '100%'}"
+                        field="id"
+                        placeholder="نام خانوادگی / نام شرکت"
+                        id="customerSenderIds"
+                        inputId="customerSenderIds"
+                        class="w-full text-center"
+                        styleClass="w-full"
+                        emptyMessage="موردی یافت نشد"
+                        (onFocus)="customerSenderIds.show()">
+
+                        <ng-template let-customer pTemplate="item">
+                          <div (mousedown)="$event.preventDefault(); $event.stopPropagation()"
+                               class="w-full flex flex-wrap flex-row-reverse justify-content-between items-center px-2 py-1"
+                               style="cursor: default;">
+                            <p-checkbox
+                              [binary]="true"
+                              [ngModel]="isSelected(customer)"
+                              [ngModelOptions]="{standalone: true}"
+                              (onChange)="toggleCustomer(customer)"
+                              class="z-5">
+                            </p-checkbox>
+                            <div>{{customer.name}}</div>
+                            <div>{{customer.family}}</div>
+                            <div>{{customer.companyName}}</div>
+                          </div>
+                        </ng-template>
+
+                        <ng-template let-value pTemplate="selectedItem">
+                          <div class="w-full flex flex-wrap flex-row-reverse justify-content-between">
+                            <div>{{value.name}}</div>
+                            <div>{{value.family}}</div>
+                            <div>{{value.companyName}}</div>
+                          </div>
+                        </ng-template>
+
+                      </p-autoComplete>
+
+                      <!--                <p-autoComplete-->
+                      <!--                  [inputStyle]="{'width':'100%'}"-->
+                      <!--                  [style]="{'width':'100%'}"-->
+                      <!--                  [(ngModel)]="selectedCustomers"-->
+                      <!--                  [suggestions]="filteredCustomer"-->
+                      <!--                  (completeMethod)="searchCustomerReport($event)"-->
+                      <!--                  (onSelect)="selectCustomer($event)"-->
+                      <!--                  [showClear]="true"-->
+                      <!--                  [autofocus]="true"-->
+                      <!--                  [showEmptyMessage]="true"-->
+                      <!--                  [multiple]="true"-->
+                      <!--                  emptyMessage="موردی یافت نشد"-->
+                      <!--                  appendTo="body"-->
+                      <!--                  optionLabel="fullName"-->
+                      <!--                  styleClass="w-full mx-auto block"-->
+                      <!--                  scrollHeight="400px"-->
+                      <!--                  class="p-autocomplete w-full mx-auto"-->
+                      <!--                  placeholder="نام خانوادگی | شماره تلفن | شرکت">-->
+
+                      <!--                  <ng-template let-filteredCustomers pTemplate="item">-->
+                      <!--                    <div class="grid align-items-end justify-content-between" style="direction: rtl">-->
+
+
+                      <!--                      <div class="col-12 overflow-hidden flex gap-2">-->
+                      <!--                        <p class=" my-0 ">{{filteredCustomers.name}}</p>-->
+                      <!--                        <p-->
+                      <!--                          class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">-->
+                      <!--                          {{filteredCustomers.family}} ({{filteredCustomers.companyName ? filteredCustomers.companyName :''}})-->
+                      <!--                        </p>-->
+                      <!--                      </div>-->
+
+
+                      <!--                    </div>-->
+                      <!--                  </ng-template>-->
+
+                      <!--                </p-autoComplete>-->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- startDate -->
+                <div class="col-12 md:col-12">
+                  <div class="datePickerContainer relative z-5">
+                    <label class="text-right font-bold text-md mb-2" for="startDate">از تاریخ</label>
+                    <ng-persian-datepicker
+                      (dateOnSelect)="selectStartDate($event)"
+                      (dateOnInit)="initialStartDatePicker($event)"
+                      [dateGregorianFormat]="'YYYY-MM-DD '"
+                      [dateFormat]="'YYYY-MM-DD '">
+                      <input [formControl]="startDateTimeControl" id="startDate" name="startDate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+                    </ng-persian-datepicker>
+                  </div>
+                </div>
+
+                <!-- finishDate -->
+                <div class="col-12 md:col-12">
+                  <div class="datePickerContainer relative z-4">
+                    <label class="text-right font-bold text-md mb-2" for="finishDate">تا تاریخ</label>
+                    <div class="flex gap-2">
+                      <ng-persian-datepicker
+                        class="w-full"
+                        (dateOnInit)="initialFinishDatePicker($event)"
+                        (dateOnSelect)="selectFinishDate($event)"
+                        [dateGregorianFormat]="'YYYY-MM-DD' "
+                        [dateFormat]="'YYYY-MM-DD '">
+                        <input [formControl]="finishDateTimeControl" id="finishDate" name="finishDate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+                      </ng-persian-datepicker>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ticketType -->
+                <div class="col-12 md:col-12">
+                  <div class="form-group">
+                    <label class="text-right font-bold text-md mb-2">نوع تیکت</label>
+                    <div class="field">
+                      <p-multiSelect [style]="{'width':'100%'}"
+                                     name="userType"
+                                     class="w-full"
+                                     placeholder ="نوع تیکت را انتخاب نمایید"
+                                     scrollHeight="250px"
+                                     display="chip"
+                                     optionLabel="title"
+                                     optionValue="value"
+                                     [appendTo]="'body'"
+                                     [(ngModel)]="oneObject.filters.ticketTypes"
+                                     [options]="ticketType">
+                      </p-multiSelect>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- status -->
+                <div class="col-12 md:col-12">
+                  <div class="form-group">
+                    <label class="text-right font-bold text-md mb-2">وضعیت تیکت</label>
+                    <div class="field">
+                      <p-multiSelect [style]="{'width':'100%'}"
+                                     name="userType"
+                                     class="w-full"
+                                     placeholder ="وضعیت تیکت را انتخاب نمایید"
+                                     scrollHeight="250px"
+                                     display="chip"
+                                     optionLabel="title"
+                                     optionValue="value"
+                                     [appendTo]="'body'"
+                                     [(ngModel)]="oneObject.filters.ticketStates"
+                                     [options]="ticketState">
+                      </p-multiSelect>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </p-accordionTab>
+
+            <p-accordionTab>
+              <ng-template pTemplate="header">
+                <span class="flex align-items-center gap-2 w-full">مبنا و خروجی گزارش</span>
+              </ng-template>
+
+              <div class="grid">
+                <div class="col-12">
+                  <div class="grid">
+
+                    <div class="col-12 md:col-12">
+
+                      <div class="flex flex-column gap-4">
+                        <div class="datePickerContainer relative flex-1">
+                          <label class="text-right font-bold text-md mb-2">مبنای اصلی</label>
+                          <div>
+                            <p-dropdown
+                              [styleClass]="'clear-icon'"
+                              [showClear]="true"
+                              [options]="dimension"
+                              [(ngModel)]="oneObject.primaryDimension"
+                              (onChange)="onPrimaryChange()"
+                              [appendTo]="'body'"
+                              class="mt-2"
+                              [style]="{'width':'100%'}"
+                              optionLabel="title"
+                              optionValue="value"
+                              placeholder="مبنای اصلی را انتخاب کنید">
+                            </p-dropdown>
+                          </div>
+                        </div>
+
+                        <div class="datePickerContainer relative flex-1">
+                          <label class="text-right font-bold text-md mb-2">مبنای فرعی</label>
+                          <div>
+                            <p-dropdown
+                              [styleClass]="'clear-icon'"
+                              [showClear]="true"
+                              [options]="secondaryOptions"
+                              [(ngModel)]="oneObject.secondaryDimension"
+                              [disabled]="oneObject.primaryDimension === null || oneObject.primaryDimension === undefined"
+                              [appendTo]="'body'"
+                              class="mt-2"
+                              [style]="{'width':'100%'}"
+                              optionLabel="title"
+                              optionValue="value"
+                              placeholder="مبنای فرعی را انتخاب کنید">
+                            </p-dropdown>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="col-12 md:col-12">
+                      <div class="datePickerContainer relative flex-1">
+                          <label class="text-right font-bold text-md mb-2">خروجی گزارش</label>
+                          <div>
+                            <p-dropdown
+                              [styleClass]="'clear-icon'"
+                              [showClear]="true"
+                              [options]="metric"
+                              [(ngModel)]="oneObject.Metric"
+                              class="mt-2"
+                              [style]="{'width':'100%'}"
+                              [appendTo]="'body'"
+                              optionLabel="title"
+                              optionValue="value"
+                              placeholder="خروجی گزارش را انتخاب کنید">
+                            </p-dropdown>
+                          </div>
+                        </div>
+
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </p-accordionTab>
+
+          </p-accordion>
+        </div>
+
+
+      </div>
+    </div>
+
+    <!-- دکمه باز کردن منو -->
+    <div class="hamburger" *ngIf="!menuOpen" (click)="toggleMenu()">
+      &#9776;
+    </div>
+
+    <!-- محتوای چارت -->
+    <div class="chart-container" [class.menu-open]="menuOpen">
+      <div class="p-card px-4 py-3 shadow-2">
+
+        <div class="flex justify-content-center align-items-center">
+          <div class="flex gap-4 px-2 py-3">
+        <span pTooltip="نمایش ستونی"
+              tooltipPosition="top" (click)="typeOfChart('bar');">
+          <img src="./assets/images/bar-30.png" [class]="{'active': type == 'bar'}" class="span cursor-pointer " alt="">
+        </span>
+            <span pTooltip="نمایش خطی"
+                  tooltipPosition="top" (click)="typeOfChart('line'); " >
+          <img src="./assets/images/line-30.png" [class]="{'active': type == 'line'}" class="span cursor-pointer " alt="">
+        </span>
+            <span pTooltip="نمایش دایره ای"
+                  tooltipPosition="top" (click)="typeOfChart('pie'); " *ngIf="oneObject.secondaryDimension == null || oneObject.secondaryDimension == undefined">
+          <img src="./assets/images/pie-chart-30.png" [class]="{'active': type == 'pie'}" class="span cursor-pointer " alt="">
+        </span>
+          </div>
+
+          <span class="mx-auto">
+            گزارش تیکت ها
+          </span>
+
+        </div>
+
+        <p-chart *ngIf="showChart" #chart class="chart" [type]="type" [data]="chartData" [options]="options"></p-chart>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>

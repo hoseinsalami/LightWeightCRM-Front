@@ -1,0 +1,354 @@
+<div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
+
+  <div class="mb-5">
+    <button
+      class="mx-3 p-button-success"
+      pButton
+      label="ذخیره "
+      (click)="onSaveFilter()"
+      icon="pi pi-save mx-2">
+    </button>
+    <button pButton
+            label="انصراف"
+            class="p-button-danger"
+            icon="pi pi-sign-out mx-2"
+            (click)="manager.cancel()"></button>
+  </div>
+
+  <div class="grid">
+
+    <div class="col-3">
+      <label class="text-right font-bold text-900 text-md mb-2">عنوان</label>
+      <div class="field mt-2">
+        <input
+          [style]="{'width':'100%'}"
+          [(ngModel)]="filterModel.title"
+          pInputText
+          type="text"
+          id="title"
+          name="title"
+          class="p-fieldset">
+      </div>
+    </div>
+
+    <div class="col-3">
+      <label class="text-right font-bold text-900 text-md mb-2">ماهیت</label>
+      <div class="field mt-2">
+        <p-dropdown
+          class="mt-2"
+          [styleClass]="'clear-icon'"
+          [options]="entitiesData"
+          [(ngModel)]="filterModel.entity"
+          [style]="{'width':'100%'}"
+          optionLabel="title"
+          optionValue="entity"
+          placeholder="انتخاب ماهیت"
+          (onChange)="onChangeDrp()">
+        </p-dropdown>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-group">
+        <label class="font-bold text-900">توضیحات</label>
+        <div class="field">
+          <textarea
+            [style]="{'width':'100%'}"
+            [(ngModel)]="filterModel.description"
+            rows="5"
+            id="description"
+            name="description"
+            pInputTextarea
+            class="p-fieldset">
+          </textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 flex align-items-end gap-3" *ngFor="let parameter of parameters; let i = index">
+      <div class="field m-0">
+        <label class="text-right font-bold text-900 text-md mb-0">نام</label>
+        <div class="field m-0 flex flex-column">
+          <input
+            (keypress)="allowOnlyEnglish($event,i)"
+            [style]="{'width':'200px'}"
+            [(ngModel)]="parameter.name"
+            pInputText
+            type="text"
+            [id]="'name-'+i"
+            [name]="'name-'+i"
+            class="p-fieldset">
+          <small class="p-error" *ngIf="parameter.isErrEng">
+            فقط حروف انگلیسی مجاز می‌باشد
+          </small>
+        </div>
+      </div>
+      <div class="field m-0">
+        <label class="text-right font-bold text-900 text-md mb-0">عنوان</label>
+        <div class="field m-0">
+          <input
+            [style]="{'width':'200px'}"
+            [(ngModel)]="parameter.label"
+            pInputText
+            type="text"
+            id="label"
+            name="label"
+            class="p-fieldset">
+        </div>
+      </div>
+      <div class="field m-0 flex gap-2">
+        <button pButton type="button" icon="pi pi-minus" class="p-button-danger" (click)="removeParamenter(i)"></button>
+        <button pButton type="button" icon="pi pi-plus" class="p-button-success" (click)="addNewParameter()"></button>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <p-divider align="center" type="dotted">
+        <div class="flex align-items-center gap-3">
+<!--          <b>فیلتر ها</b>-->
+<!--          <button pButton pRipple label="افزودن" icon="pi pi-plus" class="p-button-success p-mr-2"-->
+<!--                  (click)="addNewRowFilter()"></button>-->
+            <p-dropdown
+              class="mt-2"
+              [style]="{'width':'250px'}"
+              [options]="dropdownOptions"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="فیلتر را انتخاب کنید"
+              (onChange)="onFieldSelected($event.value)">
+            </p-dropdown>
+
+        </div>
+      </p-divider>
+    </div>
+
+    <div class="col-12">
+      <p-fieldset *ngIf="filters.length > 0">
+        <ng-template pTemplate="header">
+          <div class="flex align-items-center gap-1">
+            <p>فیلتر ها</p>
+          </div>
+        </ng-template>
+
+        <div>
+
+          <div class="flex gap-2 my-2">
+            <div *ngFor="let option of logicOptions">
+              <p-radioButton
+                name="logic"
+                [value]="option.value"
+                [(ngModel)]="filterGroupLogic"
+                inputId="{{option.value}}">
+              </p-radioButton>
+              <label for="{{option.value}}" class="ml-2">{{option.label}}</label>
+            </div>
+          </div>
+
+
+        </div>
+
+        <div class="mb-3" *ngFor="let filter of filters; let fi = index">
+
+          <p-fieldset>
+
+            <ng-template pTemplate="header">
+              <div class="flex align-items-center gap-1">
+                <p class="m-0"><i (click)="deleteFieldset(fi)" class="pi pi-times text-red-500 cursor-pointer font-bold"></i></p>
+                <p>{{filter.label}}</p>
+              </div>
+            </ng-template>
+
+            <div class="flex flex-wrap gap-3 mb-4">
+              <div class="flex align-items-center">
+                <p-radioButton
+                  [name]="'radiobtn-' + fi"
+                  value="and"
+                  [(ngModel)]="radiobtn[fi]"
+                  (onClick)="onRadioChange(filter, 'and')"
+                  inputId="or-{{fi}}" />
+                <label for="or-{{fi}}" class="ml-2">همه شروط</label>
+              </div>
+              <div class="flex align-items-center">
+                <p-radioButton
+                  [name]="'radiobtn-' + fi"
+                  value="or"
+                  [(ngModel)]="radiobtn[fi]"
+                  (onClick)="onRadioChange(filter, 'or')"
+                  inputId="and-{{fi}}" />
+                <label for="and-{{fi}}" class="ml-2">یکی از شروط</label>
+              </div>
+            </div>
+
+            <div class="grid" >
+              <div class="col-12" *ngFor="let item of filter.selectedFilter let ci = index" >
+                <div class="flex align-items-end gap-2">
+
+                  <ng-container *ngIf="filter.type !== 'object' && filter.type !== 'array'">
+                    <ng-container *ngFor="let fp of item.filterParameter; let fpi = index">
+                      <ng-container *ngFor="let fg of fp.filter; let fgi = index">
+                        <ng-container *ngFor="let ff of fg.filters; let ffi = index">
+                          <ng-container *ngFor="let cond of ff.conditions; let ci2 = index">
+
+                            <!-- انتخاب عملگر -->
+                            <p-dropdown
+                              [options]="[
+                                { label: 'برابر', value: 'eq' },
+                                { label: 'شامل', value: 'contains' },
+                                { label: 'بزرگتر', value: 'gt' },
+                                { label: 'کوچکتر', value: 'lt' }
+                              ]"
+                              [style]="{'width':'200px'}"
+                              [(ngModel)]="cond.operator"
+                              placeholder="عملگر انتخاب کنید">
+                            </p-dropdown>
+
+                            <!-- مقدار -->
+                            <input pInputText [(ngModel)]="cond.value" [disabled]="!!cond.parameter" placeholder="مقدار" />
+
+                            <!-- انتخاب پارامتر -->
+                            <p-dropdown
+                              class="mt-2"
+                              [styleClass]="'clear-icon'"
+                              [options]="availableParameters"
+                              [(ngModel)]="cond.parameter"
+                              [style]="{'width':'100%'}"
+                              [disabled]="!!cond.value"
+                              [showClear]="true"
+                              optionLabel="label"
+                              optionValue="name"
+                              placeholder="انتخاب ماهیت">
+                            </p-dropdown>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+
+
+                  <p-dropdown
+                    *ngIf="filter.type == 'array'"
+                    [options]="[{ label: 'حدقل دارای یک', value: 'any' }, { label: 'تمامی عناصر', value: 'all' }, ]"
+                    [style]="{'width':'200px'}"
+                    [(ngModel)]="modeFilter[ci]"
+                    placeholder="عملگر انتخاب کنید">
+                  </p-dropdown>
+                  <p-dropdown
+                    *ngIf="filter.type === 'object' || filter.type === 'array'"
+                    [options]="getFilterParameterOptions(filter)"
+                    optionLabel="label"
+                    [(ngModel)]="filter.selectedFilter[ci]"
+                    [style]="{'width':'200px'}"
+                    [showClear]="true"
+                    placeholder="انتخاب کنید"
+                    (onChange)="onSelecteFilter($event, fi, ci)">
+                  </p-dropdown>
+
+
+
+                  <!-- دکمه‌ها -->
+                  <button pButton type="button" icon="pi pi-minus" class="p-button-danger" (click)="removeCondition(fi ,ci)" [disabled]="filter.selectedFilter.length === 1"></button>
+                  <button pButton type="button" icon="pi pi-plus" class="p-button-success" (click)="addCondition(fi)"></button>
+                </div>
+              </div>
+            </div>
+
+          </p-fieldset>
+        </div>
+
+      </p-fieldset>
+
+
+    </div>
+
+  </div>
+</div>
+
+<!--************************** begin Comment modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-small'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showFilterModal"
+  [appendTo]="'body'"
+  header="ثبت نظر"
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-6" *ngFor="let param of dialogParameters; let pi = index">
+      <p-radioButton
+        name="paramRadio"
+        inputId="radioValue"
+        value="value"
+        label="مقدار فیلتر"
+        [(ngModel)]="selectedParamRadio"
+        (onClick)="onRadioSelect('value')">
+      </p-radioButton>
+
+      <div class="form-group mt-3">
+        <label class="font-bold text-900" for="name">{{ param.label }}</label>
+        <div class="field mt-2">
+          <input
+            pInputText
+            type="text"
+            id="name"
+            name="name"
+            placeholder="مقدار خود را وارد نمایید"
+            class="p-fieldset"
+            [style]="{'width':'250px'}"
+            [disabled]="selectedParamRadio && selectedParamRadio !== 'value'"
+            [(ngModel)]="param.value">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+
+      <p-radioButton
+        name="paramRadio"
+        inputId="radioParameter"
+        value="parameter"
+        label="مقدار پارامتر"
+        [(ngModel)]="selectedParamRadio"
+        (onClick)="onRadioSelect('parameter')">
+      </p-radioButton>
+
+      <div class="form-group mt-3">
+        <label class="font-bold text-900" for="name">پارامتر</label>
+        <div class="field mt-2">
+          <!-- انتخاب پارامتر -->
+          <p-dropdown
+            class="w-full"
+            [style]="{'width':'100%'}"
+            [options]="parameterOptionsDialog"
+            optionLabel="label"
+            optionValue="value"
+            [(ngModel)]="selectedParameterDialog"
+            [appendTo]="'body'"
+            [disabled]="selectedParamRadio && selectedParamRadio !== 'parameter'"
+            placeholder="انتخاب پارامتر">
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="ثبت"
+      class="p-button-success p-mr-2"
+      (click)="saveModal()"
+      ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="cancelModal()"
+    ></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end Comment modal *************************************-->

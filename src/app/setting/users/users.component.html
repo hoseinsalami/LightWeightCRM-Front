@@ -1,0 +1,200 @@
+<div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
+  <p-toolbar styleClass="p-mb-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple  label="جدید" icon="pi pi-plus" class="p-button-success p-mr-2"
+              routerLink="new"  ></button>
+
+    </ng-template>
+    <!--        routerLink="new"-->
+
+    <!--        <ng-template pTemplate="right">-->
+    <!--            <button pButton pRipple label="خروجی" icon="pi pi-upload" class="p-button-help"></button>-->
+    <!--        </ng-template>-->
+  </p-toolbar>
+
+  <p-table #dt
+           [rows]="10"
+           [value]="many?many:[]"
+           [paginator]="true"
+           [rowHover]="true"
+           dataKey="id"
+           [showCurrentPageReport]="true"
+           [lazy]="true"
+           (onLazyLoad)="lazyLoadData(construct, dt,$event,'/list')"
+           [totalRecords]="totalRecords? totalRecords : 0"
+           [loading]="tableLoading"
+           [rowsPerPageOptions]="[10,25,50,100,200,500]"
+           currentPageReportTemplate=" از {first}  تا {last} از مجموع {totalRecords} نتیجه"
+           responsiveLayout="scroll"
+           styleClass="p-datatable-responsive-demo p-datatable-sm"
+           stateStorage="local"
+           stateKey="userTable">
+
+    <!--        {first} تا {last} از  {totalRecords}-->
+
+    <ng-template pTemplate="header">
+      <tr>
+
+        <th pSortableColumn="fullName">
+<!--          <p-columnFilter matchMode="contains" type="text" field="fullName" display="menu"></p-columnFilter>-->
+          نام خانوادگی
+          <p-sortIcon field="fullName"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="mobile">
+<!--          <p-columnFilter matchMode="contains" type="text" field="mobile" display="menu"></p-columnFilter>-->
+          شماره همراه
+          <p-sortIcon field="mobile"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="userName">
+<!--          <p-columnFilter matchMode="contains" type="text" field="userName" display="menu"></p-columnFilter>-->
+          نام کاربری
+          <p-sortIcon field="userName"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="userType">
+<!--          <p-columnFilter matchMode="contains" type="text" field="userType" display="menu"></p-columnFilter>-->
+          نوع کاربر
+          <p-sortIcon field="userType"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="active">
+<!--          <p-columnFilter matchMode="contains" type="text" field="active" display="menu"></p-columnFilter>-->
+          فعال
+          <p-sortIcon field="active"></p-sortIcon>
+        </th>
+
+        <th></th>
+      </tr>
+
+    </ng-template>
+
+
+    <ng-template pTemplate="body" let-object>
+      <tr>
+
+        <td>
+          <span class="p-column-title">نام و نام خانوادگی</span>
+          {{object.fullName}}
+        </td>
+
+        <td>
+          <span class="p-column-title">شماره همراه</span>
+          {{object.mobile}}
+        </td>
+
+        <td>
+          <span class="p-column-title">نام کاربر</span>
+          {{object.userName}}
+        </td>
+
+        <td>
+          <span class="p-column-title">نوع کاربر</span>
+          {{userType[object.userType].title}}
+        </td>
+
+        <td>
+          <span class="p-column-title">فعال</span>
+          {{object.active ?'فعال': 'غیرفعال'}}
+        </td>
+
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2 m-1"
+                  pTooltip="ویرایش"
+                  tooltipPosition="top"
+                  [routerLink]="['edit', object.id]" ></button>
+
+          <button pButton pRipple icon="pi pi-lock" class="p-button-rounded p-button-info p-mr-2 m-1"
+                  pTooltip="تغییر رمز عبور"
+                  tooltipPosition="top"
+          (click)="onShowModalChangePassword(object.id)"></button>
+
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2 m-1" pTooltip="حذف"
+                  tooltipPosition="top"
+                  (click)="deleteItem(object.id)"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+
+  </p-table>
+
+
+
+</div>
+
+<p-dialog
+  [styleClass]="'modal-small'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showModalChangePassword"
+  [appendTo]="'body'"
+  [header]="'تغییر رمز عبور'"
+  [modal]="true"
+  [closable]="false">
+
+  <div class="grid">
+    <div class="col-12">
+      <div class="flex-column">
+
+          <div class="flex flex-column w-full p-3">
+            <label class="font-bold text-900 text-lg">رمز عبور جدید</label>
+            <div class="mt-2">
+              <p-password
+                [(ngModel)]="newPassword"
+                [appendTo]="'body'"
+                name="newPass"
+                autocomplete="new-password"
+                id="new-password"
+                inputId="new-password"
+                class="w-full"
+                styleClass="w-full"
+                inputStyleClass="w-full ltr font-medium"
+                promptLabel="رمز را وارد کنید!"
+                weakLabel="بسیار ساده"
+                mediumLabel="نرمال"
+                [toggleMask]="true"
+                [feedback]="true"
+                strongLabel="پیچیده" />
+            </div>
+          </div>
+
+          <div class="flex flex-column w-full p-3">
+            <label class="font-bold text-900 text-lg">تکرار رمز عبور جدید</label>
+            <div class="mt-2">
+              <input
+                [(ngModel)]="reapNewPassword"
+                type="password"
+                dir="rtl"
+                class="w-full"
+                pInputText
+                name="new-password"
+                id="repeat-password">
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+
+    <button
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success button p-mr-2"
+      (click)="onChangePassword()"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="showModalChangePassword = false"
+    ></button>
+
+  </ng-template>
+
+</p-dialog>

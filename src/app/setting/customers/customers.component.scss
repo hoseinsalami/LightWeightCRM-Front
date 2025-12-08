@@ -1,0 +1,74 @@
+::ng-deep{
+
+  .p-overlaypanel-content{
+    padding: 1rem!important;
+  }
+
+  .p-divider{
+    margin: 0px;
+  }
+
+  .p-datatable-tbody{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .p-datatable-wrapper{
+    overflow-x: hidden;
+  }
+
+  .customer-card{
+    &:before{
+      content: "";
+      position: absolute;
+      background: rgb(85 108 214 / 5%);
+      width: 170px;
+      height: 400px;
+      z-index: -1;
+      transform: rotate(42deg);
+      right: -56px;
+      top: -23px;
+      border-radius: 35px;
+    }
+  }
+
+  .badge{
+    position: relative;
+    span{
+      background: #22c55e;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 10px;
+      position: absolute;
+      bottom: 16px;
+      left: 6px;
+    }
+  }
+
+  .card-item {
+    flex: 0 0 calc((100% - 2rem) / 3); // هر کارت یک سوم کل عرض منهای gap
+    box-sizing: border-box; // فاصله padding و border لحاظ شود
+  }
+
+  .tags-scroll-container{
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 0.5rem;
+    scrollbar-width: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    &::-webkit-scrollbar{
+      display: none;
+    }
+  }
+
+}

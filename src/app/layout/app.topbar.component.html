@@ -1,0 +1,199 @@
+<div class="layout-topbar justify-content-between h-4rem" style="background:#444; color: #b5cf38">
+<!--    <a class="layout-topbar-logo" routerLink="">-->
+<!--        <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo">-->
+<!--        <span>SAKAI</span>-->
+<!--    </a>-->
+
+<!--    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">-->
+<!--        <i class="pi pi-bars"></i>-->
+<!--    </button>-->
+      <div class="flex gap-2" *ngIf="user.userType != UserTypesEnum.SystemAdmin; else systemAdmin">
+
+        <div style="z-index:999; position:relative">
+          <input type="text" pInputText
+                 style="width:250px"
+                 (focus)="showCard()"
+                 [(ngModel)]="searchText"
+                 (input)="onSearchInput($event)"
+                 [ngClass]="{'bg-gray-300': cardVisible}"
+                 class="search-input"
+                 placeholder="جستجو..." />
+          <div *ngIf="cardVisible"
+               (click)="$event.stopPropagation()"
+               class="p-card mt-1 overflow-auto"
+               style="position: fixed;
+                      width: 300px;
+                      padding: 10px;
+                      z-index: 9999;
+                      height: 30rem;
+                      overflow: auto;">
+            <!--            top: 5.5vh;-->
+            <!-- هدر کارت: آیکون‌ها -->
+            <div class="p-card-header flex gap-3 align-items-center mb-1 border-solid border-bottom-1 border-none border-gray-300">
+
+              <ul class="flex gap-3 justify-center align-items-centerlist-none p-0 m-0">
+                <li *ngFor="let icon of icons"
+                    class="cursor-pointer flex items-center gap-1"
+                    (click)="selectIcon(icon)"
+                    [ngClass]="{ 'active-tab': selectedIcon?.name === icon.name }">
+                  <p *ngIf="icon.name === 'همه'" class="text-base">
+                    {{ icon.name }}
+                  </p>
+
+                  <i *ngIf="icon.name !== 'همه'" [class]="icon.class" class="text-xl"></i>
+                </li>
+              </ul>
+            </div>
+
+            <!-- بدنه کارت: نتایج -->
+            <div class="p-card-body p-1 flex flex-column gap-2">
+              <div *ngFor="let item of filteredItems"
+                   class="p-2 border-bottom-1 border-gray-300 hover:bg-gray-200 cursor-pointer flex flex-column gap-1"
+                   style="direction:rtl" (click)="selecteIFilterItems(item)">
+                <div class="flex align-items-center justify-content-between">
+                  <span class="flex items-center gap-2">
+                  <i [class]="item.iconClass"></i>
+                    {{ item.title }}
+                </span>
+                  <span *ngIf="item.extraInfo && item.extraInfo?.isCustomer === false" class="bg-green-100 border-round text-green-500 text-xs px-2 font-bold">مشتری</span>
+                </div>
+                <p>
+                  <small *ngIf="item.extraInfo?.customerFullName">{{item.extraInfo?.customerFullName}}</small>
+                  <small *ngIf="item.phonesString ">{{item.phonesString }}</small>
+                </p>
+              </div>
+
+              <div *ngIf="filteredItems.length === 0" class="text-center text-gray-500 p-2">
+                موردی یافت نشد
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p-menu #menu [model]="cariesItem" [popup]="true" appendTo="body" [baseZIndex]="10000" [autoZIndex]="true" />
+        <div class="flex align-items-center gap-1">
+          <button (click)="menu.toggle($event)"
+                  class="p-link p-2 m-0 hover:bg-yellow-200 hover:text-gray-600"
+                  style="color:#b5cf38">کاریز ها</button>
+
+          <p class="p-link p-2 m-0 hover:bg-yellow-200 hover:text-gray-600 flex align-items-center"
+             style="color:#b5cf38"
+             routerLink="activities"
+             routerLinkActive="active-item">فعالیت ها</p>
+
+          <p class="p-link p-2 m-0 hover:bg-yellow-200 hover:text-gray-600 flex align-items-center"
+             style="color:#b5cf38"
+             routerLink="/setting/customers"
+             routerLinkActive="active-item">مشتریان</p>
+
+          <div *ngFor="let ticket of ticketItem">
+            <p class="p-link p-2 m-0 hover:bg-yellow-200 hover:text-gray-600 flex align-items-center gap-2"
+               style="color:#b5cf38"
+               [routerLink]="['tickets/'+ticket.id]"
+               routerLinkActive="active-item"
+               [routerLinkActiveOptions]="{ exact: true }">
+              <!--             (click)="setActiveItem(ticket.label)" [class]="{'active-item' : selectedItem === ticket.label}">-->
+              {{ticket.label}}
+              <span style="font-size:11px"
+                    class="flex align-items-center justify-content-center border-round-3xl pt-1 text-white font-light">({{ticket.badge}})</span>
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <ng-template #systemAdmin>
+    <div class="flex">
+      <p class="p-link p-3 m-0 hover:bg-yellow-200 hover:text-gray-600 flex align-items-center"
+         style="color:#b5cf38"
+         routerLink="/admin/company"
+         routerLinkActive="active-item">شرکت</p>
+
+      <p class="p-link p-3 m-0 hover:bg-yellow-200 hover:text-gray-600 flex align-items-center"
+         style="color:#b5cf38"
+         routerLink="/admin/sms"
+         routerLinkActive="active-item">سرویس دهنده پیامک</p>
+
+      <p class="p-link p-3 m-0 hover:bg-yellow-200 hover:text-gray-600 flex align-items-center"
+         style="color:#b5cf38"
+         routerLink="/admin/event"
+         routerLinkActive="active-item">رویداد ها</p>
+
+      <p class="p-link p-3 m-0 hover:bg-yellow-200 hover:text-gray-600 flex align-items-center"
+         style="color:#b5cf38"
+         routerLink="/admin/permissions"
+         routerLinkActive="active-item">دسترسی ها</p>
+
+    </div>
+  </ng-template>
+
+
+
+
+      <div class="flex">
+        <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" (click)="layoutService.showProfileSidebar()">
+          <i class="pi pi-ellipsis-v"></i>
+        </button>
+
+          <p-menu #report [model]="reportItems" [popup]="true" appendTo="body" [baseZIndex]="10000" [autoZIndex]="true" />
+          <button (click)="report.toggle($event)"
+                  *ngIf="user.userType === UserTypesEnum.SuperAdmin || user.userType === UserTypesEnum.Admin"
+                  class="p-link p-3 m-0 hover:bg-yellow-200 layout-topbar-button hover:text-gray-600"
+                  style="color:#b5cf38">
+            <i class="pi pi-chart-bar text-xxl" style="color:#b5cf38"></i>
+
+          </button>
+
+        <p-menu #profileMenu [model]="profileItem" [popup]="true" />
+        <button (click)="profileMenu.toggle($event)" class="flex align-items-center p-link layout-topbar-button hover:bg-yellow-200"
+                *ngIf="user.userType === UserTypesEnum.SuperAdmin">
+          <i class="pi pi-cog text-xxl"  style="color:#b5cf38"></i>
+        </button>
+
+<!--        <button #bellBtn (click)="op.toggle($event)" class="flex align-items-center p-link layout-topbar-button hover:bg-yellow-200">-->
+<!--          <i class="pi pi-bell text-xxl"  style="color:#b5cf38"></i>-->
+<!--        </button>-->
+<!--        <p-overlayPanel #op>-->
+<!--          <div class="flex flex-column gap-3 w-15rem text-center" *ngIf="latestActivity?.activity">-->
+<!--            <div>-->
+<!--              <span class="font-bold text-base text-900 block mb-2">یادآوری فعالیت</span>-->
+<!--              <div class="font-bold text-lg">{{ latestActivity.activity.title }}</div>-->
+<!--              <div class="text-sm text-color-secondary mt-1">{{ latestActivity.activity.description }}</div>-->
+<!--              <div class="text-sm text-color-secondary mt-1">زمان: {{ latestActivity.activity.dueDate | jalaliDate:'custom':'HH:mm - YYYY/MM/DD' }}</div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </p-overlayPanel>-->
+
+
+
+        <button class="p-link layout-topbar-button hover:bg-yellow-200 " [routerLink]="'/activities'" title="داشبورد">
+          <i class="pi pi-home"  style="color:#b5cf38" ></i>
+          <span>داشبورد</span>
+        </button>
+
+        <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+
+
+          <p class="flex align-items-center mb-0 ml-3">{{user?.fullName}}</p>
+          <div *ngIf="user" class="flex align-items-center">
+            <p-avatar  icon="pi pi-user" class="md:ml-3" [style]="{'background-color': '#9c27b0', 'color': '#ffffff'}"
+                       shape="circle"
+                       pTooltip="<div style='direction:rtl;color:white;margin-left:10px;'><span >{{UserTypesEnum2LabelMapping[user.userType]}} - {{user.fullName}}<br> آخرین ورود:<br>{{user.lastLogin | jalaliDate}} </span></div>"
+                       [escape]="false"
+                       tooltipPosition="right">
+            </p-avatar>
+
+            <!--                <p-menu #menu [popup]="true" [model]="profileItem"></p-menu>-->
+            <button class="p-link layout-topbar-button hover:bg-yellow-200" [routerLink]="'/logout'" title="خروج">
+              <p class="pi pi-sign-out text-red-500 m-0" style="font-size: 18px"></p>
+              <span>خروج</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+

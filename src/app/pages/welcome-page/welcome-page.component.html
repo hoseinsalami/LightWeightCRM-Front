@@ -1,0 +1,137 @@
+<div *ngIf = "!isLogging" class="main" style="direction:rtl" (keydown.enter)="login()">
+
+  <div class="grid">
+    <div class="col-12">
+      <div class="md:flex w-full border-round shadow-2">
+
+        <div class="bg-red-500 text-white w-full p-4 flex flex-column align-items-center justify-content-evenly">
+          <div class="w-full">
+            <h2 class="text-white">به پلتفرم SSCRM خوش آمدید</h2>
+<!--            <p>حساب کاربری ندارید؟</p>-->
+<!--            <button-->
+<!--              pButton-->
+<!--              pRipple-->
+<!--              label="ثبت نام"-->
+<!--              class="p-button-danger bg-transparent border-white border-round-3xl"-->
+<!--            ></button>-->
+          </div>
+          <p>توسعه داده شده توسط فتاپ</p>
+        </div>
+
+        <div class="relative w-full bg-white p-4">
+
+          <div class="flex justify-content-center">
+            <h3>ورود</h3>
+          </div>
+
+          <div class="form">
+            <form [formGroup]="loginForm">
+
+              <div class="p-field text-right ">
+                <label class="font-bold text-900 text-md">نام کاربری</label>
+                <div class="mt-2">
+
+                  <input type="text" class="w-full" pInputText formControlName="username" name="username" />
+
+                  <div *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.errors" class="error-msg">
+                    {{ getErrorMessage('username') }}
+                  </div>
+
+                </div>
+              </div>
+
+
+
+              <div class="p-field text-right">
+                <label class="font-bold text-900 text-md">رمز عبور</label>
+                <div class="mt-2">
+                  <input type="password" class="w-full" pInputText formControlName="password" name="password"/>
+                  <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors" class="error-msg">
+                    {{ getErrorMessage('password') }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-field">
+                <div class="mt-5">
+                  <button
+                    pButton
+                    pRipple
+                    label="ورود"
+                    class="p-button-danger w-full bg-red-500 border-white border-round-3xl"
+                    (click)="login()"
+                  ></button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<!--    <img src="assets/images/arm.png" alt=" سازمان محیط زیست شهرداری مشهد" class="logo">-->
+
+<!--  <div class="panel">-->
+<!--    <div class="flex flex-column position-relative">-->
+<!--      <div class="captcha">-->
+<!--        <app-dnt-captcha   [captchaForm]="captchaForm" />-->
+<!--      </div>-->
+<!--      <div class="btn-getKey mt-2">-->
+<!--        <button pButton class="p-button-help "  (click)="OnEnter()">ورود به سامانه</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--        <div  class="dntCaptcha mb-3" [id]="captchaOutput.dntCaptchaId">-->
+<!--          <img-->
+<!--            alt="captcha"-->
+<!--            id="dntCaptchaImg"-->
+<!--            name="dntCaptchaImg"-->
+<!--            style="margin-bottom: 4px"-->
+<!--            [src]="captchaOutput.dntCaptchaImgUrl"-->
+<!--          />-->
+<!--          <a-->
+<!--            class="bi-arrow-counterclockwise btn-lg"-->
+<!--            id="dntCaptchaRefreshButton"-->
+<!--            name="dntCaptchaRefreshButton"-->
+<!--            (click)="doRefreshCaptcha()"-->
+<!--            style="cursor: pointer"-->
+<!--          ></a>-->
+<!--          <input id="DNTCaptchaText" name="DNTCaptchaText" type="hidden" [value]="captchaOutput.dntCaptchaTextValue"/>-->
+<!--          <div class="input-group">-->
+<!--                  <span class="input-group-text">-->
+<!--                    <span class="bi-lock"></span>-->
+<!--                  </span>-->
+<!--            <input-->
+<!--              autocomplete="off"-->
+<!--              class="form-control"-->
+<!--              dir="ltr"-->
+<!--              id="DNTCaptchaInputText"-->
+<!--              name="DNTCaptchaInputText"-->
+<!--              [(ngModel)]="captchaVerifyInput.DNTCaptchaInputText"-->
+<!--              placeholder="Security code as a number"-->
+<!--              type="text"-->
+<!--            />-->
+<!--          </div>-->
+<!--          <input id="DNTCaptchaToken" name="DNTCaptchaToken" type="hidden" [value]="captchaOutput.dntCaptchaTokenValue"/>-->
+<!--        </div>-->
+
+
+
+</div>
+
+<div *ngIf = "isLogging" class="flex justify-content-center align-items-center flex-column h-screen">
+    <div>
+        <img src="assets/images/loading_.gif" style="max-width: 90%;border-radius: 20%" />
+    </div>
+    <div>در حال انتقال به سامانه ...  </div>
+</div>
+
+
+
+
+

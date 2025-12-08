@@ -1,0 +1,17 @@
+::ng-deep{
+  .p-panel-header{
+    border: none !important;
+    padding: 0px !important;
+  }
+
+}
+.scroll-container {
+  //height: 750px; /* یا هر ارتفاع مناسبی */
+  //overflow-y: auto;
+}
+.green-bg {
+  background: #22c55e !important;
+  .pi{
+    color: #fff !important;
+  }
+}

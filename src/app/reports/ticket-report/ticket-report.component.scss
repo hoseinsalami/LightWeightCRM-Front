@@ -1,0 +1,25 @@
+::ng-deep{
+
+  .datepicker-outer-container{
+    position: relative;
+  }
+
+  .chart{
+    canvas{
+      height: 30rem !important;
+    }
+  }
+
+  .p-divider-horizontal{
+    margin: 0;
+  }
+  .divider{
+    .p-divider-dashed{
+      &:before{
+        border-top: 2px #e5e7eb dashed !important;
+      }
+    }
+  }
+
+}
+

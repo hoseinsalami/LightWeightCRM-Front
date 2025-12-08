@@ -1,0 +1,31 @@
+<!--url="{{uploadUrl}}"-->
+<!--accept="image/*"-->
+<p-fileUpload name="uploadFiles" [disabled]="isDisabled" [url]="url()" (onUpload)="onUpload($event)" (onSelect)="onSelect($event)" *ngIf="uploadType!=='simple'"
+              chooseLabel="{{addLabel}}" cancelLabel="لغو" uploadLabel="بارگذاری" [auto]="true"
+              [multiple]="multi" [maxFileSize]="10485760" styleClass="w-98">
+  <ng-template pTemplate="content">
+    <ul *ngIf="uploadedFiles.length" class="list-none">
+      <li *ngFor="let file of uploadedFiles; let i = index">
+        <div class="flex align-items-center gap-3">
+<!--          <img *ngIf="imagePreviews[i]" [src]="imagePreviews[i]" alt="پیش‌نمایش تصویر" class="w-5rem"/>-->
+          <div class="w-full">
+            <button pButton pRipple (click)="removeFile(i)" class="p-button-danger my-1 pi pi-times"></button>
+            <span *ngIf="file.name || file.size">{{file.name}} - {{file.size}} bytes</span>
+            <span *ngIf="file.title">{{file.title}}</span>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </ng-template>
+</p-fileUpload>
+
+<!--<p-fileUpload  *ngIf="uploadType=='simple'"-->
+<!--               mode="basic"-->
+<!--               name="uploadPhotos"-->
+<!--               [url]="urlByType(fileType)"-->
+<!--               [accept]="getAccept(fileType)"-->
+<!--               [maxFileSize]=maxImageSize-->
+<!--               [invalidFileSizeMessageSummary]="'خطا'"-->
+<!--               [invalidFileSizeMessageDetail]="'اندازه فایلی که انتخاب کرده اید بزرگ است.'"-->
+<!--               (onUpload)="onUpload($event)" [auto]="true"-->
+<!--               chooseLabel="{{addLabel}}"></p-fileUpload>-->

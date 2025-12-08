@@ -1,0 +1,909 @@
+<!--<div class="grid">-->
+<!--  <div class="col-12">-->
+
+    <p class="top-right-button text-white cursor-pointer"
+       (click)="showModalSearchWorkItem=true" pTooltip="جستجو قلم کاری"
+       tooltipPosition="left">
+      <i class="pi pi-search text-lg"></i>
+    </p>
+
+<!--    <div class="flex justify-content-between">-->
+
+<!--      <div class="field">-->
+<!--&lt;!&ndash;        <label class="text-right font-bold text-900 text-md mb-2" for="">جستجو مشتری</label>&ndash;&gt;-->
+<!--        <div class="field">-->
+<!--          <p-autoComplete-->
+<!--            [inputStyle]="{'width':'300px'}"-->
+<!--            [style]="{'width':'100%'}"-->
+<!--            [suggestions]="filteredWorkItem"-->
+<!--            (completeMethod)="filterWorkItems($event)"-->
+<!--            (onSelect)="selectWorkItem($event)"-->
+<!--            [showClear]="true"-->
+<!--            [autofocus]="true"-->
+<!--            [showEmptyMessage]="true"-->
+<!--            emptyMessage="موردی یافت نشد"-->
+<!--            appendTo="body"-->
+<!--            optionLabel="title"-->
+<!--            styleClass="w-full mx-auto"-->
+<!--            scrollHeight="400px"-->
+<!--            class="p-autocomplete w-full mx-auto"-->
+<!--            placeholder="جستجو براساس قلم کاری | مشتری | شرکت">-->
+
+<!--            <ng-template let-filteredCustomers pTemplate="item">-->
+<!--              <div class="grid align-items-end justify-content-between" style="direction: rtl">-->
+
+
+<!--                <div class="col-12 overflow-hidden flex gap-2">-->
+<!--                  <p class=" my-0 ">{{filteredCustomers.title}}</p>-->
+<!--                </div>-->
+
+
+<!--              </div>-->
+<!--            </ng-template>-->
+
+<!--            <ng-template pTemplate="empty">-->
+<!--              <div class="text-center px-2 flex align-items-baseline justify-content-between" style="direction: rtl">-->
+<!--                <p class="mb-2">موردی یافت نشد</p>-->
+<!--                <button pButton-->
+<!--                        pRipple-->
+<!--                        [outlined]="true"-->
+<!--                        severity="success"-->
+<!--                        class="p-button p-component p-button-sm p-button-success hover:bg-green-500 hover:text-white"-->
+<!--                        (click)="openModalNewCustomer()">-->
+<!--                  افزودن مشتری-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </ng-template>-->
+
+<!--          </p-autoComplete>-->
+<!--        </div>-->
+
+<!--      </div>-->
+
+
+<!--      <div class="field">-->
+<!--        <p-dropdown-->
+<!--          [styleClass]="'clear-icon'"-->
+<!--          [showClear]="true"-->
+<!--          [options]="expertUsers"-->
+<!--          [(ngModel)]="selectedExpertUser"-->
+<!--          class="mt-2"-->
+<!--          [style]="{'width':'250px'}"-->
+<!--          optionLabel="fullName"-->
+<!--          optionValue="id"-->
+<!--          placeholder="کارشناسان">-->
+<!--        </p-dropdown>-->
+<!--      </div>-->
+
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<div class="relative">
+
+  <button  (click)="scroll('left')" class="scroll-btn left-btn">
+    ◀
+  </button>
+
+  <!-- دکمه اسکرول به راست -->
+  <button  (click)="scroll('right')" class="scroll-btn right-btn">
+    ▶
+  </button>
+
+  <div class="grid">
+    <div class="col-2">
+      <div class="flex align-items-center gap-2">
+        <!--        <label class="block">کاریز</label>-->
+        <p-dropdown
+          [styleClass]="'clear-icon'"
+          [showClear]="true"
+          [options]="listOfCaries?.otherPaths"
+          class="mt-2"
+          [style]="{'width':'250px'}"
+          optionLabel="title"
+          optionValue="id"
+          [(ngModel)]="pathId"
+          (onChange)="navigatePath($event)">
+        </p-dropdown>
+        <i class="pi pi-pencil bg-green-500 border-round-3xl cursor-pointer p-2 text-white" (click)="modalDetailCaries()"></i>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Header Section: نمایش عنوان مراحل -->
+  <!--  class="header-steps overflow-auto flex gap-3 py-3"-->
+  <div class="pipeline-cntr">
+    <section #headerSteps
+             dir="rtl"
+             class="pipeline-header"
+             cdkDropList
+             [cdkDropListData]="steps"
+             (cdkDropListDropped)="dropStep($event)"
+             cdkDropListOrientation="horizontal">
+      <!--      <div *ngFor="let step of steps"-->
+      <!--           class="text-center min-w-20rem stp relative"-->
+      <!--           [cdkDragData]="step"-->
+      <!--           cdkDrag>-->
+      <!--      class="text-center min-w-20rem stp relative"  -->
+      <header *ngFor="let step of steps"
+              class="tooltip-hover icon-edit "
+              [cdkDragData]="step"
+              cdkDrag>
+        <div class="white-space-nowrap overflow-hidden text-overflow-ellipsis">{{ step?.title }}</div>
+        <i class="pi pi-pencil edit" (click)="openModalEditCaries(step)"></i>
+        <i class="pi pi-plus new" (click)="openModalNewCaries(step)"></i>
+        <span class="arrow-prg-L"></span>
+        <span class="arrow-prg-R"></span>
+      </header>
+      <!--      </div>-->
+    </section>
+  </div>
+
+
+  <!-- Body Section: نمایش کارت‌های معاملات در هر مرحله -->
+  <!--  class="body-wrapper overflow-x-auto  overflow-y-auto" style="max-height: 80vh;"-->
+  <div #bodyWrapper class="pipeline-col-cntr"  (scroll)="onStepScroll($event)">
+    <!--      <div  class="flex gap-3">-->
+
+    <!--      class="body-workItems min-w-20rem flex-shrink-0 mb-2"-->
+    <section *ngFor="let step of steps"
+             #stepColumn
+             cdkDropList
+             [cdkDropListData]="step.workItems"
+             [cdkDropListConnectedTo]="connectedDropLists"
+             [id]="'dropList-' + step.id"
+             (cdkDropListDropped)="drop($event, step.id)"
+             class="pipeline-col flex-shrink-0">
+
+      <!--          <section class="pipeline-item-cntr">-->
+      <div (click)="openModal(step.id)"
+           class="border-2 border-dashed border-green-500 bg-transparent text-green-500 text-center cursor-pointer my-2 py-2 px-5 sticky z-100 top-1vh bg-success-btn">
+        ایجاد معامله جدید
+      </div>
+
+      <article class="relative flex flex-column gap-3">
+
+        <!--            &lt;!&ndash; دکمه افزودن معامله جدید &ndash;&gt;-->
+        <!--            <div (click)="openModal(step.id)"-->
+        <!--                 class="border-2 border-dashed border-round border-green-500 bg-transparent text-green-500 text-center cursor-pointer mt-2 py-2 px-5">-->
+        <!--              ایجاد معامله جدید-->
+        <!--            </div>-->
+
+        <div *ngFor="let workItem of step.workItems"
+             class="card cursor-pointer p-2 border-round flex flex-column justify-content-around m-0"
+             cdkDrag
+             (cdkDragStarted)="onDragStarted()"
+             (cdkDragEnded)="onDragEnded()"
+             [ngClass]="{'success': workItemStatesEnum[workItem?.status]?.value == 1,'failure': workItemStatesEnum[workItem?.status]?.value == 2}"
+             [style]="{'height': '190px'}"
+             [routerLink]="'/workItem/' + workItem.id">
+
+          <p class="m-0">{{ workItem?.title }}</p>
+
+          <div class="overlay" *ngIf="workItemStatesEnum[workItem?.status]?.value == 1">
+            <img src="./assets/images/successfull.png">
+          </div>
+          <div class="overlay" *ngIf="workItemStatesEnum[workItem?.status]?.value == 2">
+            <img src="./assets/images/failure.png">
+          </div>
+
+          <div class="flex align-items-center gap-2">
+            <img src="./assets/images/icon-company-100.png" style="width:75px" alt="">
+
+
+            <div class="flex flex-column gap-1" (mouseleave)="showListPhoneNumberFor = null">
+              <p class="mb-1">{{ workItem?.customer?.name + ' ' + workItem?.customer?.family }}</p>
+
+              <div *ngIf="workItems.customer?.customerPhones?.length" class="flex align-items-center gap-1">
+
+                <div class="phone-dropdown" (click)="$event.stopPropagation()">
+                  <div class="phone-display" (click)="op.toggle($event)">
+                    <span class="text-sm">{{ getSelectedPhone(workItem) }}</span>
+                    <!--                        <span>{{ workItem?.customer?.customerPhones[0].phoneNumber }}</span>-->
+                    <i class="pi pi-chevron-down hover-block"></i>
+                  </div>
+
+                  <p-overlayPanel #op [showCloseIcon]="false" appendTo="body" class="p-0" styleClass="p-0">
+                    <ul class="m-0 p-0 list-none flex flex-column gap-2">
+                      <li *ngFor="let phone of getFilteredPhones(workItem)"
+                          (click)="selectPhone(workItem, phone); op.hide()"
+                          class="cursor-pointer hover:bg-green-500 hover:text-white py-2 px-3">
+                        {{ phone.phoneNumber }}
+                      </li>
+                    </ul>
+                  </p-overlayPanel>
+                </div>
+
+                <img src="assets/images/chat-25.png" style="width:20px; height:20px" class="mr-1"
+                     (click)="openDialogSms(workItem) ; $event.stopPropagation()">
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+          <p *ngIf="workItem.isStagnant" class="text-xs text-left text-gray-400 mt-2">
+            <img src="assets/images/exclamation-25.png" alt=""
+                 pTooltip="راکد"
+                 tooltipPosition="top">
+          </p>
+
+          <!--              <p *ngIf="workItem?.deadline; else noDate" class="text-xs text-left text-gray-400 mt-2">-->
+          <!--                تاریخ: {{ workItem?.deadline | jalaliDate:'date' }}-->
+          <!--              </p>-->
+          <!--              <ng-template #noDate>-->
+          <!--                <p class="text-xs text-left text-gray-400 mt-2">فاقد تاریخ</p>-->
+          <!--              </ng-template>-->
+        </div>
+
+      </article>
+      <!--          </section>-->
+      <!-- دکمه افزودن معامله جدید -->
+
+    </section>
+    <!--      </div>-->
+  </div>
+
+
+
+
+
+  <!--  <div #scrollContainer class="flex gap-3 overflow-auto h-full" style="scroll-behavior: smooth;">-->
+<!--    <div #column class="min-w-20rem">-->
+
+<!--      <div class="flex">-->
+<!--        <div class="p-card text-center p-3 stp " *ngFor="let item of steps"  [class]="{'fixed-scroll': isSticky}">{{item?.title}}</div>-->
+<!--      </div>-->
+
+<!--      <div>-->
+<!--        <div *ngFor="let item of steps">-->
+<!--          <div *ngFor="let workItem of item.workItems" >-->
+<!--            <div #card class="card cursor-pointer p-2 border-round shadow-2 my-3"-->
+<!--                 [class]="workItem?.status && workItemStatesEnum[workItem.status]?.value ? (workItemStatesEnum[workItem.status].value == 1 ? 'success' : (workItemStatesEnum[workItem.status].value == 2 ? 'failure' : '')): ''"-->
+<!--                 cdkDrag-->
+<!--                 (cdkDragStarted)="onDragStarted()"-->
+<!--                 (cdkDragEnded)="onDragEnded()"-->
+<!--                 [style]="{'height': '15vh'}"-->
+<!--                 [routerLink]="'/workItem/' + workItem.id">-->
+
+<!--              <p>{{workItem?.title}}</p>-->
+
+<!--              <div class="overlay" *ngIf="workItem?.status && workItemStatesEnum[workItem.status].value == 1">-->
+<!--                <img src="./assets/images/successfull.png">-->
+<!--              </div>-->
+
+<!--              <div class="overlay" *ngIf="workItem?.status && workItemStatesEnum[workItem.status].value == 2">-->
+<!--                <img src="./assets/images/failure.png">-->
+<!--              </div>-->
+
+<!--              <div class="flex align-items-center gap-2">-->
+<!--                <img src="assets/images/avatar-60.png" class="w-4rem" alt="">-->
+<!--                <p>{{workItem?.customer?.name + ' ' + workItem?.customer?.family}}</p>-->
+<!--              </div>-->
+
+<!--              <p *ngIf="workItem?.deadline; else noDate" class="text-xs text-left text-gray-400 mt-2">-->
+<!--                تاریخ:-->
+<!--                {{workItem?.deadline | jalaliDate:'date'}}-->
+<!--              </p>-->
+<!--              <ng-template #noDate>-->
+<!--                <p class="text-xs text-left text-gray-400 mt-2">-->
+<!--                  فاقد تاریخ-->
+<!--                </p>-->
+<!--              </ng-template>-->
+<!--            </div>-->
+<!--            <div (click)="openModal(item.id)"-->
+<!--                 class="border-2 border-dashed border-round border-green-500 bg-transparent text-green-500 text-center cursor-pointer mt-2 py-2 px-5 ">-->
+<!--              ایجاد معامله جدید-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </div >-->
+
+<!--  </div>-->
+
+</div>
+
+
+<!--************************** begin newWorkItem modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showModal"
+  [appendTo]="'body'"
+  header="افزودن معامله جدید"
+  [modal]="true">
+
+<!--  <ng-container *ngIf="selectedWorkItem">-->
+
+    <div class="grid">
+      <div class="col-12">
+
+        <div class="flex flex-wrap gap-4">
+
+          <div class="form-group flex-1">
+            <label class="text-right font-bold text-900 text-md mb-2">عنوان معامله</label>
+            <div class="field mt-2">
+              <input
+                [style]="{'width':'100%'}"
+                pInputText
+                type="text"
+                id="title"
+                name="title"
+                class="p-fieldset"
+                [(ngModel)]="workItems.title">
+            </div>
+          </div>
+
+          <div class="flex-1" *ngIf="user.userType === UserTypesEnum.Admin || user.userType === UserTypesEnum.SuperAdmin">
+            <label class="text-right font-bold text-900 text-md mb-2">کارشناس</label>
+            <div class="field mt-2">
+              <p-dropdown
+                [styleClass]="'clear-icon'"
+                [showClear]="true"
+                [options]="pathExpertUsers"
+                [(ngModel)]="workItems.responsibleUserId"
+                class="mt-2"
+                [style]="{'width':'100%'}"
+                optionLabel="fullName"
+                optionValue="id"
+                placeholder="انتخاب کارشناس">
+              </p-dropdown>
+            </div>
+          </div>
+<!--        </div>-->
+
+          <div class="form-group field flex-1">
+            <label class="text-right font-bold text-900 text-md mb-2" for="">جستجو مشتری</label>
+            <div class="field">
+              <p-autoComplete
+                [inputStyle]="{'width':'100%'}"
+                [style]="{'width':'100%'}"
+                [(ngModel)]="selectedCustomer"
+                [suggestions]="filteredCustomer"
+                (completeMethod)="filterCustomer($event)"
+                (onSelect)="selectCustomer($event)"
+                [showClear]="true"
+                [autofocus]="true"
+                [showEmptyMessage]="true"
+                emptyMessage="موردی یافت نشد"
+                appendTo="body"
+                optionLabel="fullName"
+                styleClass="w-full mx-auto"
+                scrollHeight="400px"
+                class="p-autocomplete w-full mx-auto"
+                placeholder="نام خانوادگی | شماره تلفن | شرکت">
+
+                <ng-template let-filteredCustomers pTemplate="item">
+                  <div class="grid align-items-end justify-content-between" style="direction: rtl">
+
+
+                    <div class="col-12 overflow-hidden flex gap-2">
+                      <p class=" my-0 ">{{filteredCustomers.name}}</p>
+                      <p
+                        class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">
+                        {{filteredCustomers.family}} ({{filteredCustomers.companyName ? filteredCustomers.companyName :''}})
+                      </p>
+                    </div>
+
+
+                  </div>
+                </ng-template>
+
+                <ng-template pTemplate="empty">
+                  <div class="text-center px-2 flex align-items-baseline justify-content-between" style="direction: rtl">
+                    <p class="mb-2">موردی یافت نشد</p>
+                    <button pButton
+                            pRipple
+                            [outlined]="true"
+                            severity="success"
+                            class="p-button p-component p-button-sm p-button-success hover:bg-green-500 hover:text-white"
+                            (click)="openModalNewCustomer()">
+                      افزودن مشتری
+                    </button>
+                  </div>
+                </ng-template>
+
+              </p-autoComplete>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-12">
+        <div class="form-group">
+          <label class="font-bold text-900 text-xl">توضیحات</label>
+          <div class="field">
+              <textarea
+                [(ngModel)]="workItems.description"
+                [style]="{'width':'100%'}"
+                rows="5"
+                id="description"
+                name="description"
+                pInputTextarea
+                class="p-fieldset">
+              </textarea>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!--  </ng-container>-->
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success p-mr-2"
+      (click)="onRegister()"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="closeModal()"
+    ></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end newWorkItem modal *************************************-->
+
+<!--************************** begin newCustomer modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showModalNewCustomer"
+  [appendTo]="'body'"
+  header="افزودن مشتری جدید"
+  [modal]="true">
+
+  <!--  <ng-container *ngIf="selectedWorkItem">-->
+
+  <div *ngIf="showCustomerForm" class="grid">
+    <div class="col-12">
+      <div class="flex flex-wrap gap-4">
+
+        <div class="form-group flex-1">
+          <label class="text-right font-bold text-900 text-md mb-2">نام</label>
+          <div class="field mt-2">
+            <input
+            [(ngModel)]="workItems.customer.name"
+            [style]="{'width':'100%'}"
+            pInputText
+            type="text"
+            id="name"
+            name="name"
+            class="p-fieldset">
+          </div>
+        </div>
+
+        <div class="form-group flex-1">
+          <label class="text-right font-bold text-900 text-md mb-2">نام خانوادگی</label>
+          <div class="field mt-2">
+            <input
+              [(ngModel)]="workItems.customer.family"
+              [style]="{'width':'100%'}"
+              pInputText
+              type="text"
+              id="family"
+              name="family"
+              class="p-fieldset">
+          </div>
+        </div>
+
+        <div class="form-group flex-1">
+          <label class="text-right font-bold text-900 text-md mb-2">شماره همراه</label>
+          <div class="field mt-2">
+            <input
+              [(ngModel)]="workItems.customer.phone"
+              #phoneInput="ngModel"
+              [style]="{'width':'100%'}"
+              pInputText
+              type="text"
+              id="phone"
+              name="phone"
+              class="p-fieldset"
+              minlength="11"
+              maxlength="11"
+              pattern="^[0-9]{11}$"
+              [pKeyFilter]="'int'">
+<!--            <div *ngIf="phoneInput.invalid && phoneInput.touched" class="text-red-500 text-sm mt-1">-->
+<!--              <div *ngIf="phoneInput.errors?.['required']">شماره همراه اجباری است.</div>-->
+<!--              <div *ngIf="phoneInput.errors?.['pattern']">شماره باید ۱۱ رقم باشد.</div>-->
+<!--            </div>-->
+          </div>
+        </div>
+
+        <div class="form-group flex-1">
+          <label class="text-right font-bold text-900 text-md mb-2">شرکت</label>
+          <div class="field mt-2">
+            <input
+              [(ngModel)]="workItems.customer.companyName"
+              [style]="{'width':'100%'}"
+              pInputText
+              type="text"
+              id="companyName"
+              name="companyName"
+              class="p-fieldset">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--  </ng-container>-->
+
+  <ng-template pTemplate="footer">
+
+    <button
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success p-mr-2"
+      (click)="onRegisterNewCustomer()"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="closeModalNewCustomer()"
+    ></button>
+
+
+  </ng-template>
+
+
+
+
+</p-dialog>
+<!--************************** end newCustomer modal *************************************-->
+
+<!--************************** begin searchWorkItem modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showModalSearchWorkItem"
+  [appendTo]="'body'"
+  header="جستجو قلم کاری"
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12">
+          <div class="">
+      <!--        <label class="text-right font-bold text-900 text-md mb-2" for="">جستجو مشتری</label>-->
+              <div class="field">
+                <p-autoComplete
+                  [inputStyle]="{'width':'100%'}"
+                  [style]="{'width':'100%'}"
+                  [suggestions]="filteredWorkItem"
+                  (completeMethod)="filterWorkItems($event)"
+                  (onSelect)="selectWorkItem($event)"
+                  [showClear]="true"
+                  [autofocus]="true"
+                  [showEmptyMessage]="true"
+                  emptyMessage="موردی یافت نشد"
+                  appendTo="body"
+                  optionLabel="title"
+                  styleClass="w-full mx-auto"
+                  scrollHeight="400px"
+                  class="p-autocomplete w-full mx-auto"
+                  placeholder="جستجو براساس قلم کاری | مشتری | شرکت">
+
+                  <ng-template let-filteredCustomers pTemplate="item">
+                    <div class="grid align-items-end justify-content-between" style="direction: rtl">
+
+
+                      <div class="col-12 overflow-hidden flex gap-2">
+                        <p class=" my-0 ">
+                          <span class="font-light">قلم کاری:</span>
+                          {{filteredCustomers.title}}</p>
+                        <p
+                          class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">
+                          -
+                          <span class="font-light">مشتری:</span>
+                          {{filteredCustomers.customer.family}} ({{filteredCustomers.customer.companyName ? filteredCustomers.customer.companyName :''}})
+                        </p>
+                      </div>
+
+
+                    </div>
+                  </ng-template>
+
+                  <ng-template pTemplate="empty">
+                    <div class="text-center px-2 flex align-items-baseline justify-content-between" style="direction: rtl">
+                      <p class="mb-2">موردی یافت نشد</p>
+                    </div>
+                  </ng-template>
+
+                </p-autoComplete>
+              </div>
+
+
+<!--            <div class="field">-->
+<!--              <p-dropdown-->
+<!--                [styleClass]="'clear-icon'"-->
+<!--                [showClear]="true"-->
+<!--                [options]="expertUsers"-->
+<!--                [(ngModel)]="selectedExpertUser"-->
+<!--                class="mt-2"-->
+<!--                [style]="{'width':'250px'}"-->
+<!--                optionLabel="fullName"-->
+<!--                optionValue="id"-->
+<!--                placeholder="کارشناسان">-->
+<!--              </p-dropdown>-->
+<!--            </div>-->
+
+          </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+
+    <button
+      pButton
+      pRipple
+      label="بستن"
+      class="p-button-danger p-mr-2"
+      (click)="showModalSearchWorkItem = false"
+    ></button>
+
+
+  </ng-template>
+
+
+
+
+</p-dialog>
+<!--************************** end newCustomer modal *************************************-->
+
+<!--************************** begin caries-step modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showModalCariesStep"
+  [appendTo]="'body'"
+  [header]="modeCaries == 'new' ? 'افزودن گام جدید' : 'ویرایش گام' "
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12">
+
+      <div *ngFor="let item of orderList">
+        <div class="flex align-items-end mb-3 gap-3">
+          <div class="flex flex-column flex-1">
+            <label class="text-right">عنوان</label>
+            <input
+              pInputText
+              id="steps"
+              name="steps"
+              [(ngModel)]="item.title"
+              (keydown)="handleSpace($event)"/>
+          </div>
+          <div class="flex flex-column flex-1">
+            <label class="text-right">حداکثر زمان پیش از راکد شدن</label>
+            <input
+              pInputText
+              type="text"
+              id="reminder"
+              name="reminder"
+              class="p-fieldset"
+              placeholder="مدت زمان"
+              [style]="{'width':'100%'}"
+              [(ngModel)]="item.deadlineValue"
+              [pKeyFilter]="'int'">
+          </div>
+
+          <div class="form-group flex gap-3">
+            <p-dropdown
+              (click)="$event.stopPropagation()"
+              (mousedown)="$event.stopPropagation()"
+              (pointerdown)="$event.stopPropagation()"
+              (touchstart)="$event.stopPropagation()"
+              [styleClass]="'clear-icon'"
+              [showClear]="true"
+              [options]="TimeUnits"
+              [(ngModel)]="item.periodTimeUnit"
+              optionLabel="title"
+              optionValue="value"
+              class="mt-2"
+              [style]="{'width':'150px'}"
+              [required]="true"
+              [appendTo]="'body'"
+              placeholder="زمان">
+            </p-dropdown>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+
+    <button
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success p-mr-2"
+      (click)="modeCaries == 'new' ? onAddNewStep() : onEditStep()"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="showModalCariesStep = false"
+    ></button>
+
+
+  </ng-template>
+
+</p-dialog>
+<!--************************** end caries-step modal *************************************-->
+
+<!--************************** begin caries-info modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl', height:'500px'}"
+  [(visible)]="showModalDetailCaries"
+  [appendTo]="'body'"
+  [header]="'ویرایش کاریز' "
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12 md:col-4">
+      <div class="flex flex-column flex-1">
+        <label for="title">عنوان کاریز</label>
+        <input
+          pInputText
+          id="title"
+          name="title"
+          [(ngModel)]="detailCaries.title"/>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-4">
+      <div class="datePickerContainer relative">
+        <label class="text-right font-bold text-md mb-2">راهبر</label>
+        <div>
+          <p-dropdown
+            [styleClass]="'clear-icon'"
+            [showClear]="true"
+            [options]="adminUsers"
+            [(ngModel)]="detailCaries.pathAdminId"
+            class="mt-2"
+            [style]="{'width':'100%'}"
+            appendTo="body"
+            optionLabel="fullName"
+            optionValue="id"
+            placeholder="راهبر برای کاریز خود انتخاب کنید">
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-group">
+        <label class="text-right font-bold text-md mb-2">کارشناس</label>
+        <div class="field">
+          <p-multiSelect [style]="{'width':'100%'}"
+                         name="userType"
+                         class="w-full"
+                         placeholder ="کارشناسان خود را انتخاب نمایید"
+                         scrollHeight="250px"
+                         display="chip"
+                         optionLabel="fullName"
+                         optionValue="id"
+                         appendTo="body"
+                         [(ngModel)]="detailCaries.pathExpertIds"
+                         [options]="cariesExpertUsers">
+          </p-multiSelect>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-12">
+      <div class="flex flex-column flex-1">
+        <label for="description">توضیحات</label>
+        <textarea
+          id="description"
+          name="description"
+          rows="5"
+          cols="30"
+          pInputTextarea
+          [autoResize]="false"
+          [(ngModel)]="detailCaries.description">
+        </textarea>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+
+    <button
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success p-mr-2"
+      (click)="onUpdateCaries()"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="showModalDetailCaries = false"
+    ></button>
+
+
+  </ng-template>
+
+</p-dialog>
+<!--************************** end caries-info modal *************************************-->
+
+<!--************************** begin SendMessageForCustomer modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-small'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showDialogSms"
+  [appendTo]="'body'"
+  [header]="'ارسال پیام به مشتری' "
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12">
+      <div class="flex flex-column flex-1">
+        <label for="title">پیام</label>
+        <textarea
+          rows="5"
+          cols="30"
+          pInputTextarea
+          [(ngModel)]="dataMessage.message"
+          placeholder="متن پیام خود را وارد نمایید">
+        </textarea>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template pTemplate="footer">
+
+    <button
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success p-mr-2"
+      (click)="onSendMessage()"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="this.showDialogSms = false"
+    ></button>
+
+
+  </ng-template>
+
+</p-dialog>
+<!--************************** end SendMessageForCustomer modal *************************************-->

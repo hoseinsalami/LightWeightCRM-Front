@@ -1,0 +1,73 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import {AuthGuard} from "../_guard/auth.guard";
+
+const routes: Routes = [
+  {
+    path: 'users',
+    loadChildren: () => import('./users/users.module').then(u => u.UsersModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+  {
+    path: 'customers',
+    loadChildren: () => import('./customers/customers.module').then(c => c.CustomersModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+  {
+    path: 'caries',
+    loadChildren: () => import('./caries/caries.module').then(c => c.CariesModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+  {
+    path: 'activities',
+    loadChildren: () => import('./activities/activities.module').then(a => a.ActivitiesModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+  {
+    path: 'accustom',
+    loadChildren: () => import('./accustom/accustom.module').then(ac => ac.AccustomModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+  {
+    path: 'failures',
+    loadChildren: () => import('./failures/failures.module').then(f => f.FailuresModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+  {
+    path: 'ticket-config',
+    loadChildren: () => import('./ticket-config/ticket-config.module').then(t => t.TicketConfigModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'ticket'}
+  },
+
+  {
+    path: 'tag',
+    loadChildren: () => import('./tag/tag.module').then(t => t.TagModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+  {
+    path: 'filter',
+    loadChildren: () => import('./filters/filters.module').then(f => f.FiltersModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'filter'}
+  },
+  {
+    path: 'process-automation',
+    loadChildren: () => import('./process-automation/process-automation.module').then(p => p.ProcessAutomationModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'process'}
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class SettingRoutingModule { }

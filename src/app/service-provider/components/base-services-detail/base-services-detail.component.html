@@ -1,0 +1,56 @@
+<div class="flex flex-column align-items-center">
+  <div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
+    <div class="grid">
+
+      <div class="col-12">
+
+        <div class="form-group">
+          <label class="text-900">عنوان</label>
+          <div class="field">
+            <input
+              [(ngModel)]="manager.oneObject.title"
+              [style]="{'width':'100%'}"
+              pInputText
+              type="text"
+              id="title"
+              name="title"
+              placeholder="عنوان وارد نمایید."
+              class="p-fieldset"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="text-900">کد سرویس دهنده</label>
+          <div class="field">
+            <input
+              [(ngModel)]="manager.oneObject.code"
+              [style]="{'width':'100%'}"
+              pInputText
+              type="text"
+              id="code"
+              name="code"
+              placeholder="کد سرویس دهنده وارد نمایید."
+              class="p-fieldset"/>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-12 flex justify-content-end gap-3">
+        <!--        <div class="mt-3 mr-3">-->
+        <button type="button" pButton pRipple
+                class=" p-button-danger w-6rem"
+                label="انصراف"
+                (click)="manager.cancel()">
+        </button>
+        <button type="button" pButton pRipple
+                class="p-button-success w-6rem"
+                label="ثبت"
+                (click)="manager.save()">
+        </button>
+        <!--        </div>-->
+      </div>
+
+    </div>
+  </div>
+</div>

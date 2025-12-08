@@ -1,0 +1,1745 @@
+<div class="flex m-auto" style="width:800px; min-height:80vh"> <!-- height:730px -->
+  <div class="p-card p-4 shadow-2 mx-auto w-full max-w-60rem">
+    <div class="grid">
+      <div class="col-12">
+        <p-button label="ثبت فرایند" severity="success" (click)="onSubmit()" />
+
+        <p-tabView>
+          <p-tabPanel header="تنظیمات">
+
+            <div class="grid">
+              <div class="col-12">
+                <p-fieldset [style]="{padding:'0px'}">
+                  <ng-template pTemplate="header">
+                    <p>مشخصات</p>
+                  </ng-template>
+
+                  <div class="flex flex-column">
+                    <div class="border-2 border-dashed surface-border border-round surface-ground px-3 py-2">
+
+                      <div class="flex align-items-center gap-5">
+                        <div class="form-group">
+                          <label class="font-bold text-900" for="title">عنوان</label>
+                          <div class="field">
+                            <input
+                              pInputText
+                              type="text"
+                              id="title"
+                              name="title"
+                              class="p-fieldset"
+                              [style]="{'width': '250px'}"
+                              [(ngModel)]="oneObject.title">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="font-bold text-900" for="title">فعال</label>
+                          <div class="field">
+                            <p-inputSwitch [(ngModel)]="oneObject.active" />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="font-bold text-900">توضیحات</label>
+                        <div class="field">
+                          <textarea
+                            [style]="{'width':'100%'}"
+                            rows="5"
+                            id="description"
+                            name="description"
+                            pInputTextarea
+                            class="p-fieldset"
+                            [(ngModel)]="oneObject.description">
+                          </textarea>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </p-fieldset>
+              </div>
+
+              <div class="col-12">
+                <p-fieldset [style]="{padding:'0px'}">
+                  <ng-template pTemplate="header">
+                    <p>فعال کننده</p>
+                  </ng-template>
+
+                  <div>
+                    <div class="flex justify-content-between align-items-center gap-3">
+                      <div class="form-group flex-1">
+                        <label for="event" class="text-right font-bold">نوع رویداد</label>
+                        <div class="field">
+                          <p-dropdown [style]="{'width':'100%'}"
+                                      name="userType"
+                                      class="w-full"
+                                      placeholder ="رویداد انتخاب کنید"
+                                      scrollHeight="250px"
+                                      display="chip"
+                                      optionLabel="caption"
+                                      [options]="listOfEvent"
+                                      (onChange)="onEventData($event.value)">
+                          </p-dropdown>
+                        </div>
+                      </div>
+
+                      <div class="form-group flex-1">
+                        <label for="filter" class="text-right font-bold">فیلتر</label>
+                        <div class="field">
+                          <p-dropdown [style]="{'width':'100%'}"
+                                      name="userType"
+                                      class="w-full"
+                                      placeholder ="فیلتر انتخاب کنید"
+                                      scrollHeight="250px"
+                                      display="chip"
+                                      optionLabel="title"
+                                      optionValue="filterParameter"
+                                      [(ngModel)]="triggerEventParameter"
+                                      [options]="eventFilterOptions"
+                                      (onChange)="onEventFilterOptions($event)">
+                          </p-dropdown>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <!--                    <div class="flex flex-column border-2 border-dashed surface-border border-round surface-ground px-3 py-2">-->
+                    <!--            <ul class="pl-2 list-roman">-->
+                    <!--              <ng-container *ngFor="let node of treeNodes">-->
+                    <!--                <ng-container [ngTemplateOutlet]="treeNodeTemplate" [ngTemplateOutletContext]="{ node: node }"></ng-container>-->
+                    <!--              </ng-container>-->
+                    <!--            </ul>-->
+
+                    <!--            <ng-template #treeNodeTemplate let-node="node">-->
+                    <!--              <li class="mb-1">-->
+                    <!--                <div class="flex items-center space-x-2">-->
+                    <!--                  &lt;!&ndash; expand &ndash;&gt;-->
+                    <!--                  <button-->
+                    <!--                    *ngIf="!node.isLeaf"-->
+                    <!--                    (click)="toggleExpand(node)"-->
+                    <!--                    class="toggle-btn">-->
+                    <!--                    <i class="pi"-->
+                    <!--                       [ngClass]="node.expanded ? 'pi-angle-down' : 'pi-angle-left'">-->
+                    <!--                    </i>-->
+                    <!--                  </button>-->
+                    <!--                  <span>{{ node.label }}</span>-->
+
+                    <!--                  <p-multiSelect [style]="{'width':'100%'}"-->
+                    <!--                                 *ngIf="node.values?.length"-->
+                    <!--                                 class="w-full"-->
+                    <!--                                 placeholder ="کارشناس را انتخاب نمایید"-->
+                    <!--                                 scrollHeight="250px"-->
+                    <!--                                 [(ngModel)]="node.selectedValue"-->
+                    <!--                                 [options]="mapValuesToDropdownOptions(node.values)">-->
+                    <!--                  </p-multiSelect>-->
+
+                    <!--&lt;!&ndash;                  <p-dropdown&ndash;&gt;-->
+                    <!--&lt;!&ndash;                    *ngIf="node.values?.length"&ndash;&gt;-->
+                    <!--&lt;!&ndash;                    [(ngModel)]="node.selectedValue"&ndash;&gt;-->
+                    <!--&lt;!&ndash;                    [options]="mapValuesToDropdownOptions(node.values)"&ndash;&gt;-->
+                    <!--&lt;!&ndash;                    placeholder="انتخاب کنید"&ndash;&gt;-->
+                    <!--&lt;!&ndash;                    class="ml-2">&ndash;&gt;-->
+                    <!--&lt;!&ndash;                  </p-dropdown>&ndash;&gt;-->
+                    <!--                </div>-->
+
+                    <!--                &lt;!&ndash; برگ با چند شرط &ndash;&gt;-->
+                    <!--                <div *ngIf="node.isLeaf" class="">-->
+
+                    <!--                  <div *ngFor="let cond of node.conditions; let i = index" class="flex align-items-center gap-3 my-3">-->
+
+                    <!--                    &lt;!&ndash; مقدار بر اساس نوع &ndash;&gt;-->
+                    <!--                    <input pInputText type="text" *ngIf="node.type==='string'" [(ngModel)]="cond.value" placeholder="متن مورد نظر را وارد کنید" class="p-fieldset" />-->
+
+                    <!--                    <input pInputText type="text" *ngIf="node.type==='number'" [(ngModel)]="cond.value" placeholder="مقدار مورد نظر را وارد کنید" class="p-fieldset" />-->
+
+                    <!--                    <input pInputText type="date" *ngIf="node.type==='datetime'" [(ngModel)]="cond.value" class="p-fieldset" />-->
+
+                    <!--                    &lt;!&ndash; BOOLEAN &ndash;&gt;-->
+                    <!--                    <p-dropdown-->
+                    <!--                      *ngIf="node.type==='boolean'"-->
+                    <!--                      [(ngModel)]="cond.value"-->
+                    <!--                      [options]="booleanOptions"-->
+                    <!--                      placeholder="انتخاب کنید"-->
+                    <!--                    ></p-dropdown>-->
+
+                    <!--                    &lt;!&ndash; ENUM &ndash;&gt;-->
+                    <!--                    <p-dropdown-->
+                    <!--                      *ngIf="node.type==='enum'"-->
+                    <!--                      [(ngModel)]="cond.value"-->
+                    <!--                      [options]="mapEnumOptions(node.enumOptions)"-->
+                    <!--                      placeholder="انتخاب کنید"-->
+                    <!--                    ></p-dropdown>-->
+
+                    <!--                    &lt;!&ndash; MatchMode &ndash;&gt;-->
+                    <!--                    <p-dropdown-->
+                    <!--                      [(ngModel)]="cond.matchMode"-->
+                    <!--                      [options]="getMatchModeOptionsForType(node.type)"-->
+                    <!--                      optionLabel="label"-->
+                    <!--                      optionValue="value"-->
+                    <!--                      [style]="{'width': '150px'}"-->
+                    <!--                    ></p-dropdown>-->
+
+                    <!--                    &lt;!&ndash; Operator &ndash;&gt;-->
+                    <!--                    <p-dropdown-->
+                    <!--                      [(ngModel)]="cond.operator"-->
+                    <!--                      [options]="operatorOptions"-->
+                    <!--                    ></p-dropdown>-->
+
+                    <!--                    &lt;!&ndash; افزودن شرط جدید &ndash;&gt;-->
+                    <!--                    <button pButton-->
+                    <!--                            pTooltip="افزودن شرط"-->
+                    <!--                            tooltipPosition="top"-->
+                    <!--                            (click)="addCondition(node)"-->
+                    <!--                            class="p-button-success text-white w-2rem h-2rem rounded"-->
+                    <!--                            icon="pi pi-plus"></button>-->
+
+                    <!--                    &lt;!&ndash; حذف شرط &ndash;&gt;-->
+                    <!--                    <button *ngIf="i > 0"-->
+                    <!--                            pTooltip="حذف شرط"-->
+                    <!--                            tooltipPosition="top"-->
+                    <!--                            pButton-->
+                    <!--                            (click)="removeCondition(node, i)"-->
+                    <!--                            class="p-button-danger text-white w-2rem h-2rem rounded"-->
+                    <!--                            icon="pi pi-times"></button>-->
+                    <!--                  </div>-->
+                    <!--                  <p-divider type="solid" [style]="{'border-top':'1px solid #d1d1d1',}"/>-->
+                    <!--                </div>-->
+
+                    <!--                &lt;!&ndash; بچه ها &ndash;&gt;-->
+                    <!--                <ul *ngIf="node.expanded" class="ml-6">-->
+                    <!--                  <ng-container *ngFor="let child of node.children">-->
+                    <!--                    <ng-container [ngTemplateOutlet]="treeNodeTemplate" [ngTemplateOutletContext]="{ node: child }"></ng-container>-->
+                    <!--                  </ng-container>-->
+                    <!--                </ul>-->
+                    <!--              </li>-->
+                    <!--            </ng-template>-->
+
+                    <!--                    </div>-->
+                  </div>
+
+                </p-fieldset>
+              </div>
+
+            </div>
+
+          </p-tabPanel>
+
+          <p-tabPanel header="واکنش ها">
+
+            <div class="overflow-y-auto pl-3" style="height:65vh">
+
+              <div class="mb-5"  >
+
+                <p-accordion [multiple]="true">
+                  <p-accordionTab  *ngFor="let block of actionBlocks; let i = index; let last=last">
+                    <ng-template pTemplate="header">
+                      <div class="flex flex-1 align-items-baseline justify-content-between">
+                        <p class="m-0">واکنش {{ i + 1 }}</p>
+                        <div class="flex gap-2">
+                          <button *ngIf="last" pButton icon="pi pi-plus" class="p-button-success p-2" (click)="addActionBlock(block); $event.stopPropagation()"></button>
+                          <button *ngIf="actionBlocks.length > 1"
+                                  pButton icon="pi pi-trash"
+                                  class="p-button-danger p-2"
+                                  (click)="removeActionBlock(i); $event.stopPropagation()"></button>
+                        </div>
+                      </div>
+                    </ng-template>
+
+<!--                    <div class="flex justify-content-between items-center mb-2">-->
+<!--                      <h4>اکشن شماره {{ i + 1 }}</h4>-->
+<!--                      <div class="flex gap-2">-->
+<!--                        <button *ngIf="last" pButton icon="pi pi-plus" class="p-button-success" (click)="addActionBlock(block)"></button>-->
+<!--                        <button *ngIf="actionBlocks.length > 1"-->
+<!--                                pButton icon="pi pi-trash"-->
+<!--                                class="p-button-danger"-->
+<!--                                (click)="removeActionBlock(i)"></button>-->
+<!--                      </div>-->
+<!--                    </div>-->
+
+                    <div class="flex justify-content-between align-items-center gap-3">
+                      <div class="form-group">
+                        <label class="text-right font-bold">نوع اکشن</label>
+                        <div class="field">
+                          <p-dropdown [style]="{'width':'250px'}"
+                                      name="userType"
+                                      class="w-full"
+                                      placeholder ="اکشن انتخاب کنید"
+                                      scrollHeight="250px"
+                                      display="chip"
+                                      optionLabel="label"
+                                      optionValue="action"
+                                      appendTo="body"
+                                      [(ngModel)]="block.name"
+                                      [options]="actionTypeOptions"
+                                      (onChange)="onActionInput($event, i)">
+                          </p-dropdown>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="border-2 border-dashed surface-border border-round surface-ground px-3 py-2">
+                      <div class="grid">
+                        <ng-container *ngFor="let f of filterActionsInput[i];let fi = index; let lastField = last;">
+
+                          <ng-container [ngSwitch]="f.type">
+                            <div *ngSwitchCase="'string'" class="col-12">
+                              <div class="flex align-items-center gap-2 mb-2">
+                                <label class="text-right font-bold text-md">{{f.label}}</label>
+                                <button pButton
+                                        type="button"
+                                        label="انتخاب مقدار"
+                                        icon="pi pi-calendar"
+                                        class="p-button-success p-button-outlined p-button-sm"
+                                        (click)="getEntityData(f,'tree',i, fi)"></button>
+                              </div>
+                              <div class="field mb-0 mt-1">
+                                <div class="tags p-2 my-2" *ngIf="treeValuesMap.get(i + '_' + fi)?.length">
+                            <span class="p-2 text-white border-round ml-2 cursor-pointer bg-teal-400"
+                                  style="unicode-bidi:plaintext"
+                                  *ngFor="let val of treeValuesMap.get(i + '_' + fi)"
+                                  (click)="insertAtCursor(val,i + '_' + fi)">{{val}}</span>
+                                </div>
+
+                                <textarea *ngIf="block.actionParameters?.[fi]"
+                                          #textareaRefs
+                                          [attr.data-key]="i + '_' + fi"
+                                          [style]="{'width':'100%'}"
+                                          rows="5"
+                                          id="description"
+                                          name="description"
+                                          pInputTextarea
+                                          class="p-fieldset"
+                                          [(ngModel)]="block.actionParameters[fi].valueFormat">
+                          </textarea>
+                              </div>
+                            </div>
+
+                            <div *ngSwitchCase="'number'" class="col-12">
+                              <label class="text-right font-bold text-md mb-2">{{f.label}}</label>
+                              <div class="field mb-0 mt-1">
+                                <p-inputNumber
+                                  [(ngModel)]="block.actionParameters[fi].valueFormat"
+                                  [style]="{'width': '100%'}"
+                                  [mode]="'decimal'"
+                                  [useGrouping]="false"
+                                  class="w-full"></p-inputNumber>
+                              </div>
+                            </div>
+
+                            <div *ngSwitchCase="'boolean'" class="col-12">
+                              <div class="flex flex-wrap align-items-center gap-3">
+                                <p-inputSwitch #switch
+                                               [(ngModel)]="booleanMap[i + '_' + fi]"
+                                               (onChange)="onBooleanChange(i, fi)" />
+                                <label class="text-right font-bold text-md " for="finishDate">{{f.label}}</label>
+                                <div class="flex align-items-center">
+                                  <button pButton
+                                          label="انتخاب مقدار"
+                                          class="p-button-success p-button-outlined"
+                                          icon="pi pi-tag mx-2"
+                                          (click)="getEntityData(f, 'tree', i, fi)"></button>
+                                </div>
+                              </div>
+                              <input class="font-bold w-full mt-2" pInputText type="text" placeholder="مقدار" [value]="displayBooleanMap.get(i + '_' + fi) || ''" readonly />
+                            </div>
+
+                            <div *ngSwitchCase="'datetime'" class="col-12">
+                              <div class="flex flex-wrap align-items.center gap-3">
+                                <label class="text-right font-bold text-md " for="finishDate">{{f.label}}:</label>
+                                <div class="flex align-items-center">
+                                  <button
+                                    pButton
+                                    type="button"
+                                    label="انتخاب تاریخ"
+                                    icon="pi pi-calendar"
+                                    class="p-button-outlined p-button-sm"
+                                    (click)="openDateModal(i, fi, block)"
+                                  ></button>
+                                </div>
+
+                                <div class="flex align-items-center">
+                                  <button pButton
+                                          label="انتخاب مقدار"
+                                          class="p-button-success p-button-outlined"
+                                          icon="pi pi-tag mx-2"
+                                          (click)="getEntityData(f, 'tree', i, fi)"></button>
+                                </div>
+                              </div>
+                              <input class="font-bold w-full mt-2" pInputText type="text" placeholder="مقدار" [value]="displayDateMap.get(i + '_' + fi) || ''" readonly />
+                            </div>
+
+                            <div *ngSwitchCase="'object'" class="col-12">
+                              <div class="form-group">
+                                <label class="text-right font-bold text-md mb-2">{{f.label}}</label>
+                                <div class="field mb-0 mt-1">
+                                  <p-dropdown *ngIf="block.actionParameters?.[fi]"
+                                              [style]="{'width': '100%'}"
+                                              optionLabel="label"
+                                              [(ngModel)]="block.actionParameters[fi].filter"
+                                              [options]="mapFilterParameterOptions(f.filterParameter, block, fi)"
+                                              (onChange)="onSelectFilterParameter($event, 'action',block, fi)"
+                                              appendTo="body"
+                                              placeholder="انتخاب کنید"
+                                              class="ml-2">
+                                  </p-dropdown>
+                                </div>
+                              </div>
+                            </div>
+
+                          </ng-container>
+
+
+                          <div class="w-full" *ngIf="!lastField">
+                            <p-divider />
+                          </div>
+
+                        </ng-container>
+
+                      </div>
+                    </div>
+
+                  </p-accordionTab>
+                </p-accordion>
+
+                <!-- عنوان و دکمه‌ها -->
+<!--                <div class="flex justify-content-between items-center mb-2">-->
+<!--                  <h4>اکشن شماره {{ i + 1 }}</h4>-->
+<!--                  <div class="flex gap-2">-->
+<!--                    <button *ngIf="last" pButton icon="pi pi-plus" class="p-button-success" (click)="addActionBlock(block)"></button>-->
+<!--                    <button *ngIf="actionBlocks.length > 1"-->
+<!--                            pButton icon="pi pi-trash"-->
+<!--                            class="p-button-danger"-->
+<!--                            (click)="removeActionBlock(i)"></button>-->
+<!--                  </div>-->
+<!--                </div>-->
+
+<!--                <div class="flex justify-content-start align-items-center gap-3">-->
+<!--                  <div class="form-group">-->
+<!--                    <label class="text-right font-bold">نوع اکشن</label>-->
+<!--                    <div class="field">-->
+<!--                      <p-dropdown [style]="{'width':'250px'}"-->
+<!--                                  name="userType"-->
+<!--                                  class="w-full"-->
+<!--                                  placeholder ="اکشن انتخاب کنید"-->
+<!--                                  scrollHeight="250px"-->
+<!--                                  display="chip"-->
+<!--                                  optionLabel="label"-->
+<!--                                  optionValue="action"-->
+<!--                                  appendTo="body"-->
+<!--                                  [(ngModel)]="block.name"-->
+<!--                                  [options]="actionTypeOptions"-->
+<!--                                  (onChange)="onActionInput($event, i)">-->
+<!--                      </p-dropdown>-->
+<!--                    </div>-->
+<!--                  </div>-->
+
+
+<!--                </div>-->
+
+<!--                <div class="border-2 border-dashed surface-border border-round surface-ground px-3 py-2">-->
+<!--                  <div class="grid">-->
+<!--                    <ng-container *ngFor="let f of filterActionsInput[i];let fi = index; let lastField = last;">-->
+
+<!--                      <ng-container [ngSwitch]="f.type">-->
+<!--                        <div *ngSwitchCase="'string'" class="col-12">-->
+<!--                          <div class="flex align-items-center gap-2 mb-2">-->
+<!--                            <label class="text-right font-bold text-md">{{f.label}}</label>-->
+<!--                            <button pButton-->
+<!--                                    type="button"-->
+<!--                                    label="انتخاب مقدار"-->
+<!--                                    icon="pi pi-calendar"-->
+<!--                                    class="p-button-success p-button-outlined p-button-sm"-->
+<!--                                    (click)="getEntityData(f,'tree',i, fi)"></button>-->
+<!--                          </div>-->
+<!--                          <div class="field mb-0 mt-1">-->
+<!--                            <div class="tags p-2 my-2" *ngIf="treeValuesMap.get(i + '_' + fi)?.length">-->
+<!--                            <span class="p-2 text-white border-round ml-2 cursor-pointer bg-teal-400"-->
+<!--                                  style="unicode-bidi:plaintext"-->
+<!--                                  *ngFor="let val of treeValuesMap.get(i + '_' + fi)"-->
+<!--                                  (click)="insertAtCursor(val,i + '_' + fi)">{{val}}</span>-->
+<!--                            </div>-->
+
+<!--                            <textarea *ngIf="block.actionParameters?.[fi]"-->
+<!--                                      #textareaRefs-->
+<!--                                      [attr.data-key]="i + '_' + fi"-->
+<!--                                      [style]="{'width':'100%'}"-->
+<!--                                      rows="5"-->
+<!--                                      id="description"-->
+<!--                                      name="description"-->
+<!--                                      pInputTextarea-->
+<!--                                      class="p-fieldset"-->
+<!--                                      [(ngModel)]="block.actionParameters[fi].valueFormat">-->
+<!--                          </textarea>-->
+<!--                          </div>-->
+<!--                        </div>-->
+
+<!--                        <div *ngSwitchCase="'number'" class="col-12">-->
+<!--                          <label class="text-right font-bold text-md mb-2">{{f.label}}</label>-->
+<!--                          <div class="field mb-0 mt-1">-->
+<!--                            <p-inputNumber-->
+<!--                              [(ngModel)]="block.actionParameters[fi].valueFormat"-->
+<!--                              [style]="{'width': '100%'}"-->
+<!--                              [mode]="'decimal'"-->
+<!--                              [useGrouping]="false"-->
+<!--                              class="w-full"></p-inputNumber>-->
+<!--                          </div>-->
+<!--                        </div>-->
+
+<!--                        <div *ngSwitchCase="'boolean'" class="col-12">-->
+<!--                          <div class="flex flex-wrap gap-3">-->
+<!--                            <p-inputSwitch #switch-->
+<!--                              [(ngModel)]="booleanMap[i + '_' + fi]"-->
+<!--                              (onChange)="onBooleanChange(i, fi)" />-->
+<!--                            <label class="text-right font-bold text-md " for="finishDate">{{f.label}}</label>-->
+<!--                            <div class="flex align-items-center">-->
+<!--                              <button pButton-->
+<!--                                      label="انتخاب مقدار"-->
+<!--                                      class="p-button-success p-button-outlined"-->
+<!--                                      icon="pi pi-tag mx-2"-->
+<!--                                      (click)="getEntityData(f, 'tree', i, fi)"></button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                          <input class="font-bold w-full mt-2" pInputText type="text" placeholder="مقدار" [value]="displayBooleanMap.get(i + '_' + fi) || ''" readonly />-->
+<!--                        </div>-->
+
+<!--                        <div *ngSwitchCase="'datetime'" class="col-12">-->
+<!--                          <div class="flex flex-wrap gap-3">-->
+<!--                            <label class="text-right font-bold text-md " for="finishDate">{{f.label}}:</label>-->
+<!--                            <div class="flex align-items-center">-->
+<!--                              <button-->
+<!--                                pButton-->
+<!--                                type="button"-->
+<!--                                label="انتخاب تاریخ"-->
+<!--                                icon="pi pi-calendar"-->
+<!--                                class="p-button-outlined p-button-sm"-->
+<!--                                (click)="openDateModal(i, fi, block)"-->
+<!--                              ></button>-->
+<!--                            </div>-->
+
+<!--                            <div class="flex align-items-center">-->
+<!--                              <button pButton-->
+<!--                                      label="انتخاب مقدار"-->
+<!--                                      class="p-button-success p-button-outlined"-->
+<!--                                      icon="pi pi-tag mx-2"-->
+<!--                                      (click)="getEntityData(f, 'tree', i, fi)"></button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                          <input class="font-bold w-full mt-2" pInputText type="text" placeholder="مقدار" [value]="displayDateMap.get(i + '_' + fi) || ''" readonly />-->
+<!--                        </div>-->
+
+<!--                        <div *ngSwitchCase="'object'" class="col-12">-->
+<!--                          <div class="form-group">-->
+<!--                            <label class="text-right font-bold text-md mb-2">{{f.label}}</label>-->
+<!--                            <div class="field mb-0 mt-1">-->
+<!--                              <p-dropdown *ngIf="block.actionParameters?.[fi]"-->
+<!--                                          [style]="{'width': '100%'}"-->
+<!--                                          optionLabel="label"-->
+<!--                                          [(ngModel)]="block.actionParameters[fi].filter"-->
+<!--                                          [options]="mapFilterParameterOptions(f.filterParameter, block, fi)"-->
+<!--                                          (onChange)="onSelectFilterParameter($event, 'action',block, fi)"-->
+<!--                                          appendTo="body"-->
+<!--                                          placeholder="انتخاب کنید"-->
+<!--                                          class="ml-2">-->
+<!--                              </p-dropdown>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                        </div>-->
+
+<!--                      </ng-container>-->
+
+
+<!--                      <div class="w-full" *ngIf="!lastField">-->
+<!--                        <p-divider />-->
+<!--                      </div>-->
+
+<!--                    </ng-container>-->
+
+<!--                  </div>-->
+<!--                </div>-->
+
+                <!--          <div class="flex flex-column border-2 border-dashed surface-border border-round surface-ground px-3 py-2">-->
+
+                <!--            <div class="flex">-->
+                <!--              <div *ngFor="let f of filterActionsInput;" class="field-row">-->
+                <!--                <div class="form-group" *ngIf="f.type === 'string'">-->
+                <!--                  <label class="font-bold text-900" for="receiver">{{f.label}}</label>-->
+                <!--                  <div class="field flex gap-3 mt-1">-->
+                <!--                    <input-->
+                <!--                      pInputText-->
+                <!--                      type="text"-->
+                <!--                      id="receiver"-->
+                <!--                      name="receiver"-->
+                <!--                      class="p-fieldset"-->
+                <!--                      [style]="{'width': '250px'}">-->
+                <!--                  </div>-->
+                <!--                </div>-->
+                <!--                -->
+                <!--                <div class="form-group" *ngIf="f.type === 'number'">-->
+                <!--                  <label class="font-bold text-900" for="receiver">{{f.label}}</label>-->
+                <!--                  <div class="field flex gap-3 mt-1">-->
+                <!--                    <p-inputNumber-->
+                <!--                      [mode]="'decimal'"-->
+                <!--                      [useGrouping]="false"-->
+                <!--                      class="w-full"></p-inputNumber>-->
+                <!--                  </div>-->
+                <!--                </div>-->
+                <!--                -->
+                <!--                <div class="datePickerContainer relative" *ngIf="f.type === 'datetime'">-->
+                <!--                  <label class="text-right font-bold text-md mb-2" for="finishDate">زمان ارسال</label>-->
+                <!--                  <div class="flex gap-2 ">-->
+                <!--                    <ng-persian-datepicker-->
+                <!--                      class="w-full"-->
+                <!--                      (dateOnInit)="initialFinishDatePicker($event)"-->
+                <!--                      (dateOnSelect)="selectFinishDate($event)"-->
+                <!--                      [dateGregorianFormat]="'YYYY-MM-DD' "-->
+                <!--                      [dateFormat]="'YYYY-MM-DD '">-->
+                <!--                      <input [formControl]="finishDateTimeControl" id="finishDate" name="finishDate" class="font-bold w-10rem" pInputText type="text" autocomplete="off"/>-->
+                <!--                    </ng-persian-datepicker>-->
+                <!--                  </div>-->
+                <!--                </div>-->
+                <!--              -->
+                <!--                <div class="form-group" *ngIf="f.type === 'object'">-->
+                <!--                  <label class="font-bold text-900" for="receiver">{{f.label}}</label>-->
+                <!--                  <div class="field flex gap-3 mt-1">-->
+                <!--                    <p-dropdown-->
+                <!--                      optionLabel="label"-->
+                <!--                      optionValue="value"-->
+                <!--                      [options]="mapFilterParameterOptions(f.filterParameter)"-->
+                <!--                      placeholder="انتخاب کنید"-->
+                <!--                      class="ml-2">-->
+                <!--                    </p-dropdown>-->
+                <!--                  </div>-->
+                <!--                </div>-->
+                <!--              </div>-->
+                <!--            </div>-->
+
+
+
+                <!--            <div *ngIf="block.actionTypeSelected === ActionTypesEnum.SendSMS">-->
+
+                <!--              <div class="flex align-items-baseline gap-5">-->
+                <!--                <div class="form-group">-->
+                <!--                  <label class="font-bold text-900" for="receiver">شماره گیرنده</label>-->
+                <!--                  <button pButton-->
+                <!--                          pTooltip="اطلاعات مرحله"-->
+                <!--                          tooltipPosition="top"-->
+                <!--                          class="p-button-warning text-white w-2rem h-2rem rounded mr-2"-->
+                <!--                          icon="pi pi-external-link"-->
+                <!--                          id="receiver"-->
+                <!--                          (click)="openDialogActionCondition(null,$event)"></button>-->
+
+                <!--                  <div class="field flex gap-3 mt-1">-->
+                <!--                    <input-->
+                <!--                      pInputText-->
+                <!--                      type="text"-->
+                <!--                      id="receiver"-->
+                <!--                      name="receiver"-->
+                <!--                      class="p-fieldset"-->
+                <!--                      [style]="{'width': '250px'}"-->
+                <!--                      [(ngModel)]="oneObjectSendSms.receiver">-->
+                <!--                  </div>-->
+                <!--                </div>-->
+
+                <!--                <div class="datePickerContainer relative">-->
+                <!--                  <label class="text-right font-bold text-md mb-2 text-900" for="sendDateTime">زمان ارسال</label>-->
+                <!--                  <button pButton-->
+                <!--                          pTooltip="اطلاعات مرحله"-->
+                <!--                          tooltipPosition="top"-->
+                <!--                          class="p-button-warning text-white w-2rem h-2rem rounded mr-2"-->
+                <!--                          icon="pi pi-external-link"-->
+                <!--                          id="sendDateTime"-->
+                <!--                          (click)="openDialogActionCondition(null,$event)"></button>-->
+
+                <!--                  <ng-persian-datepicker-->
+                <!--                    class="block mt-1"-->
+                <!--                    [style]="{'width':'220px'}"-->
+                <!--                    (dateOnSelect)="selectSendSmsDate($event)"-->
+                <!--                    (dateOnInit)="initialSendSmsDateDatePicker($event)"-->
+                <!--                    [dateGregorianFormat]="'YYYY-MM-DD '"-->
+                <!--                    [dateFormat]="'YYYY-MM-DD '">-->
+                <!--                    <input #sendDateTimeInput [formControl]="sendSmsDateTimeControl" id="sendDateTime" name="sendDateTime" class="font-bold w-full" pInputText type="text" autocomplete="off"/>-->
+                <!--                  </ng-persian-datepicker>-->
+                <!--                </div>-->
+
+                <!--              </div>-->
+
+                <!--              <div class="form-group">-->
+                <!--                <label class="font-bold text-900" for="content">متن پیام</label>-->
+                <!--                <button pButton-->
+                <!--                        pTooltip="اطلاعات مرحله"-->
+                <!--                        tooltipPosition="top"-->
+                <!--                        class="p-button-warning text-white w-2rem h-2rem rounded mr-2"-->
+                <!--                        icon="pi pi-external-link"-->
+                <!--                        id="content"-->
+                <!--                        (click)="openDialogActionCondition(null,$event)"></button>-->
+
+                <!--                <div class="field mt-1">-->
+                <!--                  <textarea-->
+                <!--                    [style]="{'width':'100%'}"-->
+                <!--                    rows="5"-->
+                <!--                    id="content"-->
+                <!--                    name="content"-->
+                <!--                    pInputTextarea-->
+                <!--                    class="p-fieldset"-->
+                <!--                    [(ngModel)]="oneObjectSendSms.content">-->
+                <!--                  </textarea>-->
+                <!--                </div>-->
+                <!--              </div>-->
+                <!--            </div>-->
+
+                <!--            <ul class="pl-2 list-roman">-->
+                <!--              <ng-container *ngFor="let node of block.treeNodesAction">-->
+                <!--                <ng-container [ngTemplateOutlet]="treeNodeTemplate" [ngTemplateOutletContext]="{ node: node }"></ng-container>-->
+                <!--              </ng-container>-->
+                <!--            </ul>-->
+
+                <!--            <ng-template #treeNodeTemplate let-node="node">-->
+                <!--              <li class="mb-1">-->
+                <!--                <div class="flex items-center space-x-2">-->
+                <!--                  &lt;!&ndash; expand &ndash;&gt;-->
+                <!--                  <button-->
+                <!--                    *ngIf="!node.isLeaf"-->
+                <!--                    (click)="toggleExpand(node)"-->
+                <!--                    class="toggle-btn">-->
+                <!--                    <i class="pi"-->
+                <!--                       [ngClass]="node.expanded ? 'pi-angle-down' : 'pi-angle-left'">-->
+                <!--                    </i>-->
+                <!--                  </button>-->
+                <!--                  <span>{{ node.label }}</span>-->
+
+                <!--                  <p-multiSelect [style]="{'width':'100%'}"-->
+                <!--                                 *ngIf="node.values?.length"-->
+                <!--                                 class="w-full"-->
+                <!--                                 placeholder ="کارشناس را انتخاب نمایید"-->
+                <!--                                 scrollHeight="250px"-->
+                <!--                                 [(ngModel)]="node.selectedValue"-->
+                <!--                                 [options]="mapValuesToDropdownOptions(node.values)">-->
+                <!--                  </p-multiSelect>-->
+
+                <!--&lt;!&ndash;                  <p-dropdown&ndash;&gt;-->
+                <!--&lt;!&ndash;                    *ngIf="node.values?.length"&ndash;&gt;-->
+                <!--&lt;!&ndash;                    [(ngModel)]="node.selectedValue"&ndash;&gt;-->
+                <!--&lt;!&ndash;                    [options]="mapValuesToDropdownOptions(node.values)"&ndash;&gt;-->
+                <!--&lt;!&ndash;                    placeholder="انتخاب کنید"&ndash;&gt;-->
+                <!--&lt;!&ndash;                    class="ml-2">&ndash;&gt;-->
+                <!--&lt;!&ndash;                  </p-dropdown>&ndash;&gt;-->
+                <!--                </div>-->
+
+                <!--                &lt;!&ndash; برگ با چند شرط &ndash;&gt;-->
+                <!--                <div *ngIf="node.isLeaf" class="">-->
+
+                <!--                  <div *ngFor="let cond of node.conditions; let i = index" class="flex align-items-center gap-3 my-3">-->
+
+                <!--                    &lt;!&ndash; مقدار بر اساس نوع &ndash;&gt;-->
+                <!--                    <input pInputText type="text" *ngIf="node.type==='string'" [(ngModel)]="cond.value" placeholder="متن مورد نظر را وارد کنید" class="p-fieldset" />-->
+
+                <!--                    <input pInputText type="text" *ngIf="node.type==='number'" [(ngModel)]="cond.value" placeholder="مقدار مورد نظر را وارد کنید" class="p-fieldset" />-->
+
+                <!--                    <input pInputText type="text" *ngIf="node.type==='datetime'" type="date" [(ngModel)]="cond.value" class="p-fieldset" />-->
+
+                <!--&lt;!&ndash;                    <ng-container *ngIf="node.type === 'datetime'">&ndash;&gt;-->
+                <!--&lt;!&ndash;                      <ng-persian-datepicker&ndash;&gt;-->
+                <!--&lt;!&ndash;                        class="block"&ndash;&gt;-->
+                <!--&lt;!&ndash;                        [style]="{'width':'220px'}"&ndash;&gt;-->
+                <!--&lt;!&ndash;                        (dateOnSelect)="selectActionDate($event,cond)"&ndash;&gt;-->
+                <!--&lt;!&ndash;                        (dateOnInit)="initialActionDateDatePicker($event,cond)"&ndash;&gt;-->
+                <!--&lt;!&ndash;                        [dateGregorianFormat]="'YYYY-MM-DD '"&ndash;&gt;-->
+                <!--&lt;!&ndash;                        [dateFormat]="'YYYY-MM-DD '">&ndash;&gt;-->
+                <!--&lt;!&ndash;                        <input [formControl]="actionDateTimeControl" id="actionDateTime" name="actionDateTime" class="font-bold w-full" pInputText type="text" autocomplete="off"/>&ndash;&gt;-->
+                <!--&lt;!&ndash;                      </ng-persian-datepicker>&ndash;&gt;-->
+                <!--&lt;!&ndash;                    </ng-container>&ndash;&gt;-->
+
+                <!--                    &lt;!&ndash; BOOLEAN &ndash;&gt;-->
+                <!--                    <p-dropdown-->
+                <!--                      *ngIf="node.type==='boolean'"-->
+                <!--                      [(ngModel)]="cond.value"-->
+                <!--                      [options]="booleanOptions"-->
+                <!--                      placeholder="انتخاب کنید"-->
+                <!--                    ></p-dropdown>-->
+
+                <!--                    &lt;!&ndash; ENUM &ndash;&gt;-->
+                <!--                    <p-dropdown-->
+                <!--                      *ngIf="node.type==='enum'"-->
+                <!--                      [(ngModel)]="cond.value"-->
+                <!--                      [options]="mapEnumOptions(node.enumOptions)"-->
+                <!--                      placeholder="انتخاب کنید"-->
+                <!--                    ></p-dropdown>-->
+
+                <!--                    &lt;!&ndash; MatchMode &ndash;&gt;-->
+                <!--                    <p-dropdown-->
+                <!--                      [(ngModel)]="cond.matchMode"-->
+                <!--                      [options]="getMatchModeOptionsForType(node.type)"-->
+                <!--                      optionLabel="label"-->
+                <!--                      optionValue="value"-->
+                <!--                      [style]="{'width': '150px'}"-->
+                <!--                    ></p-dropdown>-->
+
+                <!--                    &lt;!&ndash; Operator &ndash;&gt;-->
+                <!--                    <p-dropdown-->
+                <!--                      [(ngModel)]="cond.operator"-->
+                <!--                      [options]="operatorOptions"-->
+                <!--                    ></p-dropdown>-->
+
+                <!--                    &lt;!&ndash; افزودن شرط جدید &ndash;&gt;-->
+                <!--                    <button pButton-->
+                <!--                            pTooltip="افزودن شرط"-->
+                <!--                            tooltipPosition="top"-->
+                <!--                            (click)="addCondition(node)"-->
+                <!--                            class="p-button-success text-white w-2rem h-2rem rounded"-->
+                <!--                            icon="pi pi-plus"></button>-->
+
+                <!--                    &lt;!&ndash; حذف شرط &ndash;&gt;-->
+                <!--                    <button *ngIf="i > 0"-->
+                <!--                            pTooltip="حذف شرط"-->
+                <!--                            tooltipPosition="top"-->
+                <!--                            pButton-->
+                <!--                            (click)="removeCondition(node, i)"-->
+                <!--                            class="p-button-danger text-white w-2rem h-2rem rounded"-->
+                <!--                            icon="pi pi-times"></button>-->
+
+                <!--                    &lt;!&ndash; اطلاعات مرحله قبل &ndash;&gt;-->
+                <!--                    <button pTooltip="اطلاعات"-->
+                <!--                            tooltipPosition="top"-->
+                <!--                            pButton-->
+                <!--                            (click)="openDialogActionCondition(null, $event)"-->
+                <!--                            class="p-button-warning text-white w-2rem h-2rem rounded"-->
+                <!--                            icon="pi pi-external-link"></button>-->
+                <!--                  </div>-->
+                <!--                  <p-divider type="solid" [style]="{'border-top':'1px solid #d1d1d1',}"/>-->
+                <!--                </div>-->
+
+                <!--                &lt;!&ndash; بچه ها &ndash;&gt;-->
+                <!--                <ul *ngIf="node.expanded" class="ml-6">-->
+                <!--                  <ng-container *ngFor="let child of node.children">-->
+                <!--                    <ng-container [ngTemplateOutlet]="treeNodeTemplate" [ngTemplateOutletContext]="{ node: child }"></ng-container>-->
+                <!--                  </ng-container>-->
+                <!--                </ul>-->
+                <!--              </li>-->
+
+
+                <!--            </ng-template>-->
+
+                <!--          </div>-->
+
+              </div>
+
+            </div>
+
+
+          </p-tabPanel>
+
+        </p-tabView>
+
+      </div>
+    </div>
+
+    <!--  <p-stepper>-->
+    <!--    <p-stepperPanel header="مشخصات">-->
+    <!--      <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">-->
+    <!--        <div class="flex flex-column">-->
+    <!--          <div class="border-2 border-dashed surface-border border-round surface-ground px-3 py-2">-->
+
+    <!--            <div class="flex align-items-center gap-5">-->
+    <!--              <div class="form-group">-->
+    <!--                <label class="font-bold text-900" for="title">عنوان</label>-->
+    <!--                <div class="field">-->
+    <!--                  <input-->
+    <!--                    pInputText-->
+    <!--                    type="text"-->
+    <!--                    id="title"-->
+    <!--                    name="title"-->
+    <!--                    class="p-fieldset"-->
+    <!--                    [style]="{'width': '250px'}"-->
+    <!--                    [(ngModel)]="oneObject.title">-->
+    <!--                </div>-->
+    <!--              </div>-->
+    <!--              <div class="form-group">-->
+    <!--                <label class="font-bold text-900" for="title">فعال</label>-->
+    <!--                <div class="field">-->
+    <!--                  <p-inputSwitch [(ngModel)]="oneObject.active" />-->
+    <!--              </div>-->
+    <!--            </div>-->
+    <!--            </div>-->
+
+    <!--            <div class="form-group">-->
+    <!--              <label class="font-bold text-900">توضیحات</label>-->
+    <!--              <div class="field">-->
+    <!--              <textarea-->
+    <!--                [style]="{'width':'100%'}"-->
+    <!--                rows="5"-->
+    <!--                id="description"-->
+    <!--                name="description"-->
+    <!--                pInputTextarea-->
+    <!--                class="p-fieldset"-->
+    <!--                [(ngModel)]="oneObject.description">-->
+    <!--              </textarea>-->
+
+    <!--              </div>-->
+    <!--            </div>-->
+
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--        <div class="flex pt-4 justify-content-end">-->
+    <!--          <p-button-->
+    <!--            label="مرحله بعد"-->
+    <!--            (onClick)="nextCallback.emit()" />-->
+    <!--        </div>-->
+    <!--      </ng-template>-->
+    <!--    </p-stepperPanel>-->
+
+    <!--    <p-stepperPanel header="رویداد">-->
+    <!--      <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">-->
+    <!--        <div>-->
+    <!--          <div class="flex justify-content-start align-items-center">-->
+    <!--            <div class="form-group">-->
+    <!--              <label for="userType" class="text-right font-bold">نوع رویداد</label>-->
+    <!--              <div class="field">-->
+    <!--                <p-dropdown [style]="{'width':'250px'}"-->
+    <!--                            name="userType"-->
+    <!--                            class="w-full"-->
+    <!--                            placeholder ="رویداد انتخاب کنید"-->
+    <!--                            scrollHeight="250px"-->
+    <!--                            display="chip"-->
+    <!--                            optionLabel="title"-->
+    <!--                            optionValue="value"-->
+    <!--                            [(ngModel)]="oneObject.triggerEvent"-->
+    <!--                            [options]="eventTypesOptions"-->
+    <!--                            (onChange)="onEventData($event)">-->
+    <!--                </p-dropdown>-->
+    <!--              </div>-->
+    <!--            </div>-->
+    <!--          </div>-->
+
+    <!--          <div class="flex flex-column border-2 border-dashed surface-border border-round surface-ground px-3 py-2">-->
+
+    <!--            <p-dropdown [style]="{'width':'250px'}"-->
+    <!--                        name="userType"-->
+    <!--                        class="w-full"-->
+    <!--                        placeholder ="رویداد انتخاب کنید"-->
+    <!--                        scrollHeight="250px"-->
+    <!--                        display="chip"-->
+    <!--                        optionLabel="title"-->
+    <!--                        optionValue="filterParameter"-->
+    <!--                        [(ngModel)]="triggerEventParameter"-->
+    <!--                        [options]="eventFilterOptions"-->
+    <!--                        (onChange)="onEventFilterOptions($event)">-->
+    <!--            </p-dropdown>-->
+
+    <!--&lt;!&ndash;            <ul class="pl-2 list-roman">&ndash;&gt;-->
+    <!--&lt;!&ndash;              <ng-container *ngFor="let node of treeNodes">&ndash;&gt;-->
+    <!--&lt;!&ndash;                <ng-container [ngTemplateOutlet]="treeNodeTemplate" [ngTemplateOutletContext]="{ node: node }"></ng-container>&ndash;&gt;-->
+    <!--&lt;!&ndash;              </ng-container>&ndash;&gt;-->
+    <!--&lt;!&ndash;            </ul>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;            <ng-template #treeNodeTemplate let-node="node">&ndash;&gt;-->
+    <!--&lt;!&ndash;              <li class="mb-1">&ndash;&gt;-->
+    <!--&lt;!&ndash;                <div class="flex items-center space-x-2">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  &lt;!&ndash; expand &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <button&ndash;&gt;-->
+    <!--&lt;!&ndash;                    *ngIf="!node.isLeaf"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    (click)="toggleExpand(node)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    class="toggle-btn">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <i class="pi"&ndash;&gt;-->
+    <!--&lt;!&ndash;                       [ngClass]="node.expanded ? 'pi-angle-down' : 'pi-angle-left'">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    </i>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </button>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <span>{{ node.label }}</span>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                  <p-multiSelect [style]="{'width':'100%'}"&ndash;&gt;-->
+    <!--&lt;!&ndash;                                 *ngIf="node.values?.length"&ndash;&gt;-->
+    <!--&lt;!&ndash;                                 class="w-full"&ndash;&gt;-->
+    <!--&lt;!&ndash;                                 placeholder ="کارشناس را انتخاب نمایید"&ndash;&gt;-->
+    <!--&lt;!&ndash;                                 scrollHeight="250px"&ndash;&gt;-->
+    <!--&lt;!&ndash;                                 [(ngModel)]="node.selectedValue"&ndash;&gt;-->
+    <!--&lt;!&ndash;                                 [options]="mapValuesToDropdownOptions(node.values)">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </p-multiSelect>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;&lt;!&ndash;                  <p-dropdown&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                    *ngIf="node.values?.length"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                    [(ngModel)]="node.selectedValue"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                    [options]="mapValuesToDropdownOptions(node.values)"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                    placeholder="انتخاب کنید"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                    class="ml-2">&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                  </p-dropdown>&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                &lt;!&ndash; برگ با چند شرط &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                <div *ngIf="node.isLeaf" class="">&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                  <div *ngFor="let cond of node.conditions; let i = index" class="flex align-items-center gap-3 my-3">&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; مقدار بر اساس نوع &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <input pInputText type="text" *ngIf="node.type==='string'" [(ngModel)]="cond.value" placeholder="متن مورد نظر را وارد کنید" class="p-fieldset" />&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    <input pInputText type="text" *ngIf="node.type==='number'" [(ngModel)]="cond.value" placeholder="مقدار مورد نظر را وارد کنید" class="p-fieldset" />&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    <input pInputText type="date" *ngIf="node.type==='datetime'" [(ngModel)]="cond.value" class="p-fieldset" />&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; BOOLEAN &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <p-dropdown&ndash;&gt;-->
+    <!--&lt;!&ndash;                      *ngIf="node.type==='boolean'"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [(ngModel)]="cond.value"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [options]="booleanOptions"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      placeholder="انتخاب کنید"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    ></p-dropdown>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; ENUM &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <p-dropdown&ndash;&gt;-->
+    <!--&lt;!&ndash;                      *ngIf="node.type==='enum'"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [(ngModel)]="cond.value"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [options]="mapEnumOptions(node.enumOptions)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      placeholder="انتخاب کنید"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    ></p-dropdown>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; MatchMode &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <p-dropdown&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [(ngModel)]="cond.matchMode"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [options]="getMatchModeOptionsForType(node.type)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      optionLabel="label"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      optionValue="value"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [style]="{'width': '150px'}"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    ></p-dropdown>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; Operator &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <p-dropdown&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [(ngModel)]="cond.operator"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [options]="operatorOptions"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    ></p-dropdown>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; افزودن شرط جدید &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <button pButton&ndash;&gt;-->
+    <!--&lt;!&ndash;                            pTooltip="افزودن شرط"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            tooltipPosition="top"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            (click)="addCondition(node)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            class="p-button-success text-white w-2rem h-2rem rounded"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            icon="pi pi-plus"></button>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; حذف شرط &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <button *ngIf="i > 0"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            pTooltip="حذف شرط"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            tooltipPosition="top"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            pButton&ndash;&gt;-->
+    <!--&lt;!&ndash;                            (click)="removeCondition(node, i)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            class="p-button-danger text-white w-2rem h-2rem rounded"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            icon="pi pi-times"></button>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <p-divider type="solid" [style]="{'border-top':'1px solid #d1d1d1',}"/>&ndash;&gt;-->
+    <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                &lt;!&ndash; بچه ها &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                <ul *ngIf="node.expanded" class="ml-6">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <ng-container *ngFor="let child of node.children">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <ng-container [ngTemplateOutlet]="treeNodeTemplate" [ngTemplateOutletContext]="{ node: child }"></ng-container>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </ng-container>&ndash;&gt;-->
+    <!--&lt;!&ndash;                </ul>&ndash;&gt;-->
+    <!--&lt;!&ndash;              </li>&ndash;&gt;-->
+    <!--&lt;!&ndash;            </ng-template>&ndash;&gt;-->
+
+    <!--          </div>-->
+    <!--        </div>-->
+
+    <!--        <div class="flex pt-4 justify-content-between">-->
+    <!--          <p-button-->
+    <!--            label="مرحله قبل"-->
+    <!--            (onClick)="prevCallback.emit()" />-->
+    <!--          <p-button-->
+    <!--            label="مرحله بعد"-->
+    <!--            (onClick)="nextCallback.emit()" />-->
+    <!--        </div>-->
+
+    <!--      </ng-template>-->
+    <!--    </p-stepperPanel>-->
+
+    <!--    &lt;!&ndash;**** begin Action Step ****&ndash;&gt;-->
+    <!--    <p-stepperPanel header="اکشن">-->
+    <!--      <ng-template pTemplate="content" let-prevCallback="prevCallback" let-index="index">-->
+
+    <!--        <div *ngFor="let block of actionBlocks; let i = index" >-->
+
+    <!--          &lt;!&ndash; عنوان و دکمه‌ها &ndash;&gt;-->
+    <!--          <div class="flex justify-content-between items-center mb-2">-->
+    <!--            <h4>اکشن شماره {{ i + 1 }}</h4>-->
+
+    <!--            <div class="flex gap-2">-->
+    <!--              <button pButton icon="pi pi-plus" class="p-button-success" (click)="addActionBlock(block)"></button>-->
+    <!--              <button *ngIf="actionBlocks.length > 1"-->
+    <!--                      pButton icon="pi pi-trash"-->
+    <!--                      class="p-button-danger"-->
+    <!--                      (click)="removeActionBlock(i)"></button>-->
+    <!--            </div>-->
+    <!--          </div>-->
+
+    <!--          <div class="flex justify-content-start align-items-center gap-3">-->
+
+    <!--            <div class="form-group">-->
+    <!--              <label class="text-right font-bold">نوع رویداد</label>-->
+    <!--              <div class="field">-->
+    <!--                <p-dropdown [style]="{'width':'250px'}"-->
+    <!--                            name="userType"-->
+    <!--                            class="w-full"-->
+    <!--                            placeholder ="رویداد انتخاب کنید"-->
+    <!--                            scrollHeight="250px"-->
+    <!--                            display="chip"-->
+    <!--                            optionLabel="label"-->
+    <!--                            optionValue="action"-->
+    <!--                            [(ngModel)]="block.name"-->
+    <!--                            [options]="actionTypeOptions"-->
+    <!--                            (onChange)="onFilterInput($event)">-->
+    <!--                </p-dropdown>-->
+    <!--              </div>-->
+    <!--            </div>-->
+
+
+    <!--          </div>-->
+
+    <!--          <div class="border-2 border-dashed surface-border border-round surface-ground px-3 py-2">-->
+    <!--            <div class="grid">-->
+    <!--              <ng-container *ngFor="let f of filterActionsInput;let fi = index">-->
+
+    <!--                <div class="col-12" *ngIf="f.type === 'number'">-->
+    <!--                  <label class="text-right font-bold text-md mb-2">{{f.label}}</label>-->
+    <!--                  <div class="field mt-1">-->
+    <!--                    <p-inputNumber-->
+    <!--                      [(ngModel)]="block.actionParameters[fi].valueFormat"-->
+    <!--                      [style]="{'width': '100%'}"-->
+    <!--                      [mode]="'decimal'"-->
+    <!--                      [useGrouping]="false"-->
+    <!--                      class="w-full"></p-inputNumber>-->
+    <!--                  </div>-->
+    <!--                </div>-->
+
+    <!--                <div class="col-12"  *ngIf="f.type === 'datetime'">-->
+    <!--                  <div class="datePickerContainer relative">-->
+    <!--                    <label class="text-right font-bold text-md mb-2" for="finishDate">{{f.label}}</label>-->
+    <!--                    <div class="flex mt-1">-->
+    <!--                      <ng-persian-datepicker-->
+    <!--                        class="w-full"-->
+    <!--                        (dateOnInit)="initialFinishDatePicker($event,block,fi)"-->
+    <!--                        (dateOnSelect)="selectFinishDate($event,block,fi)"-->
+    <!--                        [dateGregorianFormat]="'YYYY-MM-DD' "-->
+    <!--                        [dateFormat]="'YYYY-MM-DD '">-->
+    <!--                        <input [formControl]="finishDateTimeControl[i][fi]"  class="font-bold w-full" pInputText type="text" autocomplete="off"/>-->
+    <!--                      </ng-persian-datepicker>-->
+    <!--                    </div>-->
+    <!--                  </div>-->
+    <!--                </div>-->
+
+    <!--                <div class="col-12" *ngIf="f.type === 'object'">-->
+    <!--                  <div class="form-group">-->
+    <!--                    <label class="text-right font-bold text-md mb-2">{{f.label}}</label>-->
+    <!--                    <div class="field mt-1">-->
+    <!--                      <p-dropdown-->
+    <!--                        [style]="{'width': '100%'}"-->
+    <!--                        optionLabel="label"-->
+    <!--                        optionValue="value"-->
+    <!--                        [(ngModel)]="block.actionParameters[fi].filter"-->
+    <!--                        [options]="mapFilterParameterOptions(f.filterParameter)"-->
+    <!--                        (onChange)="onSelectFilterParameter($event.value, 'action')"-->
+    <!--                        placeholder="انتخاب کنید"-->
+    <!--                        class="ml-2">-->
+    <!--                      </p-dropdown>-->
+    <!--                    </div>-->
+    <!--                  </div>-->
+    <!--                </div>-->
+
+    <!--                <div class="col-12" *ngIf="f.type === 'string'">-->
+    <!--                  <label class="text-right font-bold text-md mb-2">{{f.label}}</label>-->
+    <!--                  <div class="field mt-1">-->
+    <!--                    <div class="tags p-2 my-2" *ngIf="treeValues.length">-->
+    <!--                      <span class="p-2 text-white border-round ml-2 cursor-pointer bg-teal-400"-->
+    <!--                            style="unicode-bidi:plaintext"-->
+    <!--                            *ngFor="let val of treeValues"-->
+    <!--                            (click)="insertAtCursor(val)">{{val}}</span>-->
+    <!--                    </div>-->
+
+    <!--                    <textarea-->
+    <!--                      #textareaRef-->
+    <!--                      [style]="{'width':'100%'}"-->
+    <!--                      rows="5"-->
+    <!--                      id="description"-->
+    <!--                      name="description"-->
+    <!--                      pInputTextarea-->
+    <!--                      class="p-fieldset"-->
+    <!--                      [(ngModel)]="block.actionParameters[fi].valueFormat">-->
+    <!--                    </textarea>-->
+    <!--                  </div>-->
+    <!--                  <div class="form-group mt-3">-->
+    <!--                    <button-->
+    <!--                      pButton-->
+    <!--                      pRipple-->
+    <!--                      class="p-button-success pi pi-tags"-->
+    <!--                      (click)="getEntityData(f,'tree')"></button>-->
+    <!--                  </div>-->
+    <!--                </div>-->
+
+    <!--              </ng-container>-->
+
+    <!--            </div>-->
+    <!--          </div>-->
+
+    <!--&lt;!&ndash;          <div class="flex flex-column border-2 border-dashed surface-border border-round surface-ground px-3 py-2">&ndash;&gt;-->
+
+    <!--&lt;!&ndash;            <div class="flex">&ndash;&gt;-->
+    <!--&lt;!&ndash;              <div *ngFor="let f of filterActionsInput;" class="field-row">&ndash;&gt;-->
+    <!--&lt;!&ndash;                <div class="form-group" *ngIf="f.type === 'string'">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <label class="font-bold text-900" for="receiver">{{f.label}}</label>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <div class="field flex gap-3 mt-1">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <input&ndash;&gt;-->
+    <!--&lt;!&ndash;                      pInputText&ndash;&gt;-->
+    <!--&lt;!&ndash;                      type="text"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      id="receiver"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      name="receiver"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      class="p-fieldset"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [style]="{'width': '250px'}">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;                &ndash;&gt;-->
+    <!--&lt;!&ndash;                <div class="form-group" *ngIf="f.type === 'number'">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <label class="font-bold text-900" for="receiver">{{f.label}}</label>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <div class="field flex gap-3 mt-1">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <p-inputNumber&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [mode]="'decimal'"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [useGrouping]="false"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      class="w-full"></p-inputNumber>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;                &ndash;&gt;-->
+    <!--&lt;!&ndash;                <div class="datePickerContainer relative" *ngIf="f.type === 'datetime'">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <label class="text-right font-bold text-md mb-2" for="finishDate">زمان ارسال</label>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <div class="flex gap-2 ">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <ng-persian-datepicker&ndash;&gt;-->
+    <!--&lt;!&ndash;                      class="w-full"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      (dateOnInit)="initialFinishDatePicker($event)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      (dateOnSelect)="selectFinishDate($event)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [dateGregorianFormat]="'YYYY-MM-DD' "&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [dateFormat]="'YYYY-MM-DD '">&ndash;&gt;-->
+    <!--&lt;!&ndash;                      <input [formControl]="finishDateTimeControl" id="finishDate" name="finishDate" class="font-bold w-10rem" pInputText type="text" autocomplete="off"/>&ndash;&gt;-->
+    <!--&lt;!&ndash;                    </ng-persian-datepicker>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;              &ndash;&gt;-->
+    <!--&lt;!&ndash;                <div class="form-group" *ngIf="f.type === 'object'">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <label class="font-bold text-900" for="receiver">{{f.label}}</label>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <div class="field flex gap-3 mt-1">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <p-dropdown&ndash;&gt;-->
+    <!--&lt;!&ndash;                      optionLabel="label"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      optionValue="value"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [options]="mapFilterParameterOptions(f.filterParameter)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      placeholder="انتخاب کنید"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      class="ml-2">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    </p-dropdown>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;              </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;            </div>&ndash;&gt;-->
+
+
+
+    <!--&lt;!&ndash;            <div *ngIf="block.actionTypeSelected === ActionTypesEnum.SendSMS">&ndash;&gt;-->
+
+    <!--&lt;!&ndash;              <div class="flex align-items-baseline gap-5">&ndash;&gt;-->
+    <!--&lt;!&ndash;                <div class="form-group">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <label class="font-bold text-900" for="receiver">شماره گیرنده</label>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <button pButton&ndash;&gt;-->
+    <!--&lt;!&ndash;                          pTooltip="اطلاعات مرحله"&ndash;&gt;-->
+    <!--&lt;!&ndash;                          tooltipPosition="top"&ndash;&gt;-->
+    <!--&lt;!&ndash;                          class="p-button-warning text-white w-2rem h-2rem rounded mr-2"&ndash;&gt;-->
+    <!--&lt;!&ndash;                          icon="pi pi-external-link"&ndash;&gt;-->
+    <!--&lt;!&ndash;                          id="receiver"&ndash;&gt;-->
+    <!--&lt;!&ndash;                          (click)="openDialogActionCondition(null,$event)"></button>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                  <div class="field flex gap-3 mt-1">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <input&ndash;&gt;-->
+    <!--&lt;!&ndash;                      pInputText&ndash;&gt;-->
+    <!--&lt;!&ndash;                      type="text"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      id="receiver"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      name="receiver"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      class="p-fieldset"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [style]="{'width': '250px'}"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [(ngModel)]="oneObjectSendSms.receiver">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                <div class="datePickerContainer relative">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <label class="text-right font-bold text-md mb-2 text-900" for="sendDateTime">زمان ارسال</label>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <button pButton&ndash;&gt;-->
+    <!--&lt;!&ndash;                          pTooltip="اطلاعات مرحله"&ndash;&gt;-->
+    <!--&lt;!&ndash;                          tooltipPosition="top"&ndash;&gt;-->
+    <!--&lt;!&ndash;                          class="p-button-warning text-white w-2rem h-2rem rounded mr-2"&ndash;&gt;-->
+    <!--&lt;!&ndash;                          icon="pi pi-external-link"&ndash;&gt;-->
+    <!--&lt;!&ndash;                          id="sendDateTime"&ndash;&gt;-->
+    <!--&lt;!&ndash;                          (click)="openDialogActionCondition(null,$event)"></button>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                  <ng-persian-datepicker&ndash;&gt;-->
+    <!--&lt;!&ndash;                    class="block mt-1"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    [style]="{'width':'220px'}"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    (dateOnSelect)="selectSendSmsDate($event)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    (dateOnInit)="initialSendSmsDateDatePicker($event)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    [dateGregorianFormat]="'YYYY-MM-DD '"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    [dateFormat]="'YYYY-MM-DD '">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <input #sendDateTimeInput [formControl]="sendSmsDateTimeControl" id="sendDateTime" name="sendDateTime" class="font-bold w-full" pInputText type="text" autocomplete="off"/>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </ng-persian-datepicker>&ndash;&gt;-->
+    <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;              </div>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;              <div class="form-group">&ndash;&gt;-->
+    <!--&lt;!&ndash;                <label class="font-bold text-900" for="content">متن پیام</label>&ndash;&gt;-->
+    <!--&lt;!&ndash;                <button pButton&ndash;&gt;-->
+    <!--&lt;!&ndash;                        pTooltip="اطلاعات مرحله"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        tooltipPosition="top"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        class="p-button-warning text-white w-2rem h-2rem rounded mr-2"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        icon="pi pi-external-link"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        id="content"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        (click)="openDialogActionCondition(null,$event)"></button>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                <div class="field mt-1">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <textarea&ndash;&gt;-->
+    <!--&lt;!&ndash;                    [style]="{'width':'100%'}"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    rows="5"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    id="content"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    name="content"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    pInputTextarea&ndash;&gt;-->
+    <!--&lt;!&ndash;                    class="p-fieldset"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    [(ngModel)]="oneObjectSendSms.content">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </textarea>&ndash;&gt;-->
+    <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;              </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;            </div>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;            <ul class="pl-2 list-roman">&ndash;&gt;-->
+    <!--&lt;!&ndash;              <ng-container *ngFor="let node of block.treeNodesAction">&ndash;&gt;-->
+    <!--&lt;!&ndash;                <ng-container [ngTemplateOutlet]="treeNodeTemplate" [ngTemplateOutletContext]="{ node: node }"></ng-container>&ndash;&gt;-->
+    <!--&lt;!&ndash;              </ng-container>&ndash;&gt;-->
+    <!--&lt;!&ndash;            </ul>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;            <ng-template #treeNodeTemplate let-node="node">&ndash;&gt;-->
+    <!--&lt;!&ndash;              <li class="mb-1">&ndash;&gt;-->
+    <!--&lt;!&ndash;                <div class="flex items-center space-x-2">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  &lt;!&ndash; expand &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <button&ndash;&gt;-->
+    <!--&lt;!&ndash;                    *ngIf="!node.isLeaf"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    (click)="toggleExpand(node)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    class="toggle-btn">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <i class="pi"&ndash;&gt;-->
+    <!--&lt;!&ndash;                       [ngClass]="node.expanded ? 'pi-angle-down' : 'pi-angle-left'">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    </i>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </button>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <span>{{ node.label }}</span>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                  <p-multiSelect [style]="{'width':'100%'}"&ndash;&gt;-->
+    <!--&lt;!&ndash;                                 *ngIf="node.values?.length"&ndash;&gt;-->
+    <!--&lt;!&ndash;                                 class="w-full"&ndash;&gt;-->
+    <!--&lt;!&ndash;                                 placeholder ="کارشناس را انتخاب نمایید"&ndash;&gt;-->
+    <!--&lt;!&ndash;                                 scrollHeight="250px"&ndash;&gt;-->
+    <!--&lt;!&ndash;                                 [(ngModel)]="node.selectedValue"&ndash;&gt;-->
+    <!--&lt;!&ndash;                                 [options]="mapValuesToDropdownOptions(node.values)">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </p-multiSelect>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;&lt;!&ndash;                  <p-dropdown&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                    *ngIf="node.values?.length"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                    [(ngModel)]="node.selectedValue"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                    [options]="mapValuesToDropdownOptions(node.values)"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                    placeholder="انتخاب کنید"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                    class="ml-2">&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                  </p-dropdown>&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                &lt;!&ndash; برگ با چند شرط &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                <div *ngIf="node.isLeaf" class="">&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                  <div *ngFor="let cond of node.conditions; let i = index" class="flex align-items-center gap-3 my-3">&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; مقدار بر اساس نوع &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <input pInputText type="text" *ngIf="node.type==='string'" [(ngModel)]="cond.value" placeholder="متن مورد نظر را وارد کنید" class="p-fieldset" />&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    <input pInputText type="text" *ngIf="node.type==='number'" [(ngModel)]="cond.value" placeholder="مقدار مورد نظر را وارد کنید" class="p-fieldset" />&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    <input pInputText type="text" *ngIf="node.type==='datetime'" type="date" [(ngModel)]="cond.value" class="p-fieldset" />&ndash;&gt;-->
+
+    <!--&lt;!&ndash;&lt;!&ndash;                    <ng-container *ngIf="node.type === 'datetime'">&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                      <ng-persian-datepicker&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                        class="block"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                        [style]="{'width':'220px'}"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                        (dateOnSelect)="selectActionDate($event,cond)"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                        (dateOnInit)="initialActionDateDatePicker($event,cond)"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                        [dateGregorianFormat]="'YYYY-MM-DD '"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                        [dateFormat]="'YYYY-MM-DD '">&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                        <input [formControl]="actionDateTimeControl" id="actionDateTime" name="actionDateTime" class="font-bold w-full" pInputText type="text" autocomplete="off"/>&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                      </ng-persian-datepicker>&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;                    </ng-container>&ndash;&gt;&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; BOOLEAN &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <p-dropdown&ndash;&gt;-->
+    <!--&lt;!&ndash;                      *ngIf="node.type==='boolean'"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [(ngModel)]="cond.value"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [options]="booleanOptions"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      placeholder="انتخاب کنید"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    ></p-dropdown>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; ENUM &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <p-dropdown&ndash;&gt;-->
+    <!--&lt;!&ndash;                      *ngIf="node.type==='enum'"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [(ngModel)]="cond.value"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [options]="mapEnumOptions(node.enumOptions)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      placeholder="انتخاب کنید"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    ></p-dropdown>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; MatchMode &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <p-dropdown&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [(ngModel)]="cond.matchMode"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [options]="getMatchModeOptionsForType(node.type)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      optionLabel="label"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      optionValue="value"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [style]="{'width': '150px'}"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    ></p-dropdown>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; Operator &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <p-dropdown&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [(ngModel)]="cond.operator"&ndash;&gt;-->
+    <!--&lt;!&ndash;                      [options]="operatorOptions"&ndash;&gt;-->
+    <!--&lt;!&ndash;                    ></p-dropdown>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; افزودن شرط جدید &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <button pButton&ndash;&gt;-->
+    <!--&lt;!&ndash;                            pTooltip="افزودن شرط"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            tooltipPosition="top"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            (click)="addCondition(node)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            class="p-button-success text-white w-2rem h-2rem rounded"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            icon="pi pi-plus"></button>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; حذف شرط &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <button *ngIf="i > 0"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            pTooltip="حذف شرط"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            tooltipPosition="top"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            pButton&ndash;&gt;-->
+    <!--&lt;!&ndash;                            (click)="removeCondition(node, i)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            class="p-button-danger text-white w-2rem h-2rem rounded"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            icon="pi pi-times"></button>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                    &lt;!&ndash; اطلاعات مرحله قبل &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <button pTooltip="اطلاعات"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            tooltipPosition="top"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            pButton&ndash;&gt;-->
+    <!--&lt;!&ndash;                            (click)="openDialogActionCondition(null, $event)"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            class="p-button-warning text-white w-2rem h-2rem rounded"&ndash;&gt;-->
+    <!--&lt;!&ndash;                            icon="pi pi-external-link"></button>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </div>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <p-divider type="solid" [style]="{'border-top':'1px solid #d1d1d1',}"/>&ndash;&gt;-->
+    <!--&lt;!&ndash;                </div>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                &lt;!&ndash; بچه ها &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                <ul *ngIf="node.expanded" class="ml-6">&ndash;&gt;-->
+    <!--&lt;!&ndash;                  <ng-container *ngFor="let child of node.children">&ndash;&gt;-->
+    <!--&lt;!&ndash;                    <ng-container [ngTemplateOutlet]="treeNodeTemplate" [ngTemplateOutletContext]="{ node: child }"></ng-container>&ndash;&gt;-->
+    <!--&lt;!&ndash;                  </ng-container>&ndash;&gt;-->
+    <!--&lt;!&ndash;                </ul>&ndash;&gt;-->
+    <!--&lt;!&ndash;              </li>&ndash;&gt;-->
+
+
+    <!--&lt;!&ndash;            </ng-template>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;          </div>&ndash;&gt;-->
+
+    <!--        </div>-->
+
+    <!--        <div class="flex pt-4 justify-content-between">-->
+    <!--          <p-button label="مرحله قبل" (onClick)="prevCallback.emit()" />-->
+    <!--          <p-button label="ثبت فرایند" severity="success" (click)="onSubmit()" />-->
+    <!--        </div>-->
+
+    <!--      </ng-template>-->
+    <!--    </p-stepperPanel>-->
+
+    <!--  </p-stepper>-->
+  </div>
+</div>
+
+
+<!--************************** begin EventFilter modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-small'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showEventFilterModal"
+  [appendTo]="'body'"
+  header="رویداد"
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-6" *ngFor="let param of dialogEventParameters; let pi = index">
+      <div class="form-group mt-3">
+        <label class="font-bold text-900" for="name">{{ param.label }}</label>
+        <div class="field mt-2">
+          <input
+            pInputText
+            type="text"
+            id="name"
+            name="name"
+            placeholder="مقدار خود را وارد نمایید"
+            class="p-fieldset"
+            [style]="{'width':'250px'}"
+            [(ngModel)]="param.value">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="ثبت"
+      class="p-button-success p-mr-2"
+      (click)="saveModalEvent()"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="showEventFilterModal = false"
+    ></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end EventFilter modal *************************************-->
+
+<!--************************** begin ActionFilter modal *************************************-->
+<p-dialog
+  *ngFor="let modal of showActionFilterModal"
+  [styleClass]="'modal-small'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="modal.visible"
+  [appendTo]="'body'"
+  header="اکشن"
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12 flex justify-content-between flex-wrap" *ngFor="let param of modal.parameters; let pi = index">
+      <div class="form-group flex-1">
+        <p-radioButton
+          name="paramRadio"
+          inputId="radioParameter"
+          value="value"
+          label="مقدار فیلتر"
+          class="gap-2"
+          [(ngModel)]="modal.selectedParamRadio"
+          (onClick)="onRadioSelect('value',modal)">
+        </p-radioButton>
+        <div class="form-group mt-3">
+          <label class="font-bold text-900" for="name">{{ param.label }}</label>
+          <div class="field mt-2">
+            <input
+              pInputText
+              type="text"
+              id="name"
+              name="name"
+              placeholder="مقدار خود را وارد نمایید"
+              class="p-fieldset"
+              [style]="{'width':'250px'}"
+              [disabled]="modal.selectedParamRadio !== 'value'"
+              [(ngModel)]="param.value">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group flex-1 flex flex-column justify-content-around">
+        <p-radioButton
+          name="paramRadio"
+          inputId="radioParameter"
+          value="parameter"
+          label="مقدار پارامتر"
+          class="gap-2"
+          [(ngModel)]="modal.selectedParamRadio"
+          (onClick)="onRadioSelect('parameter',modal)">
+        </p-radioButton>
+        <div class="form-group mt-3">
+          <button
+            [disabled]="modal.selectedParamRadio !== 'parameter'"
+            pButton
+            pRipple
+            class="p-button-success pi pi-tags"
+            (click)="getEntityData(param)"></button>
+          <div *ngIf="param.treeSelection">
+            <small class="text-green-600">
+              مسیر انتخابی: {{ param.treeSelection.path }}
+              <span *ngIf="param.treeSelection.field">.{{ param.treeSelection.field }}</span>
+            </small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="ثبت"
+      class="p-button-success p-mr-2"
+      (click)="saveModalAction(modal.id)"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="closeActionModal(modal.id)"
+    ></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end ActionFilter modal *************************************-->
+
+<!--************************** begin TreeNode modal *************************************-->
+<p-dialog
+  *ngFor="let modal of treeNodeModals"
+  [styleClass]="'modal-small'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="modal.visible"
+  [appendTo]="'body'"
+  header="انتخاب مقدار"
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12">
+
+      <div class="flex flex-column border-2 border-dashed surface-border border-round surface-ground px-3 py-2">
+        <ul class="pl-2 list-roman">
+          <ng-container *ngFor="let node of modal.entityData">
+            <ng-container
+              [ngTemplateOutlet]="EntityTreeNodeTemplate"
+              [ngTemplateOutletContext]="{ node: node }">
+            </ng-container>
+          </ng-container>
+        </ul>
+
+        <ng-template #EntityTreeNodeTemplate let-node="node" let-parent="parent">
+          <li class="mb-2">
+            <div class="flex align-items-center gap-2">
+              <!-- دکمه باز/بسته -->
+              <button *ngIf="!node.isLeaf" (click)="toggleExpand(node)" class="toggle-btn p-button-text">
+                <i class="pi" [ngClass]="node.expanded ? 'pi-angle-down' : 'pi-angle-right'"></i>
+              </button>
+
+              <!-- انتخاب فیلد نهایی -->
+              <p-radioButton
+                *ngIf="node.isLeaf"
+                name="selectedField{{modal.id}}"
+                [(ngModel)]="modal.selectedNodeFullPath"
+                [value]="node.fullPath"
+                [inputId]="node.fullPath"
+                [disabled]="parent?.values?.length && !parent.selectedValue"
+                (onClick)="clickRadioButton(node, modal)">
+              </p-radioButton>
+
+              <span>{{ node.label }}</span>
+
+              <p-dropdown
+                *ngIf="!node.isLeaf && node.values?.length"
+                [(ngModel)]="node.selectedValue"
+                [options]="node.values"
+                optionLabel="label"
+                optionValue="value"
+                [showClear]="true"
+                placeholder="انتخاب کنید"
+                (onChange)="onSelectFilterParameter($event, 'tree')">
+                <!--                (onChange)="onArraySelect($event.value, node)">-->
+              </p-dropdown>
+
+            </div>
+
+            <!-- نمایش بچه‌ها -->
+            <ul *ngIf="node.expanded" class="ml-5 mt-2">
+              <ng-container *ngFor="let child of node.children">
+                <ng-container
+                  [ngTemplateOutlet]="EntityTreeNodeTemplate"
+                  [ngTemplateOutletContext]="{ node: child, parent: node }">
+                </ng-container>
+              </ng-container>
+            </ul>
+          </li>
+        </ng-template>
+      </div>
+
+
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="ثبت"
+      class="p-button-success p-mr-2"
+      (click)="saveTreeNodeModal(modal)"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="closeEntityModal(modal.id)"
+    ></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end TreeNode modal *************************************-->
+
+<!--************************** begin DateModal modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-small'"
+  [style]="{direction:'rtl', height:'480px'}"
+  [(visible)]="showDateModal"
+  [appendTo]="'body'"
+  header="انتخاب تاریخ"
+  [modal]="true">
+
+  <div class="grid" *ngIf="selectedDateContext">
+    <div class="col-12">
+      <div class="datePickerContainer relative" >
+        <label class="text-right font-bold text-md mb-2" for="finishDate">تاریخ</label>
+        <div class="flex mt-1">
+          <ng-persian-datepicker
+            class="w-full"
+            (dateOnInit)="initialFinishDatePicker($event, actionBlocks[selectedDateContext.blockIndex], selectedDateContext.fieldIndex)"
+            (dateOnSelect)="selectFinishDate($event, actionBlocks[selectedDateContext.blockIndex], selectedDateContext.fieldIndex)"
+            [dateGregorianFormat]="'YYYY-MM-DD' "
+            [dateFormat]="'YYYY-MM-DD '">
+            <input [formControl]="finishDateTimeControl[selectedDateContext.blockIndex][selectedDateContext.fieldIndex]"
+                   name="date{{ selectedDateContext.blockIndex }}_{{ selectedDateContext.fieldIndex }}"  class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+          </ng-persian-datepicker>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="ثبت"
+      class="p-button-success p-mr-2"
+      (click)="onApplyDatePickerModal()"></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="showDateModal = false"
+    ></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end DateModal modal *************************************-->

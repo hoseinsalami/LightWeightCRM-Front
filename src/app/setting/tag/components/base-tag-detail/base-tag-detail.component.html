@@ -1,0 +1,54 @@
+<div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
+
+  <div class="flex-column">
+    <div class="flex flex-wrap gap-3 align-content-center">
+
+      <div class="form-group">
+        <label class="font-bold text-900" for="title">عنوان </label>
+        <div class="field">
+          <input
+            pInputText
+            type="text"
+            id="title"
+            name="title"
+            class="p-fieldset"
+            placeholder="عنوان فعالیت خود را وارد نمایید"
+            style="width: 250px"
+            [(ngModel)]="manager.oneObject.title">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="font-bold text-900" for="color">انتخاب رنگ</label>
+        <div class="field">
+          <input
+            type="color"
+            pInputText
+            id="color"
+            name="color"
+            [style]="{'height': '50px'}"
+            [(ngModel)]="manager.oneObject.color">
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="mt-5">
+      <button
+        class="mx-3 p-button-success"
+        pButton
+        label="ذخیره "
+        (click)="manager.save()"
+        icon="pi pi-save mx-2">
+      </button>
+      <button pButton
+              label="انصراف"
+              class="p-button-danger"
+              icon="pi pi-sign-out mx-2"
+              (click)="manager.cancel()"></button>
+    </div>
+
+  </div>
+</div>
+

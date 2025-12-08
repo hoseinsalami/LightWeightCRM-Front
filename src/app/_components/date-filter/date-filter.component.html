@@ -1,0 +1,156 @@
+<div style="display: inline-flex">
+  <button #trigger class="p-button-rounded p-button-text p-button-plain" pButton pRipple [ngClass]="{'active-filter': hasFilter}"
+    style="padding: 2px;height: auto" type="button" (click)="showDialog = !showDialog "  >
+    <span class="pi pi-filter-icon pi-filter"></span>
+  </button>
+</div>
+
+<!--[ngClass]="{'active-filter': hasFilter}-->
+
+
+ <ng-template
+
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="showDialog"
+
+>
+
+<div  class="customOverlay">
+
+  <div >
+
+    <mat-form-field class="w-full" >
+      <mat-label>از تاریخ</mat-label>
+      <input class="w-full" matInput [matDatepicker]="dp" [(ngModel)]="fieldTime[0].value">
+      <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div >
+    <mat-form-field class="w-full" >
+      <mat-label>تا تاریخ</mat-label>
+      <input matInput [matDatepicker]="todate" [(ngModel)]="fieldTime[1].value">
+      <mat-datepicker-toggle matIconSuffix [for]="todate"></mat-datepicker-toggle>
+      <mat-datepicker #todate></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+<!--    <md-datepicker type="wide" #picker (selectedChanged)="setDateReturn($event);"></md-datepicker>-->
+<!--    <mat-form-field>-->
+<!--        <input required matInput (mouseup)="dpickerFocus(picker)" [(ngModel)]="fieldTime[1].value" (focus)="dpickerFocus(picker)" readonly-->
+<!--               [matDatepicker]="picker" placeholder="تاریخ">-->
+
+<!--    </mat-form-field>-->
+
+
+  <div style="display: flex; justify-content: space-between; margin-top: 15px">
+    <button class="p-button-outlined" label="انصراف" pButton pRipple type="button" (click)="cancel()"></button>
+
+    <button *ngIf="fieldTime[0].value != null ||  fieldTime[1].value != null" pButton pRipple type="button" label="حذف" class="p-button-danger p-button-text"
+    (click)="fieldTime[0].value=null;fieldTime[1].value=null;"></button>
+
+    <button class="p-button-raised" label="اعمال" pButton pRipple type="button" (click)="setDateFilter(); showDialog = false"
+    [disabled]="fieldTime[0].value != null && fieldTime[1].value != null && fieldTime[0].value >= fieldTime[1].value"></button>
+
+  </div>
+
+
+  <div style="display: flex; justify-content: space-between; margin-top: 15px; color: #f44336"
+  *ngIf="fieldTime[0].value != null && fieldTime[1].value != null && fieldTime[0].value >= fieldTime[1].value ">
+    تاریخ <b>انتها</b> باید از تاریخ <b>ابتدا</b> بزرگتر باشد
+  </div>
+</div>
+</ng-template>
+
+<!--
+
+<p-dialog (onHide)="hideDialog()" [closable]="false" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" header="تاریخ صدور" [(visible)]="showDialog" [style]="{width: '20vw'}">
+  <ng-template pTemplate>
+    <div class="">
+
+      <mat-form-field class="w-full" >
+        <mat-label>از تاریخ</mat-label>
+        <input class="w-full" matInput [matDatepicker]="dp" [(ngModel)]="fieldTime[0].value">
+        <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div >
+      <mat-form-field class="w-full" >
+        <mat-label>تا تاریخ</mat-label>
+        <input matInput [matDatepicker]="todate" [(ngModel)]="fieldTime[1].value">
+        <mat-datepicker-toggle matIconSuffix [for]="todate"></mat-datepicker-toggle>
+        <mat-datepicker #todate></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+
+    <div style="display: flex; justify-content: space-between; margin-top: 15px">
+      <button class="p-button-outlined" label="انصراف" pButton pRipple type="button" (click)="cancel()"></button>
+
+      <button *ngIf="fieldTime[0].value != null ||  fieldTime[1].value != null" pButton pRipple type="button" label="حذف" class="p-button-danger p-button-text"
+      (click)="fieldTime[0].value=null;fieldTime[1].value=null;"></button>
+
+      <button class="p-button-raised" label="اعمال" pButton pRipple type="button" (click)="setDateFilter(); showDialog = false"
+      [disabled]="fieldTime[0].value != null && fieldTime[1].value != null && fieldTime[0].value >= fieldTime[1].value"></button>
+
+    </div>
+
+
+    <div style="display: flex; justify-content: space-between; margin-top: 15px; color: #f44336"
+    *ngIf="fieldTime[0].value != null && fieldTime[1].value != null && fieldTime[0].value >= fieldTime[1].value ">
+      تاریخ <b>انتها</b> باید از تاریخ <b>ابتدا</b> بزرگتر باشد
+    </div>
+
+  </ng-template>
+</p-dialog>
+ -->
+
+
+
+<!--
+<p-overlayPanel #op>
+  <ng-template pTemplate>
+    <div class="relative">
+
+      <mat-form-field >
+        <mat-label>از تاریخ</mat-label>
+        <input matInput [matDatepicker]="dp" [(ngModel)]="fieldTime[0].value">
+        <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+
+    <div >
+      <mat-form-field >
+        <mat-label>تا تاریخ</mat-label>
+        <input matInput [matDatepicker]="todate" [(ngModel)]="fieldTime[1].value">
+        <mat-datepicker-toggle matIconSuffix [for]="todate"></mat-datepicker-toggle>
+        <mat-datepicker #todate></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+
+    <div style="display: flex; justify-content: space-between; margin-top: 15px">
+      <button class="p-button-outlined" label="انصراف" pButton pRipple type="button" (click)="cancel(op)"></button>
+
+      <button *ngIf="fieldTime[0].value != null ||  fieldTime[1].value != null" pButton pRipple type="button" label="حذف" class="p-button-danger p-button-text"
+      (click)="fieldTime[0].value=null;fieldTime[1].value=null;"></button>
+
+      <button class="p-button-raised" label="اعمال" pButton pRipple type="button" (click)="setDateFilter(); op.hide()"
+      [disabled]="fieldTime[0].value != null && fieldTime[1].value != null && fieldTime[0].value >= fieldTime[1].value"></button>
+
+    </div>
+
+
+    <div style="display: flex; justify-content: space-between; margin-top: 15px; color: #f44336"
+    *ngIf="fieldTime[0].value != null && fieldTime[1].value != null && fieldTime[0].value >= fieldTime[1].value ">
+      تاریخ <b>انتها</b> باید از تاریخ <b>ابتدا</b> بزرگتر باشد
+    </div>
+
+  </ng-template>
+</p-overlayPanel> -->

@@ -1,0 +1,32 @@
+::ng-deep{
+  .p-dropdown-clear-icon{
+    right: 9rem !important;
+    color: red;
+  }
+
+  .p-accordion-header-link{
+    //font-weight: bolder;
+    //font-size: 14px;
+    padding: 0.5rem 1rem;
+    color:#6b7280 !important;
+  }
+  .p-accordion-toggle-icon{
+    color: #6b7280;
+  }
+
+}
+
+
+.list-roman{
+  list-style: upper-roman;
+}
+.toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

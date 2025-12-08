@@ -1,0 +1,75 @@
+::ng-deep{
+
+  .p-button{
+    &:focus{
+      box-shadow: none;
+    }
+  }
+
+  .activePanel{
+    background: #f6de95 !important;
+    box-shadow: 0 0 0 0.2rem #f6de95 !important;
+    //&:focus{
+    //  box-shadow: 0 0 0 0.2rem #f6de95 !important;
+    //}
+  }
+
+  .p-panel-header{
+    background: #fff;
+  }
+
+  .p-panel-icons-end{
+    display: none;
+  }
+
+  .green-bg {
+    background: #22c55e;
+    .pi{
+      color: #fff;
+    }
+  }
+
+  .ql-snow{
+    .ql-picker-label{
+      //padding-right: 22px !important;
+      svg{
+        right: -19px !important;
+      }
+    }
+  }
+  .active{
+    border-bottom: 3px solid #ffc800;
+  }
+
+  .overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb(221 221 221 / 50%);
+    z-index: 10;
+  }
+
+  .success, .failure{
+    position: relative;
+    //filter: blur(4px);
+  }
+
+  .rtl-editor .ql-editor {
+    direction: rtl;
+    text-align: right;
+  }
+
+  .divider{
+    .p-divider-dashed{
+      &:before{
+        border-top: 2px #e5e7eb dashed !important;
+      }
+    }
+  }
+
+}

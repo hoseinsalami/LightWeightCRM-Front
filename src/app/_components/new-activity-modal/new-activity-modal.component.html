@@ -1,0 +1,374 @@
+
+<!--************************** begin new-activity modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showModalNewActivity"
+  [appendTo]="'body'"
+  [header]="modalState  == 'new' ? 'افزودن فعالیت جدید' : modalState  == 'edit' ? 'ویرایش فعالیت' : 'مشاهده جزییات فعالیت'"
+  [modal]="true"
+  [closable]="false">
+
+  <div class="grid">
+
+    <div class="col-12">
+
+      <ul class="flex flex-wrap list-none p-0">
+        <li *ngFor="let item of activityList; let i = index"
+            [class]="{ 'green-bg': selectedIndex === i }"
+            (click)="modalState !== 'history' && onSetValue(item,i)"
+            class="border-1 border-gray-500 py-2 px-3 m-2 cursor-pointer border-radius-3 flex align-items-center">
+          <span [class]="item.iconClass" class="text-lg"></span>
+        </li>
+
+      </ul>
+
+      <div class="form-group">
+        <label class="font-bold text-900">عنوان </label>
+        <div class="field">
+          <input
+            pInputText
+            type="text"
+            id="title"
+            name="title"
+            class="p-fieldset w-full"
+            placeholder="عنوان فعالیت خود را وارد نمایید"
+            [disabled]="modalState === 'history'"
+            [(ngModel)]="newActivity.title">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-12 flex flex-wrap gap-3">
+
+      <div class="datePickerContainer relative">
+        <label class="text-right font-bold text-md mb-2" for="startDate">تاریخ</label>
+        <ng-persian-datepicker
+          *ngIf="modalState !== 'history'; else disabledDatepicker"
+          [style]="{'width':'220px'}"
+          (dateOnSelect)="selectStartDate($event)"
+          (dateOnInit)="initialStartDatePicker($event)"
+          [dateGregorianFormat]="'YYYY-MM-DD '"
+          [dateFormat]="'YYYY-MM-DD '">
+          <input [formControl]="startDateTimeControl" id="startDate" name="startDate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+        </ng-persian-datepicker>
+
+        <ng-template #disabledDatepicker>
+          <input
+            pInputText
+            class="font-bold w-full bg-gray-100 cursor-not-allowed"
+            type="text"
+            [value]="startDateTimeControl.value"
+            disabled
+          />
+        </ng-template>
+
+      </div>
+
+      <div class="datePickerContainer relative">
+        <label class="text-right font-bold text-md mb-2" for="startDate">ساعت</label>
+        <div>
+          <p-dropdown
+            [styleClass]="'clear-icon'"
+            [showClear]="true"
+            [disabled]="modalState === 'history'"
+            [options]="hourTime"
+            [(ngModel)]="selectedHourTime"
+            class="mt-2"
+            [style]="{'width':'160px'}"
+            placeholder="ساعت">
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div class="datePickerContainer relative">
+        <label class="text-right font-bold text-md mb-2" for="startDate">دقیقه</label>
+        <div>
+          <p-dropdown
+            [styleClass]="'clear-icon'"
+            [showClear]="true"
+            [disabled]="modalState === 'history'"
+            [options]="minuteTime"
+            [(ngModel)]="selectedMinuteTime"
+            class="mt-2"
+            [style]="{'width':'160px'}"
+            placeholder="دقیقه">
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="text-right font-bold text-md mb-2">مدت انجام فعالیت </label>
+        <div class="field">
+          <input
+            pInputText
+            type="text"
+            id="defaultDuration"
+            name="defaultDuration"
+            class="p-fieldset"
+            placeholder="مدت انجام فعالیت را وارد نمایید"
+            [style]="{'width':'160px'}"
+            [disabled]="modalState === 'history'"
+            [(ngModel)]="newActivity.duration"
+            [pKeyFilter]="'num'">
+        </div>
+      </div>
+
+      <div class="form-group">
+
+        <label class="text-right font-bold text-md mb-2 flex">
+          <i class="pi pi-bell"></i>
+          افزودن یادآور برای فعالیت
+          <span *ngIf="!shouldShowReminderFields()"
+                class="text-red-500 font-bold">
+            <i class="pi pi-question-circle" pTooltip="زمانی که انتخاب میکنید می بایست جلو تر از زمان فعلی باشد" tooltipPosition="top" placeholder="Top"></i>
+          </span>
+
+          <ng-container *ngIf="shouldShowReminderFields()">
+            <div *ngIf="reminders.length === 0">
+              <span *ngIf="!isReminderDisabled && modalState !== 'history'"
+                      (click)="addReminder()"
+                      class="cursor-pointer text-green-600 text-xs mr-3">
+                <i class="pi pi-plus text-xs"></i>
+                افزودن یادآور
+              </span>
+            </div>
+          </ng-container>
+
+
+        </label>
+        <ng-container *ngIf="shouldShowReminderFields()">
+
+
+
+          <div *ngFor="let item of reminders; let i = index;let last = last" class="field flex align-items-baseline gap-4">
+            <button type="button" [disabled]="isReminderDisabled || modalState === 'history'"
+                    [style]="{'cursor': isReminderDisabled ? 'no-drop' : ''}"
+                    (click)="deleteReminder(i)"
+                    class="p-button p-button-danger p-button-sm border-round-3xl p-2 pi pi-times"></button>
+            <input
+              pInputText
+              type="text"
+              id="reminder"
+              name="reminder"
+              class="p-fieldset"
+              placeholder="مدت زمان"
+              [style]="{'width':'150px'}"
+              [(ngModel)]="item.value"
+              [pKeyFilter]="'int'"
+              [disabled]="isReminderDisabled || modalState === 'history'">
+            <p-dropdown
+              [styleClass]="'clear-icon'"
+              [showClear]="true"
+              [options]="TimeUnits"
+              [(ngModel)]="item.periodTimeUnit"
+              optionLabel="title"
+              optionValue="value"
+              class="mt-2"
+              [style]="{'width':'150px'}"
+              [required]="true"
+              placeholder="دقیقه | ساعت | روز"
+              [disabled]="isReminderDisabled || modalState === 'history'">
+            </p-dropdown>
+            <button type="button" *ngIf="last && !isReminderDisabled" (click)="addReminder()"
+                    [disabled]="modalState === 'history'"
+                    class="p-button p-button-success border-round-3xl p-2 p-button-sm pi pi-plus cursor-pointer"></button>
+          </div>
+        </ng-container>
+      </div>
+
+    </div>
+
+    <div class="col-12">
+      <app-upload-file #uploadFileComponent [multi]="true" [isDisabled]="modalState === 'history'" [initialAttachments]="newActivity.attachments" (photos)="changeMainPhoto($event)" [addLabel]="'پیوست'"></app-upload-file>
+    </div>
+
+    <div class="col-12">
+
+      <div class="form-group" *ngIf="user.userType === UserTypesEnum.Admin || user.userType === UserTypesEnum.SuperAdmin">
+        <label class="font-bold text-900">مسئول انجام این فعالیت </label>
+        <div class="field">
+          <p-dropdown
+            [styleClass]="'clear-icon'"
+            [showClear]="true"
+            [disabled]="modalState === 'edit' || modalState === 'history'"
+            [options]="userList"
+            [(ngModel)]="newActivity.userId"
+            optionLabel="fullName"
+            optionValue="id"
+            class="mt-2"
+            [style]="{'width':'100%'}"
+            [required]="true"
+            placeholder="مسئول انجام فعالیت را انتخاب نمایید">
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="font-bold text-900">کارشناسان مرتبط</label>
+        <div class="field">
+          <p-multiSelect
+            [styleClass]="'clear-icon'"
+            [disabled]="!!newActivity.id"
+            [options]="filteredRelatedUsers"
+            [(ngModel)]="newActivity.relatedUsersIds"
+            optionLabel="fullName"
+            optionValue="id"
+            class="mt-2"
+            display="chip"
+            [maxSelectedLabels]="20"
+            [style]="{'width':'100%'}"
+            placeholder="کارشناسان مرتبط را انتخاب نمایید">
+          </p-multiSelect>
+        </div>
+      </div>
+
+      <div class="form-group font-bold text-orange-500 mb-3">این فعالیت مرتبط است با:</div>
+
+      <div class="field">
+        <p-autoComplete
+          [inputStyle]="{'width':'100%'}"
+          [style]="{'width':'100%'}"
+          [suggestions]="filteredCustomer"
+          (completeMethod)="filterCustomer($event)"
+          (onSelect)="selectedSearchCustomer($event)"
+          [(ngModel)]="companyName"
+          [disabled]="isDisabled || modalState === 'history'"
+          [showClear]="true"
+          [autofocus]="true"
+          [showEmptyMessage]="true"
+          emptyMessage="موردی یافت نشد"
+          appendTo="body"
+          optionLabel="fullName"
+          styleClass="w-full mx-auto"
+          scrollHeight="400px"
+          class="p-autocomplete w-full mx-auto"
+          placeholder="افراد (جستجو براساس نام | شرکت | شماره تماس)">
+
+          <ng-template let-filteredCustomers pTemplate="item">
+            <div class="grid align-items-end justify-content-between" style="direction: rtl">
+
+
+              <div class="col-12 overflow-hidden flex gap-2">
+                <p class=" my-0 ">{{filteredCustomers.name}}</p>
+                <p
+                  class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">
+                  {{filteredCustomers.family}} ({{filteredCustomers.companyName ? filteredCustomers.companyName :''}})
+                </p>
+                <p *ngFor="let phoneNumber of filteredCustomers.customerPhones"
+                  class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">
+                  شماره تماس:
+                  {{phoneNumber.phoneNumber}}
+                </p>
+              </div>
+
+
+            </div>
+          </ng-template>
+
+        </p-autoComplete>
+      </div>
+
+      <div class="field">
+        <p-autoComplete
+          [inputStyle]="{'width':'100%'}"
+          [style]="{'width':'100%'}"
+          [(ngModel)]="workItem"
+          [suggestions]="filteredWorkItem"
+          (completeMethod)="filterWorkItems($event)"
+          (onSelect)="selectedSearchWorkItems($event)"
+          [disabled]="isDisabled || modalState === 'history'"
+          [showClear]="true"
+          [autofocus]="true"
+          [showEmptyMessage]="true"
+          emptyMessage="موردی یافت نشد"
+          appendTo="body"
+          optionLabel="title"
+          styleClass="w-full mx-auto"
+          scrollHeight="400px"
+          class="p-autocomplete w-full mx-auto"
+          placeholder="قلم های کاری و تیکت ها (جستجو براساس عنوان | نام شخص | نام شرکت | شماره تماس)">
+
+          <ng-template let-filteredWorkItems pTemplate="item">
+            <div class="grid border-none border-bottom-1 border-solid border-gray-300" style="direction: rtl">
+              <div class="col-12 overflow-hidden flex gap-2">
+                <p class="my-0">
+                  <span class="font-medium text-cyan-500">{{filteredWorkItems.path.title}}:</span>
+                  {{filteredWorkItems.title}}
+                </p>
+                <p *ngIf="filteredWorkItems.customer.companyName"
+                  class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">
+                  <span class="text-gray-2300 ml-1"> | </span>
+                  <span class="font-medium text-orange-500">شرکت:</span>
+                  {{filteredWorkItems.customer.companyName ? filteredWorkItems.customer.companyName :''}}
+                </p>
+              </div>
+
+              <div class="col-12 overflow-hidden flex gap-2">
+                <p
+                  class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">
+                  <span class="font-medium text-green-500">مشتری:</span>
+                  {{filteredWorkItems.customer.family}}
+                </p>
+                <p
+                  class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">
+                  <span class="text-gray-300 ml-1"> | </span>
+                  <span class="font-medium text-red-500">شماره تماس:</span>
+                  <span *ngFor="let phone of filteredWorkItems?.customer?.customerPhones; let last = last">
+                    {{phone.phoneNumber}}{{!last ? ', ' : ''}}
+                  </span>
+
+
+                </p>
+
+
+              </div>
+            </div>
+          </ng-template>
+
+        </p-autoComplete>
+      </div>
+
+      <div class="form-group">
+        <label class="font-bold text-900">توضیحات </label>
+        <div class="field">
+                <textarea
+                  rows="5"
+                  [style]="{'width':'100%'}"
+                  pInputTextarea
+                  placeholder="توضیحات مورد نیاز برای این فعالیت را وارد نمایید"
+                  [disabled]="modalState === 'history'"
+                  [(ngModel)]="newActivity.description">
+              </textarea>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <ng-template pTemplate="footer">
+
+    <button
+      *ngIf="modalState !== 'history'"
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success button p-mr-2"
+      (click)="onRegisterActivity(modalState)"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="closePanel()"
+    ></button>
+
+  </ng-template>
+
+</p-dialog>
+<!--************************** end new-activity modal *************************************-->

@@ -1,0 +1,213 @@
+<div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
+  <p-toolbar styleClass="p-mb-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple  label="جدید" icon="pi pi-plus" class="p-button-success p-mr-2"
+              routerLink="new"></button>
+
+    </ng-template>
+    <!--        routerLink="new"-->
+
+    <!--        <ng-template pTemplate="right">-->
+    <!--            <button pButton pRipple label="خروجی" icon="pi pi-upload" class="p-button-help"></button>-->
+    <!--        </ng-template>-->
+  </p-toolbar>
+
+  <p-table #dt
+           [rows]="10"
+           [value]="many?many:[]"
+           [paginator]="true"
+           [rowHover]="true"
+           dataKey="id"
+           [showCurrentPageReport]="true"
+           [lazy]="true"
+           (onLazyLoad)="lazyLoadData(construct, dt,$event,'/list')"
+           [totalRecords]="totalRecords? totalRecords : 0"
+           [loading]="tableLoading"
+           [rowsPerPageOptions]="[10,25,50,100,200,500]"
+           currentPageReportTemplate=" از {first}  تا {last} از مجموع {totalRecords} نتیجه"
+           responsiveLayout="scroll"
+           styleClass="p-datatable-responsive-demo p-datatable-sm"
+           stateStorage="local"
+           stateKey="cariesTable">
+
+    <!--        {first} تا {last} از  {totalRecords}-->
+
+    <ng-template pTemplate="header">
+      <tr>
+<!--        pSortableColumn="title"-->
+        <th>
+<!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
+          کاریز
+          <p-sortIcon field="title"></p-sortIcon>
+        </th>
+
+        <th></th>
+      </tr>
+
+    </ng-template>
+
+
+    <ng-template pTemplate="body" let-object>
+      <tr>
+
+        <td>
+          <span class="p-column-title">عنوان</span>
+          {{object.title}}
+        </td>
+
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2 m-1"
+                  pTooltip="ویرایش"
+                  [routerLink]="['edit', object.id]" ></button>
+        </td>
+      </tr>
+    </ng-template>
+
+
+  </p-table>
+
+
+
+</div>
+
+<!--<ng-container>-->
+
+<!--    <p-dialog-->
+<!--      [styleClass]="'modal-fullscreen'"-->
+<!--      [(visible)]="showDialog"-->
+<!--      [appendTo]="'body'"-->
+<!--      header="ایجاد کاریز"-->
+<!--      [modal]="true"-->
+<!--      [style]="{'direction':'rtl'}">-->
+
+<!--      <div class="grid">-->
+<!--        <div class="col-12 md:col-4">-->
+
+<!--          <div class="flex flex-column flex-1">-->
+<!--              <label for="username">عنوان</label>-->
+<!--              <input-->
+<!--                pInputText-->
+<!--                id="username"-->
+<!--                aria-describedby="username-help"-->
+<!--              />-->
+<!--              &lt;!&ndash;            [(ngModel)]="value"&ndash;&gt;-->
+<!--            </div>-->
+
+<!--        </div>-->
+
+<!--        <div class="col-12 md:col-8">-->
+<!--          <div class="flex flex-column flex-1">-->
+<!--            <label for="userName">توضیحات</label>-->
+<!--            <textarea-->
+<!--              rows="1"-->
+<!--              cols="30"-->
+<!--              pInputTextarea-->
+<!--              [autoResize]="false">-->
+<!--            </textarea>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        <div class="col-12">-->
+
+<!--          <div class="grid">-->
+<!--            <div class="col-12 md:col-3"></div>-->
+
+<!--            <div class="col-12 md:col-6 mt-2 ">-->
+
+<!--              <form [formGroup]="form">-->
+<!--                <div formArrayName="steps">-->
+<!--                  <p-orderList-->
+<!--                    #orderList-->
+<!--                    [value]="steps.controls"-->
+<!--                    [style]="{'direction': 'ltr'}"-->
+<!--                    [dragdrop]="true"-->
+<!--                    [trackBy]="trackByIndex"-->
+<!--                    [metaKeySelection]="false">-->
+
+<!--                    <ng-template pTemplate="header">-->
+<!--                      <p class="text-center">گام های کاریز</p>-->
+<!--                    </ng-template>-->
+
+<!--                    <ng-template let-step let-i="index" pTemplate="item">-->
+<!--                      <div class="lex" style="direction: rtl !important;">-->
+<!--                        <div class="flex align-items-end mb-3 gap-3">-->
+<!--                          <div class="flex flex-column flex-1">-->
+<!--                            <label for="step-{{i}}" class="text-right">عنوان</label>-->
+<!--                            <input-->
+<!--                              pInputText-->
+<!--                              [id]="'step-' + i"-->
+<!--                              [name]="'step-' + i"-->
+<!--                              [formControlName]="i"/>-->
+<!--                          </div>-->
+<!--                          <div class="form-group flex gap-3">-->
+<!--                            <button type="button" pButton pRipple-->
+<!--                                    class="p-button-danger w-full"-->
+<!--                                    label="حذف"-->
+<!--                                    (mousedown)="onDeleteStep($event,i)">-->
+<!--&lt;!&ndash;                              (mousedown)="onDeleteStep($event,steps.length - 1)&ndash;&gt;-->
+<!--                            </button>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </ng-template>-->
+
+<!--                  </p-orderList>-->
+<!--                  <div class="form-group mt-3">-->
+<!--                    <button type="submit" pButton-->
+<!--                            class="p-button-success w-full"-->
+<!--                            label="افزودن گام جدید"-->
+<!--                            (click)="onAddNewStep()">-->
+<!--                    </button>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </form>-->
+
+
+
+<!--              &lt;!&ndash;                  <div class="flex align-items-end mb-3 gap-3" *ngFor="let step of getPhonesFormControls(); let i = index">&ndash;&gt;-->
+<!--              &lt;!&ndash;                    <div class="flex flex-column flex-1">&ndash;&gt;-->
+<!--              &lt;!&ndash;                      <label for="username">عنوان</label>&ndash;&gt;-->
+<!--              &lt;!&ndash;                      <input&ndash;&gt;-->
+<!--              &lt;!&ndash;                        pInputText&ndash;&gt;-->
+<!--              &lt;!&ndash;                        id="step"&ndash;&gt;-->
+<!--              &lt;!&ndash;                        name="step"&ndash;&gt;-->
+<!--              &lt;!&ndash;                      />&ndash;&gt;-->
+<!--              &lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--              &lt;!&ndash;                    <div class="form-group flex gap-3">&ndash;&gt;-->
+<!--              &lt;!&ndash;                      <p-button *ngIf=" i === getPhonesFormControls().length - 1"&ndash;&gt;-->
+<!--              &lt;!&ndash;                        icon="pi pi-plus"&ndash;&gt;-->
+<!--              &lt;!&ndash;                        severity="success"&ndash;&gt;-->
+<!--              &lt;!&ndash;                        (click)="onAddNewStep()"/>&ndash;&gt;-->
+<!--              &lt;!&ndash;                      <p-button icon="pi pi-times" severity="danger" (click)="onDeleteStep(i)"/>&ndash;&gt;-->
+<!--              &lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--              &lt;!&ndash;                  </div>&ndash;&gt;-->
+
+<!--            </div>-->
+
+<!--          </div>-->
+
+<!--        </div>-->
+
+<!--      </div>-->
+
+
+
+<!--      <ng-template pTemplate="footer">-->
+<!--        <button-->
+<!--          pButton-->
+<!--          pRipple-->
+<!--          label="تایید"-->
+<!--          class="p-button-success p-mr-2"-->
+<!--          (click)="showDialog = false"-->
+<!--        ></button>-->
+
+<!--        <button-->
+<!--          pButton-->
+<!--          pRipple-->
+<!--          label="انصراف"-->
+<!--          class="p-button-danger p-mr-2"-->
+<!--          (click)="showDialog = false"-->
+<!--        ></button>-->
+<!--      </ng-template>-->
+<!--    </p-dialog>-->
+<!--</ng-container>-->

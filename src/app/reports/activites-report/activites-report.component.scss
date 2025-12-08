@@ -1,0 +1,37 @@
+::ng-deep{
+
+  .datepicker-outer-container{
+    position: relative;
+  }
+
+  .chart{
+    canvas{
+      height: 30rem !important;
+    }
+  }
+
+  .p-divider-horizontal{
+    margin: 0;
+  }
+
+  .divider{
+    .p-divider-dashed{
+      &:before{
+        border-top: 2px #e5e7eb dashed !important;
+      }
+    }
+  }
+
+  .p-fieldset-legend{
+    border: none !important;
+    background: #fff !important;
+  }
+  .p-treenode-children{
+    padding-right: 1rem;
+  }
+
+  .p-toggleable-content{
+    overflow: visible;
+  }
+
+}

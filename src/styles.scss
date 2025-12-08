@@ -1,0 +1,419 @@
+/* You can add global styles to this file, and also import other style files */
+
+/*gutter:'1rem';*/
+@import "assets/layout/styles/layout/layout.scss";
+
+/* PrimeNG */
+@import "../node_modules/primeng/resources/primeng.min.css";
+@import "../node_modules/primeng/resources/themes/lara-light-blue/theme.css";
+//@import "../node_modules/primeng/resources/primeng.css";
+@import "../node_modules/primeflex/primeflex.scss";
+@import "../node_modules/primeicons/primeicons.css";
+// import Quill styles in styles.scss
+@import "../node_modules/quill/dist/quill.core.css";
+@import "../node_modules/quill/dist/quill.snow.css";
+
+
+/* Demos */
+@import "assets/demo/styles/flags/flags.css";
+@import "assets/demo/styles/badges.scss";
+@import "assets/demo/styles/code.scss";
+
+@import 'custom.css';
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.p-tabview-nav{
+  //background: #404040;
+  //background: #e3e3e3;
+  //border-radius: 10px;
+  //border: none;
+  .p-tabview-nav-link{
+    ////background: #404040;
+    //background: #e3e3e3;
+    //border-radius: 10px;
+    //color: #b5cf38;
+    //border: none;
+  }
+}
+
+.p-tabview-panels{
+  background: none !important;
+}
+
+.p-confirm-dialog-accept{
+  color: #ffffff;
+  background: #22c55e;
+  border: 1px solid #22c55e;
+}
+
+.p-confirm-dialog-reject{
+  color: #ffffff;
+  background: #ef4444;
+  border: 1px solid #ef4444;
+}
+
+/*************** begin global style ************/
+$black:#2a2a2a;
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.label{
+  font-size:11px;
+}
+.span{
+  font-size:12px;
+  color: $black;
+}
+.back-location{
+ width: 35px !important;
+}
+/*************** end global style ************/
+
+/*************** begin global style Validators ************/
+.border-radius-3{
+  border-radius: 3px;
+}
+.error-msg {
+  color: red !important;
+  font-size: 11px;
+  //position: absolute;
+  bottom: 0;
+}
+.footer-fix{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 5;
+  position: fixed;
+  bottom: 0px !important;
+  left: 0px !important;
+  width: 100%;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  background: #404040;
+  padding: 0.5rem 1rem;
+}
+.p-tooltip{
+  text-align: center !important;
+}
+/*************** end global style Validators ************/
+
+/********************* start modal *********************/
+$small: 576px;
+$medium: 768px;
+$large: 992px;
+$extra-large: 1200px;
+$extra-extra-large: 1400px;
+.modal-small {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  .modal-body {
+    @media screen and (max-width: $small) {
+      width: 100% !important;
+    }
+
+    @media screen and (min-width: $small) and (max-width: $medium) {
+      width: 80% !important;
+    }
+
+    @media screen and (min-width: $medium) and (max-width: $large) {
+      width: 60% !important;
+    }
+
+    @media screen and (min-width: $large) and (max-width: $extra-large) {
+      width: 50% !important;
+    }
+
+    @media screen and (min-width: $extra-large) and (max-width: $extra-extra-large) {
+      width: 50% !important;
+    }
+
+    @media screen and (min-width: $extra-extra-large) {
+      width: 600px !important;
+    }
+  }
+}
+
+.modal-small {
+  @media screen and (max-width: $small) {
+    width: 100% !important;
+  }
+
+  @media screen and (min-width: $small) and (max-width: $medium) {
+    width: 80% !important;
+  }
+
+  @media screen and (min-width: $medium) and (max-width: $large) {
+    width: 60% !important;
+  }
+
+  @media screen and (min-width: $large) and (max-width: $extra-large) {
+    width: 50% !important;
+  }
+
+  @media screen and (min-width: $extra-large) and (max-width: $extra-extra-large) {
+    width: 50% !important;
+  }
+
+  @media screen and (min-width: $extra-extra-large) {
+    width: 600px !important;
+  }
+}
+
+.modal-medium{
+  @media screen and (max-width: $small) {
+    width: 100% !important;
+    //height: 100% !important;
+  }
+
+  @media screen and (min-width: $small) and (max-width: $medium) {
+    width: 80% !important;
+    //height: 100% !important;
+  }
+
+  @media screen and (min-width: $medium) and (max-width: $large) {
+    width: 80% !important;
+    //height: 100% !important;
+  }
+
+  @media screen and (min-width: $large) and (max-width: $extra-large) {
+    width: 80% !important;
+    //height: 100% !important;
+  }
+
+  @media screen and (min-width: $extra-large) and (max-width: $extra-extra-large) {
+    width: 80% !important;
+    //height: 100% !important;
+  }
+
+  @media screen and (min-width: $extra-extra-large) {
+    width: 900px !important;
+    //height: 100% !important;
+  }
+}
+
+.modal-fullscreen {
+
+  @media screen and (max-width: $small) {
+    width: 95%;
+  }
+
+  @media screen and (min-width: $small) and (max-width: $medium) {
+    width: 95%;
+  }
+
+  @media screen and (min-width: $medium) and (max-width: $large) {
+    width: 95%;
+  }
+
+  @media screen and (min-width: $large) and (max-width: $extra-large) {
+    width: 95%;
+  }
+
+  @media screen and (min-width: $extra-large) and (max-width: $extra-extra-large) {
+    width: 95%;
+  }
+
+  @media screen and (min-width: $extra-extra-large) {
+    width: 95%;
+    // width: 1200px;
+  }
+
+}
+
+.modal-full-screen {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  .modall-body {
+
+    @media screen and (max-width: $small) {
+      width: 100%;
+    }
+
+    @media screen and (min-width: $small) and (max-width: $medium) {
+      width: 100%;
+    }
+
+    @media screen and (min-width: $medium) and (max-width: $large) {
+      width: 100%;
+    }
+
+    @media screen and (min-width: $large) and (max-width: $extra-large) {
+      width: 100%;
+    }
+
+    @media screen and (min-width: $extra-large) and (max-width: $extra-extra-large) {
+      width: 100%;
+    }
+
+    @media screen and (min-width: $extra-extra-large) {
+      width: 100%;
+      // width: 1200px;
+    }
+
+  }
+}
+
+.p-dialog-header{
+  width:100%;
+  //display:flex;
+  //justify-content:center;
+}
+
+.p-dialog-content{
+  width:100%;
+}
+
+.p-dialog-footer{
+  width:100% !important;
+  display:flex;
+  justify-content:center;
+}
+/********************* end modal *********************/
+
+/******* begin notices component ********/
+.car-license-plate{
+  img{width:120px;}
+}
+.CarNumClass{
+  left:28px !important;
+  color: $black;
+}
+.carAlphaClass{
+  left:52px !important;
+  color: $black;
+}
+.carNumsClass{
+  left:72px !important;
+  color: $black;
+}
+.carNationalClass{
+  left:108px !important;
+  color: $black;
+}
+
+.imgHeight{
+  top: -1px !important;
+  img{
+    height: 17px !important;
+    width: 85px !important;
+  }
+}
+.widthDiv{
+  width: 80px !important;
+}
+.carAlpha{
+  top: 0px !important;
+  span{font-size: 12px !important;}
+}
+.alpha{
+  left: 20px !important;
+}
+.firstNum{
+  left: 4px !important;
+}
+.secondNum{
+  left: 39px !important;
+}
+.nationalNum{
+  left: 64px !important;
+}
+/********* end notices component *******/
+
+/************** begin dropdown style *************/
+.clear-icon{
+  .p-dropdown-clear-icon{
+    right: auto !important;
+    color: red;
+  }
+  .p-dropdown-trigger{
+    width: 30px !important;
+    margin-right: 10px;
+  }
+}
+
+/************************ begin drag styles ***********************/
+.cdk-drag-preview {
+  background: lightgray;
+  border-radius: 5px;
+  padding: 10px;
+}
+.cdk-drag-placeholder {
+  opacity: 0.5;
+}
+/************************* end drag styles **********************/
+.active-item{
+  background: #f2d066 !important;
+  color: #111827 !important;
+}
+//
+.p-menuitem-link {
+  justify-content: right;
+}
+
+/**********************************/
+.side-menu {
+  width: 20rem;
+  transition: width 0.3s ease, padding 0.3s ease;
+  overflow: hidden;
+  background: white;
+  padding: 20px;
+  flex-shrink: 0;
+
+  //width: 0;
+  //overflow: hidden;
+  //transition: width 0.3s ease-in-out;
+  //padding: 0;
+  //height: 100%;
+}
+
+.side-menu.closed {
+  width: 0;
+  padding: 0;
+}
+
+.side-menu.open {
+  transform: translateX(0);
+  //width: 20rem;
+  //padding: 20px;
+}
+
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.hamburger {
+  //position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 1000;
+  margin-left: 10px;
+}
+
+/* چارت */
+.chart-container {
+  flex-grow: 1;
+  transition: margin-right 0.3s ease-in-out;
+  width: 100%;
+}
+
+.chart-container.menu-open {
+  margin-right: 10px; // عرض منو
+}

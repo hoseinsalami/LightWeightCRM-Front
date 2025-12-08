@@ -1,0 +1,229 @@
+<!--************************** begin search modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showModal"
+  [appendTo]="'body'"
+  header="جستجو پیشرفته"
+  [modal]="true"
+  [closable]="false">
+
+  <div class="grid">
+    <div  class="col-4">
+      <label class="block"> نام مالک </label>
+      <input type="text" pInputText class="w-full" [(ngModel)]="selectedOwnerFamily"/>
+    </div>
+    <div  class="col-4">
+      <label class="block"> کد ملی </label>
+      <input type="text" pInputText class="w-full" [(ngModel)]="selectedOwnerNationalCode"/>
+    </div>
+    <div  class="col-4">
+      <label class="block"> تلفن </label>
+      <input type="text" pInputText class="w-full" [(ngModel)]="selectedOwnerMobile"/>
+    </div>
+    <div class="col-4">
+      <label class="block"> نوع خودرو </label>
+      <input type="text" pInputText class="w-full" [(ngModel)]="selectedCarType"/>
+    </div>
+    <div class="col-4">
+      <label class="block"> مرکز معاینه فنی </label>
+      <input type="text" pInputText class="w-full" [(ngModel)]="technicalDiagnosisCenter"/>
+    </div>
+    <div  class="col-4">
+      <label class="block"> بازرس </label>
+      <p-dropdown
+        [styleClass]="'clear-icon'"
+        [showClear]="true"
+        [options]="optionInspectors"
+        [(ngModel)]="selectedInspectors"
+        class="mt-2"
+        [style]="{'width':'100%'}"
+        optionLabel="fullName"
+        optionValue="family"
+        placeholder="بازرس">
+      </p-dropdown>
+    </div>
+    <div  class="col-4">
+      <label class="block"> افسر </label>
+      <p-dropdown
+        [styleClass]="'clear-icon'"
+        [showClear]="true"
+        [options]="optionOfficers"
+        [(ngModel)]="selectedOfficers"
+        class="mt-2"
+        [style]="{'width':'100%'}"
+        optionLabel="fullName"
+        optionValue="family"
+        placeholder="افسر">
+      </p-dropdown>
+    </div>
+    <div  class="col-4" [style]="{'display': url == 'first-notice' ||
+                                  url == 'second-notice' ||
+                                  url == 'detention' ||
+                                  url == 'detention-request' ? 'none' : 'block'}">
+      <label class="block"> وضعیت فعلی </label>
+      <p-dropdown
+        class="mt-2"
+        [styleClass]="'clear-icon'"
+        [showClear]="true"
+        [options]="optionNoticeState"
+        [(ngModel)]="selectedStatus"
+        [style]="{'width':'100%'}"
+        optionLabel="title"
+        optionValue="value"
+        placeholder="وضعیت">
+      </p-dropdown>
+    </div>
+    <div  class="col-4">
+      <div class="datePickerContainer relative">
+        <label class="text-right font-bold text-md mb-2" for="startDate">
+          از تاریخ</label>
+        <ng-persian-datepicker
+          (dateOnSelect)="selectStartDate($event)"
+          (dateOnInit)="initialStartDatePicker($event)"
+          [dateGregorianFormat]="'YYYY-MM-DD '"
+          [dateFormat]="'YYYY-MM-DD '">
+          <input [formControl]="startDateTimeControl" id="startDate" name="startDate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+        </ng-persian-datepicker>
+      </div>
+    </div>
+    <div  class="col-4">
+      <div class="datePickerContainer relative">
+        <label class="text-right font-bold text-md mb-2" for="finishDate">
+          تا تاریخ</label>
+        <div class="flex gap-2">
+          <ng-persian-datepicker
+            class="w-full"
+            (dateOnInit)="initialFinishDatePicker($event)"
+            (dateOnSelect)="selectFinishDate($event)"
+            [dateGregorianFormat]="'YYYY-MM-DD' "
+            [dateFormat]="'YYYY-MM-DD '">
+            <input [formControl]="finishDateTimeControl" id="finishDate" name="finishDate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+          </ng-persian-datepicker>
+          <button
+            pButton
+            pRipple
+            label="بازنشانی"
+            class="p-button-warning p-mr-2"
+            (click)="resetDate()"
+          ></button>
+        </div>
+      </div>
+
+    </div>
+
+    <div  class="col-4">
+      <label class="block"> پلاک </label>
+      <div class="">
+        <p-inputNumber [(ngModel)]="plaque1" [inputStyle]="{'width': '50px'}"/>
+        <p-inputNumber minlength="3" [(ngModel)]="plaque2" [inputStyle]="{'width': '50px'}" />
+        <p-dropdown
+          [styleClass]="'clear-icon'"
+          [showClear]="true"
+          [options]="alphabet"
+          [(ngModel)]="selectedAlphabet"
+          [style]="{'width':'110px'}"
+          appendTo="body"
+          optionLabel="title"
+          optionValue="title"
+          placeholder="حرف">
+        </p-dropdown>
+        <p-inputNumber minlength="2" [(ngModel)]="plaque3" [inputStyle]="{'width': '50px'}"/>
+      </div>
+
+    </div>
+
+  </div>
+
+<!--  <p-divider type="solid" [style]="{'border-top':'2px solid #d1d1d1',}"/>-->
+
+  <div class="grid">
+    <div class="col-12">
+      <p class="bg-bluegray-50 font-bold text-xl text-green-500 text-center mt-4">جستجو براساس تاریخچه وضعیت</p>
+    </div>
+    <div  class="col-4">
+      <label class="block"> وضعیت  انتخابی </label>
+      <p-dropdown
+        class="mt-2"
+        [styleClass]="'clear-icon'"
+        [showClear]="true"
+        [options]="optionNoticeStateByDateTime"
+        [(ngModel)]="selectedStatusByDateTime"
+        [style]="{'width':'100%'}"
+        optionLabel="title"
+        optionValue="value"
+        placeholder="وضعیت"
+        appendTo="body">
+      </p-dropdown>
+    </div>
+
+    <div  class="col-4">
+      <div class="datePickerContainer relative">
+        <label class="text-right font-bold text-md mb-2" for="startDate">
+          از تاریخ</label>
+        <ng-persian-datepicker
+          (dateOnSelect)="selectStartDateStatus($event)"
+          (dateOnInit)="initialStartDatePickerStatus($event)"
+          [dateGregorianFormat]="'YYYY-MM-DD '"
+          [dateFormat]="'YYYY-MM-DD '">
+          <input [formControl]="startDateTimeControlStatus" id="startDateStatus" name="startDateStatus" class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+        </ng-persian-datepicker>
+      </div>
+    </div>
+    <div  class="col-4">
+      <div class="datePickerContainer relative">
+        <label class="text-right font-bold text-md mb-2" for="finishDate">
+          تا تاریخ</label>
+        <div class="flex gap-2">
+          <ng-persian-datepicker
+            class="w-full"
+            (dateOnInit)="initialFinishDatePickerStatus($event)"
+            (dateOnSelect)="selectFinishDateStatus($event)"
+            [dateGregorianFormat]="'YYYY-MM-DD' "
+            [dateFormat]="'YYYY-MM-DD '">
+            <input [formControl]="finishDateTimeControlStatus" id="finishDateStatus" name="finishDateStatus" class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+          </ng-persian-datepicker>
+          <button
+            pButton
+            pRipple
+            label="بازنشانی"
+            class="p-button-warning p-mr-2"
+            (click)="resetDateStatus()"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template pTemplate="footer">
+
+    <button
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success button p-mr-2"
+      (click)="advanceSearch()"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="showDialog()"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="بازنشانی فرم"
+      class="p-button-warning p-mr-2"
+      (click)="resetFilter()"
+    ></button>
+
+
+  </ng-template>
+
+</p-dialog>
+<!--************************** end search modal *************************************-->

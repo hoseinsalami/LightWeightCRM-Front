@@ -1,0 +1,79 @@
+<div class="flex flex-column align-items-center">
+  <div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
+    <div class="grid">
+
+      <div class="col-12">
+
+        <div class="form-group">
+          <label class="text-900">نام</label>
+          <div class="field">
+            <input
+              [(ngModel)]="manager.oneObject.caption"
+              [style]="{'width':'100%'}"
+              pInputText
+              type="text"
+              id="title"
+              name="title"
+              placeholder="عنوان وارد نمایید."
+              class="p-fieldset"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="text-900">نام رویداد</label>
+          <div class="field">
+            <input
+              (keypress)="allowOnlyEnglish($event, 'name')"
+              [(ngModel)]="manager.oneObject.name"
+              [style]="{'width':'100%'}"
+              pInputText
+              type="text"
+              id="name"
+              name="name"
+              placeholder="نام رویداد وارد نمایید."
+              class="p-fieldset "/>
+          </div>
+          <small class="p-error font-bold" *ngIf="isEnglishError['name']">
+            فقط حروف انگلیسی مجاز می‌باشد
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label class="text-900">ماهیت مرتبط</label>
+          <div class="field">
+            <input
+              (keypress)="allowOnlyEnglish($event, 'entity')"
+              [(ngModel)]="manager.oneObject.entity"
+              [style]="{'width':'100%'}"
+              pInputText
+              type="text"
+              id="entity"
+              name="entity"
+              placeholder="ماهیت مرتبط وارد نمایید."
+              class="p-fieldset "/>
+          </div>
+          <small class="p-error font-bold" *ngIf="isEnglishError['entity']">
+            فقط حروف انگلیسی مجاز می‌باشد
+          </small>
+        </div>
+
+      </div>
+
+      <div class="col-12 flex justify-content-end gap-3">
+        <button type="button" pButton pRipple
+                class="p-button-danger w-6rem"
+                label="انصراف"
+                (click)="manager.cancel()">
+        </button>
+        <button type="button" pButton pRipple
+                class="p-button-success w-6rem"
+                label="ثبت"
+                (click)="manager.save()">
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,77 @@
+<div class="flex flex-column align-items-center">
+  <div class="p-card p-4 shadow-2 mx-auto max-w-60rem" style="min-width:60rem">
+    <p-toolbar styleClass="p-mb-4">
+      <ng-template pTemplate="left">
+        <button pButton pRipple  label="جدید" icon="pi pi-plus" class="p-button-success p-mr-2"
+                routerLink="new"></button>
+
+      </ng-template>
+
+    </p-toolbar>
+
+    <p-table #dt
+             [rows]="10"
+             [value]="many?many:[]"
+             [paginator]="true"
+             [rowHover]="true"
+             dataKey="id"
+             [showCurrentPageReport]="true"
+             [lazy]="true"
+             (onLazyLoad)="lazyLoadData(construct, dt,$event,'/list')"
+             [totalRecords]="totalRecords? totalRecords : 0"
+             [loading]="tableLoading"
+             [rowsPerPageOptions]="[10,25,50,100,200,500]"
+             currentPageReportTemplate=" از {first}  تا {last} از مجموع {totalRecords} نتیجه"
+             responsiveLayout="scroll"
+             styleClass="p-datatable-responsive-demo p-datatable-sm"
+             stateStorage="local"
+             stateKey="cariesTable">
+
+      <!--        {first} تا {last} از  {totalRecords}-->
+
+      <ng-template pTemplate="header">
+        <tr>
+          <!--        pSortableColumn="title"-->
+          <th>
+            <!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
+            عنوان
+            <p-sortIcon field="caption"></p-sortIcon>
+          </th>
+
+          <th>
+            <!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
+            نام رویداد
+            <p-sortIcon field="name"></p-sortIcon>
+          </th>
+
+          <th></th>
+        </tr>
+
+      </ng-template>
+
+
+      <ng-template pTemplate="body" let-object>
+        <tr>
+
+          <td>
+            <span class="p-column-title">عنوان</span>
+            {{object.caption}}
+          </td>
+
+          <td>
+            <span class="p-column-title">عنوان</span>
+            {{object.name}}
+          </td>
+
+          <td>
+            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2 m-1"
+                    pTooltip="ویرایش"
+                    [routerLink]="['edit', object.id]" ></button>
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+
+  </div>
+</div>

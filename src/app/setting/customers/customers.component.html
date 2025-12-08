@@ -1,0 +1,277 @@
+<div class="p-card p-4 shadow-2 mx-auto max-w-60rem ">
+  <p-toolbar styleClass="p-mb-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple  label="جدید" icon="pi pi-plus" class="p-button-success p-mr-2"
+              routerLink="new"  ></button>
+
+    </ng-template>
+
+  </p-toolbar>
+
+  <p-table #dt
+           [rows]="20"
+           [value]="many?many:[]"
+           [paginator]="true"
+           [rowHover]="true"
+           dataKey="id"
+           [showCurrentPageReport]="true"
+           [lazy]="true"
+           (onLazyLoad)="lazyLoadData(construct, dt,$event,'/list')"
+           [totalRecords]="totalRecords? totalRecords : 0"
+           [loading]="tableLoading"
+           [rowsPerPageOptions]="[10,25,50,100,200,500]"
+           currentPageReportTemplate=" از {first}  تا {last} از مجموع {totalRecords} نتیجه"
+           responsiveLayout="scroll"
+           styleClass="p-datatable-responsive-demo p-datatable-sm overflow-x-hidden"
+           paginatorStyleClass="hidden"
+           class="overflow-x-hidden"
+           stateStorage="local"
+           stateKey="customerTable"
+           (onFilter)="onFilterTable($event)">
+
+    <!--        {first} تا {last} از  {totalRecords}-->
+
+    <ng-template pTemplate="header">
+      <tr>
+        <td colspan="200">
+          <p-panel [toggleable]="true" class="surface-300" [collapsed]="true">
+            <ng-template pTemplate="header">
+              <p class="m-0"> فیلتر ها و مرتب سازی</p>
+              <button *ngIf="showTableHaveFilter" pButton label="حذف فیلتر ها" class="p-button-outlined mx-2" icon="pi pi-filter-slash" (click)="clear(dt);"></button>
+
+            </ng-template>
+            <div class="flex flex-wrap col-12">
+
+              <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2" pSortableColumn="trackingNumber">
+                <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+                نام
+                <p-sortIcon field="name"></p-sortIcon>
+              </div>
+              <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2" pSortableColumn="createTime">
+                <p-columnFilter type="text" field="family" display="menu"></p-columnFilter>
+                نام خانوادگی
+                <p-sortIcon field="family"></p-sortIcon>
+              </div>
+              <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2" pSortableColumn="totalCost">
+                <p-columnFilter type="text" field="companyName" display="menu"></p-columnFilter>
+                شرکت
+                <p-sortIcon field="companyName"></p-sortIcon>
+              </div>
+              <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2">
+                <p-columnFilter
+                  field="tags"
+                  [showMatchModes]="false"
+                  [showOperator]="false"
+                  [showAddButton]="false"
+                  [showButtons]="false"
+                  matchMode="equals"
+                  display="menu"
+                  class="ml-auto">
+                  <ng-template pTemplate="filter">
+                    <div style="min-width:220px">
+                      <p-dropdown
+                        optionLabel="title"
+                        optionValue="id"
+                        [(ngModel)]="tagId"
+                        [options]="listOfTag"
+                        placeholder="فیلتر براساس برچسب">
+                        <ng-template let-option pTemplate="item">
+                          <div class="flex align-items-center gap-2">
+                            <span class="w-1rem h-1rem border-1 border-solid border-round-3xl block" [style]="{background:option.color}"></span>
+                            {{option.title}}
+                          </div>
+                        </ng-template>
+                      </p-dropdown>
+                      <div class="flex gap-2 mt-2">
+                        <button
+                          pButton
+                          label="اعمال"
+                          class="text-sm"
+                          (click)="changeCustomerByTag($event,tagId)"
+                        ></button>
+                        <button
+                          pButton
+                          label="حذف فیلتر"
+                          class="p-button-outlined text-sm"
+                          (click)="removeFilterTag($event)"
+                        ></button>
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-columnFilter>
+                برچسب
+              </div>
+
+            </div>
+          </p-panel>
+        </td>
+      </tr>
+      <!--      <tr>-->
+
+      <!--        <th pSortableColumn="name">-->
+      <!--&lt;!&ndash;          <p-columnFilter matchMode="contains" type="text" field="name" display="menu"></p-columnFilter>&ndash;&gt;-->
+      <!--          نام-->
+      <!--          <p-sortIcon field="name"></p-sortIcon>-->
+      <!--        </th>-->
+
+      <!--        <th pSortableColumn="family">-->
+      <!--&lt;!&ndash;          <p-columnFilter matchMode="contains" type="text" field="family" display="menu"></p-columnFilter>&ndash;&gt;-->
+      <!--          نام خانوادگی-->
+      <!--          <p-sortIcon field="family"></p-sortIcon>-->
+      <!--        </th>-->
+
+      <!--        <th pSortableColumn="companyName">-->
+      <!--&lt;!&ndash;          <p-columnFilter matchMode="contains" type="text" field="companyName" display="menu"></p-columnFilter>&ndash;&gt;-->
+      <!--          شرکت-->
+      <!--          <p-sortIcon field="companyName"></p-sortIcon>-->
+      <!--        </th>-->
+
+      <!--        <th></th>-->
+      <!--      </tr>-->
+
+    </ng-template>
+
+    <ng-template pTemplate="body" let-object>
+
+    </ng-template>
+
+  </p-table>
+
+
+  <div class="grid">
+    <div class="col-12 md:col-3 xl:col-2" *ngFor="let object of many" (click)="openDetails(object.id)">
+      <div class="h-full relative flex flex-column justify-content-between border-1 surface-border p-4 border-round shadow-1 hover:shadow-2 bg-white cursor-pointer">
+        <!-- Top Section -->
+        <div>
+          <h2 class="flex align-items-center justify-content-between text-xl font-bold text-900 white-space-nowrap overflow-hidden text-overflow-ellipsis">
+            {{ object.name }} {{ object.family }}
+
+            <span *ngIf="object.isCustomer === false" class="bg-green-100 border-round text-green-500 text-xs px-2 py-1 font-bold">مشتری</span>
+          </h2>
+          <p class="text-sm text-600 mt-2">{{ object.companyName }}</p>
+
+          <div class="flex align-items-center gap-2 mt-3 text-700" *ngIf="object.customerPhones?.length > 0">
+            <span class="material-symbols-outlined text-sm cursor-pointer" (click)="showCustomerPhone($event, object.customerPhones, phonePanel)">
+              <i class="text-lg pi pi-phone text-green-500"></i>
+            </span>
+            <span class="text-sm">{{ object.customerPhones[0].phoneNumber  }}</span>
+            <p-overlayPanel [style]="{width:'250px'}" #phonePanel [dismissable]="true">
+              <div class="grid">
+                <ng-container *ngFor="let item of customerPhones; let last=last">
+                  <div class="col-12 flex justify-content-between">
+                    <label class="text-color-secondary">{{ item.title }}</label>
+                    <label class="text-900">
+                      {{ item.phoneNumber }}
+                      <i class="pi pi-copy text-purple-500 cursor-pointer"
+                         (click)="copyPhone(item.phoneNumber)"></i>
+                    </label>
+                  </div>
+                  <div class="col-12" *ngIf="!last"><p-divider type="solid" [style]="{'border-top':'1px solid #fbf3f3',}"/></div>
+                </ng-container>
+              </div>
+            </p-overlayPanel>
+          </div>
+        </div>
+
+        <!-- Tags Section -->
+        <div (mousedown)="startDrag($event); $event.stopPropagation()"
+             (mousemove)="onDrag($event); $event.stopPropagation()"
+             (mouseup)="endDrag($event); $event.stopPropagation()"
+             (mouseleave)="endDrag($event); $event.stopPropagation()"
+             class="tags-scroll-container mt-3 border-top-1 surface-border pt-3 h-full">
+            <span *ngFor="let tag of object.tags"
+                  class="inline-flex align-items-center border-round px-2 py-1 text-xs font-medium text-white white-space-nowrap cursor-pointer"
+                  [style]="{background: tag.color}">{{tag.title}}</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!--  <div class="grid">-->
+    <!--    <div class="col-12 md:col-3 cursor-pointer" *ngFor="let object of many" [routerLink]="['edit', object.id]">-->
+    <!--      <div class="p-card shadow-1 mt-2 w-full" style="border-radius:.5rem; border:1px solid #d1d5db">-->
+    <!--        <div class="p-card-body" style="padding:18px 10px 3px 10px">-->
+
+    <!--          <div class="flex align-items-center justify-content-between gap-3 text-sm mb-1">-->
+    <!--            <div pTooltip="مشتری" tooltipPosition="top" class="flex gap-2">-->
+    <!--              <i class="text-lg pi pi-user text-green-500"></i>-->
+    <!--              <p class="font-medium text-color-secondary">{{ object.name }} {{ object.family }}</p>-->
+    <!--            </div>-->
+    <!--          </div>-->
+
+    <!--          <div class="flex align-items-center justify-content-between gap-3 text-sm mb-1">-->
+    <!--            <div pTooltip="شرکت" tooltipPosition="bottom" class="flex gap-2">-->
+    <!--              <i class="text-lg pi pi-building text-purple-500"></i>-->
+    <!--              <p class="text-color-secondary text-xs">{{ object.companyName }}</p>-->
+    <!--            </div>-->
+
+    <!--            <div class="flex gap-2" *ngIf="object.customerPhones?.length > 0">-->
+    <!--              <p class="badge m-0 cursor-pointer" (click)="showCustomerPhone($event, object.customerPhones, phonePanel)">-->
+    <!--                <span>{{object.customerPhones.length}}</span>-->
+    <!--                <i class="text-lg pi pi-phone text-green-500"></i>-->
+    <!--              </p>-->
+    <!--              <p class="font-medium text-color-secondary m-0">{{ object.customerPhones[0].phoneNumber  }}</p>-->
+    <!--              <p-overlayPanel [style]="{width:'250px'}" #phonePanel [dismissable]="true">-->
+    <!--                <div class="grid">-->
+    <!--                  <ng-container *ngFor="let item of customerPhones; let last=last">-->
+    <!--                    <div class="col-12 flex justify-content-between">-->
+    <!--                      <label class="text-color-secondary">{{ item.title }}</label>-->
+    <!--                      <label class="text-900">-->
+    <!--                        {{ item.phoneNumber }}-->
+    <!--                        <i class="pi pi-copy text-purple-500 cursor-pointer"-->
+    <!--                           (click)="copyPhone(item.phoneNumber)"></i>-->
+    <!--                      </label>-->
+    <!--                    </div>-->
+    <!--                    <div class="col-12" *ngIf="!last"><p-divider type="solid" [style]="{'border-top':'1px solid #fbf3f3',}"/></div>-->
+    <!--                  </ng-container>-->
+    <!--                </div>-->
+    <!--              </p-overlayPanel>-->
+    <!--            </div>-->
+    <!--          </div>-->
+
+    <!--          <div class="flex align-items-center gap-2" style="min-height:23px">-->
+    <!--            <i *ngIf="object.tags?.length" class="pi pi-tags text-pink-400"></i>-->
+    <!--            <ng-container *ngFor="let tag of object.tags">-->
+    <!--              <p [pTooltip]="tag.title" tooltipPosition="bottom"-->
+    <!--                 class="m-0 px-2 py-1 border-round text-xs text-white border-round-3xl"-->
+    <!--                 [style]="{background: tag.color, width:'15px', height:'15px', border:'1px solid #000'}">-->
+    <!--                &lt;!&ndash;              {{object.tags[0].title}}&ndash;&gt;-->
+    <!--                &lt;!&ndash;              <span *ngIf="object.tags.length > 1"> ... </span>&ndash;&gt;-->
+    <!--              </p>-->
+    <!--            </ng-container>-->
+    <!--          </div>-->
+
+    <!--          <div class="flex gap-2 justify-content-end">-->
+    <!--&lt;!&ndash;              <button&ndash;&gt;-->
+    <!--&lt;!&ndash;                pButton&ndash;&gt;-->
+    <!--&lt;!&ndash;                [text]="true"&ndash;&gt;-->
+    <!--&lt;!&ndash;                icon="pi pi-pencil"&ndash;&gt;-->
+    <!--&lt;!&ndash;                class="p-button-rounded p-button-warning text-sm w-2rem h-2rem"&ndash;&gt;-->
+    <!--&lt;!&ndash;                pTooltip="ویرایش"&ndash;&gt;-->
+    <!--&lt;!&ndash;                [routerLink]="['edit', object.id]"&ndash;&gt;-->
+    <!--&lt;!&ndash;              ></button>&ndash;&gt;-->
+    <!--              <button-->
+    <!--                pButton-->
+    <!--                [text]="true"-->
+    <!--                icon="pi pi-trash"-->
+    <!--                class="p-button-rounded p-button-danger text-sm w-2rem h-2rem"-->
+    <!--                pTooltip="حذف"-->
+    <!--                (click)="deleteItem(object.id)"-->
+    <!--              ></button>-->
+    <!--          </div>-->
+
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <!--    <div class="col-12">-->
+    <!--      <p-paginator-->
+    <!--        (onPageChange)="onPageChange($event)"-->
+    <!--        [first]="lastEvent.first"-->
+    <!--        [rows]="lastEvent.rows"-->
+    <!--        [totalRecords]="totalRecords"-->
+    <!--        [rowsPerPageOptions]="[20, 40, 60, 80, 100]" />-->
+    <!--    </div>-->
+    <!--  </div>-->
+
+  </div>
+

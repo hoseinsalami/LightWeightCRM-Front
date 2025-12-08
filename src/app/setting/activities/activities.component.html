@@ -1,0 +1,95 @@
+<div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
+  <p-toolbar styleClass="p-mb-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple  label="جدید" icon="pi pi-plus" class="p-button-success p-mr-2"
+              routerLink="new"  ></button>
+
+    </ng-template>
+    <!--        routerLink="new"-->
+
+    <!--        <ng-template pTemplate="right">-->
+    <!--            <button pButton pRipple label="خروجی" icon="pi pi-upload" class="p-button-help"></button>-->
+    <!--        </ng-template>-->
+  </p-toolbar>
+
+  <p-table #dt
+           [rows]="10"
+           [value]="many?many:[]"
+           [paginator]="true"
+           [rowHover]="true"
+           dataKey="id"
+           [showCurrentPageReport]="true"
+           [lazy]="true"
+           (onLazyLoad)="lazyLoadData(construct, dt,$event,'/list')"
+           [totalRecords]="totalRecords? totalRecords : 0"
+           [loading]="tableLoading"
+           [rowsPerPageOptions]="[10,25,50,100,200,500]"
+           currentPageReportTemplate=" از {first}  تا {last} از مجموع {totalRecords} نتیجه"
+           responsiveLayout="scroll"
+           styleClass="p-datatable-responsive-demo p-datatable-sm"
+           stateStorage="local"
+           stateKey="activitiesTable">
+
+    <!--        {first} تا {last} از  {totalRecords}-->
+
+    <ng-template pTemplate="header">
+      <tr>
+
+        <th pSortableColumn="title">
+<!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
+          عنوان
+          <p-sortIcon field="title"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="defaultDuration">
+<!--          <p-columnFilter matchMode="contains" type="text" field="defaultDuration" display="menu"></p-columnFilter>-->
+          زمان تقریبی
+          <p-sortIcon field="defaultDuration"></p-sortIcon>
+        </th>
+
+        <th>
+          آیکون نمایشی
+        </th>
+
+        <th></th>
+      </tr>
+
+    </ng-template>
+
+
+    <ng-template pTemplate="body" let-object>
+      <tr>
+
+        <td>
+          <span class="p-column-title">عنوان</span>
+          {{object.title}}
+        </td>
+
+        <td>
+          <span class="p-column-title">زمان تقریبی</span>
+          {{object.defaultDuration}}
+        </td>
+
+        <td>
+          <span class="p-column-title">آیکون نمایشی</span>
+          <span class="text-lg" [class]="object.iconClass"></span>
+        </td>
+
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2 m-1"
+                  pTooltip="ویرایش"
+                  [routerLink]="['edit', object.id]" ></button>
+
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2 m-1" pTooltip="حذف"
+                  (click)="deleteItem(object.id)"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+
+  </p-table>
+
+
+
+</div>
+

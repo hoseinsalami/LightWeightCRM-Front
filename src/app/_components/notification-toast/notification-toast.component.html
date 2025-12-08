@@ -1,0 +1,38 @@
+<div class="toast-container">
+  <div *ngFor="let notification of notifications" >
+
+    <div class="toast-box" *ngIf ="notification.activity">
+      <div class="toast-content">
+        <button class="close-btn" (click)="onRemoveClick(notification.notificationId)">×</button>
+        <div class="text-right">
+          <span class="font-bold text-base text-white block mb-2 text-green-500">یادآوری فعالیت</span>
+          <div class="font-bold text-lg text-white">{{ notification.activity.title }}</div>
+          <div class="text-sm text-white mt-1">{{ notification.activity.description }}</div>
+          <div class="text-sm text-white mt-1">
+            زمان برنامه ریزی شده: {{ notification.activity.dueDate | jalaliDate:'custom':'HH:mm - YYYY/MM/DD' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-box"
+         [style]="{ display: (notification.ticket && (notification.ticket.readDateTime == null || notification.ticket.readDateTime == undefined)) ? 'block' : 'none'}"
+          *ngIf="notification.ticket && (notification.ticket.readDateTime == null || notification.ticket.readDateTime == undefined)">
+      <div class="toast-content none">
+        <button class="close-btn" (click)="onRemoveClick(notification.notificationId)">×</button>
+        <div class="text-right">
+          <span class="font-bold text-base block mb-2 text-green-500">تیکت جدید</span>
+          <div class="font-bold text-lg text-white">{{ notification.ticket.title }}</div>
+          <div class="text-sm text-white mt-1">
+            نوع تیکت:
+            {{TicketTypeEnum2LabelMapping[notification.ticket.ticketType] }}
+          </div>
+          <div class="flex justify-content-end" (click)="goToTicketDetail(notification.ticket.ticketType, notification.ticket.id,notification.notificationId)">
+            <p class="font-bold text-sm text-withe border-round bg-blue-400 p-2 cursor-pointer">مشاهده</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
