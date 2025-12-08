@@ -144,11 +144,22 @@
         <!-- Top Section -->
         <div>
           <h2 class="flex align-items-center justify-content-between text-xl font-bold text-900 white-space-nowrap overflow-hidden text-overflow-ellipsis">
-            {{ object.name }} {{ object.family }}
+            <div class="flex align-items-center gap-3 text-sm">
+              <div class="flex-shrink-0 border-circle overflow-hidden" style="width:2rem; height:2rem;">
+                <img src="assets/images/avatar-user.png" alt="avatar" class="w-full h-full"/>
+              </div>
+              <div class="flex flex-column">
+                <span class="font-medium text-900">{{ object.name }} {{ object.family }}</span>
+              </div>
+            </div>
+
 
             <span *ngIf="object.isCustomer === false" class="bg-green-100 border-round text-green-500 text-xs px-2 py-1 font-bold">مشتری</span>
           </h2>
-          <p class="text-sm text-600 mt-2">{{ object.companyName }}</p>
+          <p class="text-sm text-600 mt-2 ">
+            <span class="pi pi pi-building text-base text-gray-400 ml-2"></span>
+            {{ object.companyName }}
+          </p>
 
           <div class="flex align-items-center gap-2 mt-3 text-700" *ngIf="object.customerPhones?.length > 0">
             <span class="material-symbols-outlined text-sm cursor-pointer" (click)="showCustomerPhone($event, object.customerPhones, phonePanel)">
@@ -174,16 +185,25 @@
         </div>
 
         <!-- Tags Section -->
-        <div (mousedown)="startDrag($event); $event.stopPropagation()"
-             (mousemove)="onDrag($event); $event.stopPropagation()"
-             (mouseup)="endDrag($event); $event.stopPropagation()"
-             (mouseleave)="endDrag($event); $event.stopPropagation()"
-             class="tags-scroll-container mt-3 border-top-1 surface-border pt-3">
+        <div
+          (mousedown)="startDrag($event); $event.stopPropagation()"
+          (mousemove)="onDrag($event); $event.stopPropagation()"
+          (mouseup)="endDrag($event); $event.stopPropagation()"
+          (mouseleave)="endDrag($event); $event.stopPropagation()"
+          class="tags-scroll-container mt-3 border-top-1 surface-border pt-3 h-full">
             <span *ngFor="let tag of object.tags"
                   class="inline-flex align-items-center border-round px-2 py-1 text-xs font-medium text-white white-space-nowrap cursor-pointer"
                   [style]="{background: tag.color}">{{tag.title}}</span>
         </div>
       </div>
+    </div>
+    <div class="col-12">
+      <p-paginator
+        (onPageChange)="onPageChange($event)"
+        [first]="lastEvent.first"
+        [rows]="lastEvent.rows"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="[20, 40, 60, 80, 100]" />
     </div>
 
 

@@ -236,7 +236,6 @@ export class ActivityNoteComponent implements OnInit{
 
       this.noteData = [...this.noteData, ...res.items];
       this.notePageInfo.from += res.items.length;
-      console.log(this.noteData)
 
 
     },  error => {
@@ -844,7 +843,7 @@ export class ActivityNoteComponent implements OnInit{
   }
 
   modalNewActivity(mode:string){
-    // this.showModalNewActivity = true;
+    this.showModalNewActivity = true;
     this.modalState = mode;
     this.newActivityModal.open(this.modalState)
     // this.newActivity = new CreateActivityType({});

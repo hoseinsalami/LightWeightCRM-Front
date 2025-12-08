@@ -54,6 +54,13 @@
               </div>
             </div>
 
+            <div class="col-12 md:col-6">
+              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3 text-purple-500 cursor-pointer" (click)="showModal('workItem')">
+                <span class="text-sm">معاملات:</span>
+                <span class="font-semibold text-sm text-left">{{manager.oneObject?.workItems?.length || 0}}</span>
+              </div>
+            </div>
+
             <div class="col-12">
               <div class="flex flex-wrap align-items-start gap-2 ">
                 <p class="border-round text-xs px-2 py-1 font-bold flex flex-wrap flex-column"
@@ -80,41 +87,6 @@
           <!--          <i -->
           <!--            class="pi pi-user-edit p-button p-button-text p-button-rounded p-button-warning p-2"-->
           <!--            style="font-size: 1.4rem"></i>-->
-        </div>
-
-      </div>
-
-      <div class="card mt-2 p-0">
-
-        <p class="bg-gray-300 border-round-top h-3rem flex align-items-center justify-content-center mb-0 text-base text-gray-700 text-center">
-          سابقه اقدامات
-        </p>
-
-        <div class="p-3 flex justify-content-evenly">
-          <p class="mb-1 flex flex-column align-items-center gap-3 cursor-pointer text-teal-500" (click)="showModal('ticket')">
-            <span class="font-medium">تیکت</span>
-            {{manager.oneObject?.tickets?.length || 0}}
-          </p>
-
-          <p class="mb-1 flex flex-column align-items-center gap-3 cursor-pointer text-purple-500" (click)="showModal('workItem')">
-            <span class="font-medium">
-<!--              <i class="pi pi-briefcase text-lg"></i>-->
-              معامله
-            </span>
-            {{manager.oneObject?.workItems?.length || 0}}
-          </p>
-        </div>
-
-      </div>
-
-      <div class="card mt-2 p-0">
-        <p class="bg-gray-300 border-round-top h-3rem flex align-items-center justify-content-center mb-0 text-base text-gray-700 text-center">
-          شعب
-        </p>
-        <div class="p-3 flex justify-content-evenly">
-          <p class="mb-1 flex flex-column align-items-center gap-3 cursor-pointer text-teal-500" (click)="showModal('branches')">
-            {{manager.oneObject?.branches?.length || 0}}
-          </p>
         </div>
 
       </div>
@@ -663,72 +635,6 @@
 
 </p-dialog>
 <!--************************** end workItem modal *****************************-->
-
-<!--************************** begin tickets modal *****************************-->
-<p-dialog
-  [styleClass]="'modal-small'"
-  [style]="{direction:'rtl'}"
-  [(visible)]="showModalTicket"
-  [appendTo]="'body'"
-  header="تیکت ها"
-  [modal]="true">
-
-  <div class="grid">
-    <div class="col-12">
-
-      <div class="flex align-items-center gap-3">
-        <div class="flex align-items-center gap-2">
-          <div class="w-1rem h-1rem border-round-3xl bg-gray-800"></div>
-          <span>جدید</span>
-        </div>
-
-        <div class="flex align-items-center gap-2">
-          <div class="w-1rem h-1rem border-round-3xl bg-green-500"></div>
-          <span>جاری</span>
-        </div>
-
-        <div class="flex align-items-center gap-2">
-          <div class="w-1rem h-1rem border-round-3xl bg-red-500"></div>
-          <span>بسته شده</span>
-        </div>
-      </div>
-
-      <div class="text-white border-round mb-2 cursor-pointer mt-3"
-           *ngFor="let item of manager.oneObject.tickets; let i = index"
-           [class]="item.readDateTime && item.closeDateTime ? 'bg-red-500' : item.readDateTime ? 'bg-green-500' : 'bg-gray-800'"
-           [routerLink]="['/tickets',item.id]">
-
-        <div class="flex align-items-center justify-content-between p-2 border-round">
-          <p class="m-0 flex align-items-center gap-1">
-            {{item.title}}
-          </p>
-
-          <p class="m-0 flex align-items-center gap-1">
-            {{TicketTypeEnum2LabelMapping[item.ticketType]}}
-          </p>
-
-
-        </div>
-
-        <div class="flex align-items-center justify-content-between p-2 border-round">
-          <p class="m-0 flex align-items-center gap-1">
-            شماره بارنامه:
-            {{item.billTrackNumber}}
-          </p>
-
-          <p class="m-0 flex align-items-center gap-1">
-            تاریخ ثبت:
-            {{item.createAt | jalaliDate:'custom':'DD-MM-YYYY'}}
-          </p>
-        </div>
-
-      </div>
-
-    </div>
-  </div>
-
-</p-dialog>
-<!--************************** end tickets modal *****************************-->
 
 <!--************************** begin branches modal *****************************-->
 <p-dialog
