@@ -31,7 +31,8 @@ export class CreateProcessType extends GenericType<CreateProcessType> {
 
 export interface IAppAction {
   name?: string;
-  actionParameters?: IActionParameter[]
+  actionParameters?: IActionParameter[];
+  executionDateTime?: string;
 }
 
 export interface IActionParameter {

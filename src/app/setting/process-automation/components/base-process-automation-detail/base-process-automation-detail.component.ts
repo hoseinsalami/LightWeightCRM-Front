@@ -9,7 +9,6 @@ import {
   ValuePathAccess
 } from "../../../_types/filter.type";
 import {IActiveDate} from "ng-persian-datepicker";
-import {ITreeNodeModal} from "../../process-automation.component";
 import {DropdownChangeEvent} from "primeng/dropdown";
 import {ProcessAutmationService} from "../../../_services/process-autmation.service";
 import {LoadingService} from "../../../../_services/loading.service";
@@ -54,6 +53,26 @@ interface ActionFilterModal {
   parentModalId?: string;
   parentModalType?: ModalType;
 }
+
+export interface ITreeNodeModal {
+  id: string;                        // شناسه یکتا برای هر مودال
+  visible: boolean;                  // وضعیت باز/بسته بودن مودال
+  entityData: any[];                 // داده درختی که داخل مودال نمایش داده میشه
+  selectedNodeFullPath?: string | null;     // مسیر نود انتخاب‌شده
+  parentModalId?: string,
+  dataActionModalId?: any;
+  dataAction?:any
+  modalTreeNodeOutPut?:any;
+
+  fullLabel?: string;
+  parentModalType?: ModalType;
+}
+
+export interface TreeSelectedValue {
+  label: string;
+  value: ValuePathAccess;
+}
+
 
 @Component({
   template:''
@@ -108,7 +127,8 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
   triggerEventEntity: string = ''
 
   treeNodeModals:ITreeNodeModal[]= [];
-  treeValuesMap: Map<string, string[]> = new Map();
+  treeValuesMap: Map<string, TreeSelectedValue[]> = new Map();
+  // treeValuesMap: Map<string, string[]> = new Map();
 
 
   showDateModal:boolean = false
@@ -135,6 +155,7 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
 
 
   onSubmit() {
+    this.loading.show()
     this.oneObject.triggerCondition = JSON.stringify(this.dialogEventParameters[0]?._targetFilter)
     console.log(this.actionBlocks)
 
@@ -158,8 +179,11 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
           // console.log(treeModal)
           param.filter = null
           if (treeModal) {
-            const ap = block.actionParameters[fieldIndex]
-            ap.valueParameters = treeModal.dataAction.valueParameters ? treeModal.dataAction.valueParameters : []
+            const treeValues = this.treeValuesMap.get(indexKey) || [];
+            param.valueParameters = treeValues.map(item => item.value);
+            // param.valueParameters = treeValues.length > 0 ? treeValues : [];
+            // const ap = block.actionParameters[fieldIndex]
+            // ap.valueParameters = treeModal.dataAction.valueParameters ? treeModal.dataAction.valueParameters : []
 
             // param.valueParameters = treeModal.dataAction.valueParameters
 
@@ -175,7 +199,7 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
           const fieldValues = this.treeValuesMap.get(indexKey);
           if (fieldValues?.length) {
             fieldValues.forEach((val, index) => {
-              const escapedVal = val.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              const escapedVal = val.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
               const regex = new RegExp(`<!${escapedVal}!>`, 'g');
               text = text.replace(regex, `<!${index}!>`);
             });
@@ -185,12 +209,12 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
           if (param.type === 'datetime' && param.valueParameters.length>0) {
             const key = `${blockIndex}_${fieldIndex}`;
             const displayVal = this.displayDateMap.get(key);
-            if (displayVal) {
+            if (displayVal.type === null) {
               // const escapedVal = displayVal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
               // text = escapedVal
               // const regex = new RegExp(`<!${text}!>`, 'g');
-              text = displayVal
-              text = text.replace(displayVal, '<!0!>');
+              text = displayVal.value
+              text = text.replace(displayVal.value, '<!0!>');
             }
             // param.filter = null
           }
@@ -482,7 +506,7 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
 
       const fieldKey = block.actionParameters[fieldIndex].field;
       const key = `${blockIndex}_${fieldIndex}`;
-      this.displayDateMap.set(key, dateEvent.shamsi.trim());// مقدار شمسی برای نمایش در input
+      this.displayDateMap.set(key, {value:dateEvent.shamsi.trim(), type:null});// مقدار شمسی برای نمایش در input
     }
 
     // پاک‌سازی و بستن مودال
@@ -588,7 +612,7 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
   //************************************************ start Date functions ***************************************
   booleanMap: { [key: string]: boolean } = {};  // نگهدار وضعیت switch
   displayBooleanMap = new Map<string, string>();
-  displayDateMap = new Map<string, string>();
+  displayDateMap = new Map<string, { value: string; type: 'timer' | null }>();
   initialFinishDatePicker(event: IActiveDate,block: any, index: number) {
     // this.finishDate = event.gregorian
     if (!block.actionParameters || !block.actionParameters[index]) return;
@@ -609,7 +633,7 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
     if (!textareaRef) return;
 
     const textarea = textareaRef.nativeElement;
-    const textToInsert = `<!${event}!>`;
+    const textToInsert = `<!${event.label}!>`;
 
     // موقعیت فعلی کرسر
     const start = textarea.selectionStart;
@@ -635,7 +659,7 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
     node.expanded = !node.expanded;
   }
 
-
+  // treeNodeTextareaMap: Map<string, ValuePathAccess[]> = new Map();
   saveTreeNodeModal(modal: ITreeNodeModal){
     if (!modal.selectedNodeFullPath) return;
 
@@ -688,9 +712,12 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
     if (!modal.parentModalId) {
       if (modal.dataAction.type === 'string'){
         const existing = this.treeValuesMap.get(modal.dataAction.indexKey) || [];
+        this.treeValuesMap.set(modal.dataAction.indexKey, [...existing,{label: modal.fullLabel, value: result}]);
         const updated = new Map(this.treeValuesMap);
-        updated.set(modal.dataAction.indexKey, [...existing, modal.fullLabel]);
-        this.treeValuesMap = updated;
+        // this.treeValuesMap = updated;
+        // const existingText = this.treeNodeTextareaMap.get(modal.dataAction.indexKey) || [];
+        // this.treeNodeTextareaMap.set(modal.dataAction.indexKey, [...existingText, result]);
+        // modal.dataAction.valueParameters = [...modal.dataAction.valueParameters ? modal.dataAction.valueParameters : [],result]
         console.log(this.treeValuesMap)
       }
 
@@ -698,9 +725,8 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
 
       if (modal.dataAction?.type === 'datetime') {
         const fieldKey = modal.dataAction?.field
-
         this.displayDateMap.delete(modal.dataAction.indexKey)
-        this.displayDateMap.set(modal.dataAction.indexKey, fullLabel);
+        this.displayDateMap.set(modal.dataAction.indexKey, {value:fullLabel, type: null});
         modal.dataAction.valueParameters = [result]
       }
 
@@ -1001,6 +1027,155 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
     }
 
 
+  }
+
+
+
+
+
+  actionRadio:string;
+  timerAction = new Map<string, { count: number; unitIndex: number }>();
+  timerState = new Map<string, { count: number; unitIndex: number }>();
+  units = ['دقیقه', 'ساعت', 'روز', 'ماه'];
+
+  onActionRadioValue(blockIndex:number){
+    if (this.actionRadio == 'now'){
+      const block = this.actionBlocks[blockIndex];
+      block.executionDateTime = null
+    } else {
+      this.initTimerAction(`${blockIndex}`)
+    }
+  }
+
+  initTimerAction(key: string) {
+    if (!this.timerAction.has(key)) {
+      this.timerAction.set(key, { count: 1, unitIndex: 0 });
+    }
+    this.syncExecutionDateTime(+key);
+  }
+  incrementAction(i: number) {
+    const key = `${i}`;
+    this.initTimerAction(key);
+    this.timerAction.get(key)!.count++;
+    this.syncExecutionDateTime(i);
+  }
+  decrementAction(i: number) {
+    const key = `${i}`;
+    this.initTimerAction(key);
+    if (this.timerAction.get(key)!.count > 1) {
+      this.timerAction.get(key)!.count--;
+      this.syncExecutionDateTime(i);
+    }
+  }
+  nextUnitAction(i: number) {
+    const key = `${i}`;
+    this.initTimerAction(key);
+    const state = this.timerAction.get(key)!;
+    if (state.unitIndex < this.units.length - 1) {
+      state.unitIndex++;
+      this.syncExecutionDateTime(i);
+    }
+  }
+  prevUnitAction(i: number) {
+    const key = `${i}`;
+    this.initTimerAction(key);
+    const state = this.timerAction.get(key)!;
+    if (state.unitIndex > 0) {
+      state.unitIndex--;
+      this.syncExecutionDateTime(i);
+    }
+  }
+  syncExecutionDateTime(i: number) {
+    const key = `${i}`;
+    const timer = this.timerAction.get(key);
+    if (!timer) return;
+
+    const unitCodes: Record<string, string> = {
+      دقیقه: 'M',
+      ساعت: 'H',
+      روز: 'D',
+      ماه: 'N'
+    };
+
+    const count = timer.count;
+    const unit = this.units[timer.unitIndex];
+    const code = unitCodes[unit];
+
+    this.actionBlocks[i].executionDateTime = `(${count}${code})`;
+  }
+
+
+  // مقدار پیش‌فرض ساختن اگر وجود نداشت
+  initTimerState(key: string) {
+    if (!this.timerState.has(key)) {
+      this.timerState.set(key, { count: 1, unitIndex: 0 });
+    }
+  }
+
+// + افزایش
+  increment(i: number, fi: number) {
+    const key = `${i}_${fi}`;
+    this.initTimerState(key);
+    this.timerState.get(key)!.count++;
+  }
+
+// - کاهش
+  decrement(i: number, fi: number) {
+    const key = `${i}_${fi}`;
+    this.initTimerState(key);
+    if (this.timerState.get(key)!.count > 1) {
+      this.timerState.get(key)!.count--;
+    }
+  }
+
+// واحد بعدی
+  nextUnit(i: number, fi: number) {
+    const key = `${i}_${fi}`;
+    this.initTimerState(key);
+    const state = this.timerState.get(key)!;
+    if (state.unitIndex < this.units.length - 1) {
+      state.unitIndex++;
+    }
+  }
+
+// واحد قبلی
+  prevUnit(i: number, fi: number) {
+    const key = `${i}_${fi}`;
+    this.initTimerState(key);
+    const state = this.timerState.get(key)!;
+    if (state.unitIndex > 0) {
+      state.unitIndex--;
+    }
+  }
+  // دکمه تأخیر زمانی
+  setTimerValue(i: number, fi: number) {
+    const blockIndex = i;
+    const fieldIndex = fi;
+    const key = `${i}_${fi}`;
+    this.initTimerState(key);
+    const block = this.actionBlocks[blockIndex];
+    // مقدار انتخاب‌شده از state
+    const timer = this.timerState.get(`${blockIndex}_${fieldIndex}`);
+    if (!timer) return;
+
+    const count = timer.count;
+    const unit = this.units[timer.unitIndex];
+
+    // مپ تبدیل واحدها
+    const unitCodes: Record<string, string> = {دقیقه: 'M', ساعت: 'H', روز: 'D', ماه: 'N'};
+    const code = unitCodes[unit];   // مثلا 'S'
+    // خروجی نهایی برای بک‌اند
+    const formatted = `<!EDT(${count}${code})!>`;
+    if (block?.actionParameters?.[fieldIndex]) {
+      block.actionParameters[fieldIndex].valueFormat = formatted;
+    }
+
+    this.displayDateMap.set(key, {value:'', type:"timer"});
+    console.log(this.timerState)
+
+    setTimeout(() => {
+      this.displayDateMap.set(key, {value: 'مقدار انتخابی', type:"timer"});
+    });
   }
 
 

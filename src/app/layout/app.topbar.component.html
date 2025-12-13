@@ -178,7 +178,7 @@
           <div *ngIf="user" class="flex align-items-center">
             <p-avatar  icon="pi pi-user" class="md:ml-3" [style]="{'background-color': '#9c27b0', 'color': '#ffffff'}"
                        shape="circle"
-                       pTooltip="<div style='direction:rtl;color:white;margin-left:10px;'><span >{{UserTypesEnum2LabelMapping[user.userType]}} - {{user.fullName}}<br> آخرین ورود:<br>{{user.lastLogin | jalaliDate}} </span></div>"
+                       pTooltip="<div style='direction:rtl;color:white;margin-left:10px;'><span >{{UserTypesEnum2LabelMapping[user.userType]}} - {{user.fullName}}<br> شرکت: {{user.tenant}} <br> آخرین ورود:<br>{{user.lastLogin | jalaliDate}} </span></div>"
                        [escape]="false"
                        tooltipPosition="right">
             </p-avatar>

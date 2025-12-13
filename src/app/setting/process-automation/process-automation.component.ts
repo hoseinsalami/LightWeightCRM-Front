@@ -99,7 +99,6 @@ export interface ITreeNodeModal {
   dataAction?:any
   modalTreeNodeOutPut?:any;
 
-
   fullLabel?: string;
   parentModalType?: ModalType;
 }

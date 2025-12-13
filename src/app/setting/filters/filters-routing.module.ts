@@ -11,19 +11,19 @@ const routes: Routes = [
     path: '',
     component: FiltersComponent,
     canActivate: [AuthGuard],
-    data: {permission: 'filter'}
+    data: {permission: 'Filter'}
   },
   {
     path: 'new',
     component: NewFilterComponent,
     canActivate: [AuthGuard],
-    data: {permission: 'filter'}
+    data: {permission: 'Filter'}
   },
   {
     path: 'edit/:id',
     component: EditFilterComponent,
     canActivate: [AuthGuard],
-    data: {permission: 'filter'}
+    data: {permission: 'Filter'}
   },
   { path: 'notfound', component: NotfoundComponent },
   { path: '**', redirectTo: '/notfound' },

@@ -20,6 +20,7 @@ export interface LoginOutputSscrmType{
   username?: string;
   permissions?: string[];
   tenant?: string;
+  tenantId?: number;
 }
 
 export interface NotificationsType {

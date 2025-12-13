@@ -1,0 +1,97 @@
+<div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
+  <p-toolbar styleClass="p-mb-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple  label="جدید" icon="pi pi-plus" class="p-button-success p-mr-2"
+              routerLink="new"  ></button>
+
+    </ng-template>
+    <!--        routerLink="new"-->
+
+    <!--        <ng-template pTemplate="right">-->
+    <!--            <button pButton pRipple label="خروجی" icon="pi pi-upload" class="p-button-help"></button>-->
+    <!--        </ng-template>-->
+  </p-toolbar>
+
+  <p-table #dt
+           [rows]="10"
+           [value]="many?many:[]"
+           [paginator]="true"
+           [rowHover]="true"
+           dataKey="id"
+           [showCurrentPageReport]="true"
+           [lazy]="true"
+           (onLazyLoad)="lazyLoadData(construct, dt,$event,'/list')"
+           [totalRecords]="totalRecords? totalRecords : 0"
+           [loading]="tableLoading"
+           [rowsPerPageOptions]="[10,25,50,100,200,500]"
+           currentPageReportTemplate=" از {first}  تا {last} از مجموع {totalRecords} نتیجه"
+           responsiveLayout="scroll"
+           styleClass="p-datatable-responsive-demo p-datatable-sm"
+           stateStorage="local"
+           stateKey="smsTable">
+
+    <!--        {first} تا {last} از  {totalRecords}-->
+
+    <ng-template pTemplate="header">
+      <tr>
+
+        <th pSortableColumn="apiKey">
+          <!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
+          کلید مجوز
+          <p-sortIcon field="apiKey"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="smsProvider">
+          <!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
+          سرویس پیامک
+          <p-sortIcon field="smsProvider"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="createTime">
+          <!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
+          تاریخ ایجاد
+          <p-sortIcon field="createTime"></p-sortIcon>
+        </th>
+
+
+        <th></th>
+      </tr>
+
+    </ng-template>
+
+
+    <ng-template pTemplate="body" let-object>
+      <tr>
+
+        <td>
+          <span class="p-column-title">کلید مجوز</span>
+          {{object.apiKey}}
+        </td>
+
+        <td>
+          <span class="p-column-title">سرویس پیامک</span>
+          {{object.smsProvider.title}}
+        </td>
+
+        <td>
+          <span class="p-column-title">smsProvider</span>
+          {{object.createTime | jalaliDate:'date'}}
+        </td>
+
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2 m-1"
+                  pTooltip="ویرایش"
+                  [routerLink]="['edit', object.id]" ></button>
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2 m-1" pTooltip="حذف"
+                  (click)="deleteItem(object.id)"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+
+  </p-table>
+
+
+
+</div>
+
