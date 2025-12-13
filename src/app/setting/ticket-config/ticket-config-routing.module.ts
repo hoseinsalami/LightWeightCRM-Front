@@ -8,7 +8,7 @@ const routes: Routes = [
     path: '',
     component: TicketConfigComponent,
     canActivate: [AuthGuard],
-    data: {permission: 'ticket'}
+    data: {permission: 'Ticket'}
   },
 ];
 

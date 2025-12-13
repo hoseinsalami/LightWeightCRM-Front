@@ -26,6 +26,7 @@ export interface FieldFilterDescriptor {
   field?: string;
   type?: string;
   label?: string;
+  realType?: string;
   filterParameter?: IFilterParameters[];
   subFields?: FieldFilterDescriptor[];
 }

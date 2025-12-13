@@ -80,22 +80,6 @@ export class WelcomePageComponent implements  OnInit{
     return '';
   }
 
-    OnEnter() {
-        this.loading.show();
-
-        this.authService.getLoginKey(this.captchaForm.getRawValue()).subscribe(out => {
-                this.loading.hide();
-                if (out) {
-                    window.location.href = 'https://login.mashhad.ir/Authentication/Start/'+out;
-                }
-            },
-            error => {
-                this.loading.hide();
-                this.dntCaptchaComponent.loadNewCaptcha();
-            }
-        );
-    }
-
   login() {
       this.loading.show();
     this.authService.loginSSCRM(this.loginForm.value).subscribe(res => {

@@ -44,6 +44,7 @@ import {OverlayPanel, OverlayPanelModule} from "primeng/overlaypanel";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {BadgeModule} from "primeng/badge";
+import {UserTypesEnum} from "../_enums/user-types.enum";
 
 @Component({
   selector: 'app-work-item',
@@ -131,7 +132,8 @@ export class WorkItemComponent implements OnInit{
 
   expertUsers: UserTypeBase[];
   selectedExpert:UserTypeBase;
-  userType:number;
+  userType:UserTypesEnum;
+  UserTypesEnum = UserTypesEnum;
   showChangeExpertModal:boolean = false;
   showDialogMessage:boolean = false
 

@@ -61,11 +61,11 @@ export class ActivityNoteService extends BaseCrudService{
     }
   }
 
-  getListOfNote(input:{id:string,from:number,row:number, state:string}):Observable<IStructureData<NoteType>>{
+  getListOfNote(input:{id:string,from:number,row:number, state:string, sort:boolean}):Observable<IStructureData<NoteType>>{
     if (input.state == 'workItem') {
-      return this.http.get(environment.apiUrl + `CRM/Note/workItem/${input.id}?from=${input.from}&rows=${input.row}`)
+      return this.http.get(environment.apiUrl + `CRM/Note/workItem/${input.id}?from=${input.from}&rows=${input.row}&sortDesc=${input.sort}`)
     } else {
-      return this.http.get(environment.apiUrl + `CRM/Note/customer/${input.id}?from=${input.from}&rows=${input.row}`)
+      return this.http.get(environment.apiUrl + `CRM/Note/customer/${input.id}?from=${input.from}&rows=${input.row}&sortDesc=${input.sort}`)
     }
   }
 

@@ -183,20 +183,27 @@ export class AppTopBarComponent implements OnInit{
       {
         label: 'تنظیمات تیکت',
         icon: 'pi pi-box',
-        permission: ['ticket'],
+        permission: ['Ticket'],
         routerLink: ['/setting/ticket-config'],
         command: () => {this.clearTableDataInLocalStorage('ticket-config')},
       },
       {
+        label: 'تنظیمات پیامک',
+        icon: 'pi pi-comment',
+        permission: ['everyOne'],
+        routerLink: ['/setting/sms-config'],
+        command: () => {this.clearTableDataInLocalStorage('sms-config')},
+      },
+      {
         label: 'فیلتر',
         icon: 'pi pi-box',
-        permission: ['filter'],
+        permission: ['Filter'],
         routerLink: ['/setting/filter'],
       },
       {
         label: 'خودکار سازی فرایند ها',
         icon: 'pi pi-code',
-        permission: ['process'],
+        permission: ['Process'],
         routerLink: ['/setting/process-automation'],
       },
     ];
@@ -377,6 +384,10 @@ export class AppTopBarComponent implements OnInit{
       case 'accustom':
         localStorage.removeItem('accustomTable');
         this.setActiveItem('شیوه آشنایی')
+        break;
+        case 'sms-config':
+        localStorage.removeItem('smsTable');
+        this.setActiveItem('تنظیمات پیامک')
         break;
       case 'failures':
         localStorage.removeItem('failureTable');

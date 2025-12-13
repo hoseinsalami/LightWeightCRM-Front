@@ -11,6 +11,9 @@
           <div class="text-sm text-white mt-1">
             زمان برنامه ریزی شده: {{ notification.activity.dueDate | jalaliDate:'custom':'HH:mm - YYYY/MM/DD' }}
           </div>
+          <div class="flex justify-content-end" (click)="onRemoveClick(notification.notificationId)">
+            <p class="font-bold text-sm text-withe border-round bg-blue-400 p-2 cursor-pointer">باشه</p>
+          </div>
         </div>
       </div>
     </div>

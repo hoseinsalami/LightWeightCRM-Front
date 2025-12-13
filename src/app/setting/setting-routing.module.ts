@@ -43,7 +43,14 @@ const routes: Routes = [
     path: 'ticket-config',
     loadChildren: () => import('./ticket-config/ticket-config.module').then(t => t.TicketConfigModule),
     canActivate: [AuthGuard],
-    data: {permission: 'ticket'}
+    data: {permission: 'Ticket'}
+  },
+
+  {
+    path: 'sms-config',
+    loadChildren: () => import('./sms-config/sms-config.module').then(s => s.SmsConfigModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
   },
 
   {
@@ -56,13 +63,13 @@ const routes: Routes = [
     path: 'filter',
     loadChildren: () => import('./filters/filters.module').then(f => f.FiltersModule),
     canActivate: [AuthGuard],
-    data: {permission: 'filter'}
+    data: {permission: 'Filter'}
   },
   {
     path: 'process-automation',
     loadChildren: () => import('./process-automation/process-automation.module').then(p => p.ProcessAutomationModule),
     canActivate: [AuthGuard],
-    data: {permission: 'process'}
+    data: {permission: 'Process'}
   }
 ];
 

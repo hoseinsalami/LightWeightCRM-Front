@@ -11,19 +11,19 @@ const routes: Routes = [
     path: '',
     component: ProcessAutomationComponent,
     canActivate: [AuthGuard],
-    data: {permission: 'process'}
+    data: {permission: 'Process'}
   },
   {
     path: 'new',
     component: NewProcessAutomationComponent,
     canActivate: [AuthGuard],
-    data: {permission: 'process'}
+    data: {permission: 'Process'}
   },
   {
     path: 'edit/:id',
     component: EditProcessAutomationComponent ,
     canActivate: [AuthGuard],
-    data: {permission: 'process'}
+    data: {permission: 'Process'}
   },
   { path: 'notfound', component: NotfoundComponent },
   { path: '**', redirectTo: '/notfound' },

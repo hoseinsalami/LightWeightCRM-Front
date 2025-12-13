@@ -262,7 +262,7 @@
                       <div class="form-group">
                         <label class="text-right font-bold">نوع اکشن</label>
                         <div class="field">
-                          <p-dropdown [style]="{'width':'250px'}"
+                          <p-dropdown [style]="{'width':'180px'}"
                                       name="userType"
                                       class="w-full"
                                       placeholder ="اکشن انتخاب کنید"
@@ -275,6 +275,44 @@
                                       [options]="actionTypeOptions"
                                       (onChange)="onActionInput($event, i)">
                           </p-dropdown>
+                        </div>
+                      </div>
+
+                      <div class="flex gap-2">
+                        <div class="flex flex-column">
+                          <p-radioButton
+                            class="mb-2"
+                            name="actionTime"
+                            value="now"
+                            [(ngModel)]="actionRadio"
+                            (onClick)="onActionRadioValue(i)"
+                            inputId="now" />
+                          <label for="now" class="ml-2">هم اکنون</label>
+                        </div>
+
+                        <div class="flex flex-column">
+                          <p-radioButton
+                            class="mb-2"
+                            name="actionTime"
+                            value="timer"
+                            [(ngModel)]="actionRadio"
+                            (onClick)="onActionRadioValue(i)"/>
+                          <div class="flex align-items-center gap-3">
+                            <!-- بخش شمارنده -->
+                            <div class="flex align-items-center gap-1">
+                              <button class="btn-counter" (click)="decrementAction(i)" [disabled]="actionRadio !== 'timer'">-</button>
+                              <span class="value-counter">{{ timerAction.get(i + '')?.count || 1 }}</span>
+                              <button class="btn-counter"  (click)="incrementAction(i)" [disabled]="actionRadio !== 'timer'">+</button>
+                            </div>
+
+                            <!-- بخش انتخاب واحد -->
+                            <div class="flex align-items-center gap-1">
+                              <button class="btn-counter"  (click)="prevUnitAction(i)" [disabled]="actionRadio !== 'timer'"> < </button>
+                              <span class="value-counter">{{ units[(timerAction.get(i + '')?.unitIndex) || 0] }}</span>
+                              <button class="btn-counter"  (click)="nextUnitAction(i)" [disabled]="actionRadio !== 'timer'"> > </button>
+                            </div>
+                          </div>
+
                         </div>
                       </div>
                     </div>
@@ -291,7 +329,7 @@
                                         type="button"
                                         label="انتخاب مقدار"
                                         icon="pi pi-calendar"
-                                        class="p-button-success p-button-outlined p-button-sm"
+                                        class="p-button-success p-button-outlined p-button-sm p-2"
                                         (click)="getEntityData(f,'tree',i, fi)"></button>
                               </div>
                               <div class="field mb-0 mt-1">
@@ -299,7 +337,7 @@
                             <span class="p-2 text-white border-round ml-2 cursor-pointer bg-teal-400"
                                   style="unicode-bidi:plaintext"
                                   *ngFor="let val of treeValuesMap.get(i + '_' + fi)"
-                                  (click)="insertAtCursor(val,i + '_' + fi)">{{val}}</span>
+                                  (click)="insertAtCursor(val,i + '_' + fi)">{{val.label}}</span>
                                 </div>
 
                                 <textarea *ngIf="block.actionParameters?.[fi]"
@@ -354,7 +392,7 @@
                                     type="button"
                                     label="انتخاب تاریخ"
                                     icon="pi pi-calendar"
-                                    class="p-button-outlined p-button-sm"
+                                    class="p-button-outlined p-button-sm p-2"
                                     (click)="openDateModal(i, fi, block)"
                                   ></button>
                                 </div>
@@ -362,12 +400,34 @@
                                 <div class="flex align-items-center">
                                   <button pButton
                                           label="انتخاب مقدار"
-                                          class="p-button-success p-button-outlined"
+                                          class="p-button-success p-button-outlined p-2"
                                           icon="pi pi-tag mx-2"
                                           (click)="getEntityData(f, 'tree', i, fi)"></button>
                                 </div>
+
+                                <div class="flex align-items-center gap-3">
+
+                                  <!-- دکمه اصلی -->
+                                  <button pButton class="p-button-info p-button-outlined p-button-sm p-2" (click)="setTimerValue(i,fi)">زمان رویداد</button>
+
+                                  <!-- بخش شمارنده -->
+                                  <div class="flex align-items-center gap-1">
+                                    <button class="btn-counter" (click)="decrement(i, fi)">-</button>
+                                    <span class="value-counter">{{ timerState.get(i + '_' + fi)?.count || 1 }}</span>
+                                    <button class="btn-counter"  (click)="increment(i,fi)">+</button>
+                                  </div>
+
+                                  <!-- بخش انتخاب واحد -->
+                                  <div class="flex align-items-center gap-1">
+                                    <button class="btn-counter"  (click)="prevUnit(i,fi)"> < </button>
+                                    <span class="value-counter">{{ units[(timerState.get(i + '_' + fi)?.unitIndex) || 0] }}</span>
+                                    <button class="btn-counter"  (click)="nextUnit(i,fi)"> > </button>
+                                  </div>
+
+                                </div>
+
                               </div>
-                              <input class="font-bold w-full mt-2" pInputText type="text" placeholder="مقدار" [value]="displayDateMap.get(i + '_' + fi) || ''" readonly />
+                              <input class="font-bold w-full mt-2" pInputText type="text" placeholder="مقدار" [value]="displayDateMap.get(i + '_' + fi)?.value || ''" readonly />
                             </div>
 
                             <div *ngSwitchCase="'object'" class="col-12">
