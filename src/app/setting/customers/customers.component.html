@@ -170,11 +170,15 @@
               <div class="grid">
                 <ng-container *ngFor="let item of customerPhones; let last=last">
                   <div class="col-12 flex justify-content-between">
-                    <label class="text-color-secondary">{{ item.title }}</label>
+                    <label class="text-color-secondary">
+                      {{ item.title }}
+                    </label>
                     <label class="text-900">
                       {{ item.phoneNumber }}
-                      <i class="pi pi-copy text-purple-500 cursor-pointer"
+                      <i class="pi pi-copy text-purple-500 cursor-pointer mx-2" pTooltip="کپی" tooltipPosition="top"
                          (click)="copyPhone(item.phoneNumber)"></i>
+                      <i class="pi pi-envelope text-pink-500 cursor-pointer" pTooltip="ارسال پیامک" tooltipPosition="top"
+                         (click)="openDialogSms(object,item)"></i>
                     </label>
                   </div>
                   <div class="col-12" *ngIf="!last"><p-divider type="solid" [style]="{'border-top':'1px solid #fbf3f3',}"/></div>
@@ -295,3 +299,51 @@
 
   </div>
 
+  <!--************************** begin SendMessageForCustomer modal *************************************-->
+  <p-dialog
+    [styleClass]="'modal-small'"
+    [style]="{direction:'rtl'}"
+    [(visible)]="showDialogSms"
+    [appendTo]="'body'"
+    [header]="'ارسال پیام به مشتری' "
+    [modal]="true">
+
+    <div class="grid">
+      <div class="col-12">
+        <div class="flex flex-column flex-1">
+          <label class="text-sm">پیام</label>
+          <textarea
+            rows="5"
+            cols="30"
+            pInputTextarea
+            [(ngModel)]="dataMessage.message"
+            placeholder="متن پیام را وارد نمایید">
+        </textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <ng-template pTemplate="footer">
+
+      <button
+        pButton
+        pRipple
+        label="تایید"
+        class="p-button-success p-mr-2"
+        (click)="onSendMessage()"
+      ></button>
+
+      <button
+        pButton
+        pRipple
+        label="انصراف"
+        class="p-button-danger p-mr-2"
+        (click)="this.showDialogSms = false"
+      ></button>
+
+
+    </ng-template>
+
+  </p-dialog>
+  <!--************************** end SendMessageForCustomer modal *************************************-->
