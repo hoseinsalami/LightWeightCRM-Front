@@ -57,7 +57,7 @@ export class CustomerService extends BaseCrudService{
   }
 
   sendMessage(input:SendMessageType){
-    return this.http.post(this.baseUrl + 'CRM/customer/SendMessage', input);
+    return this.http.post(this.baseUrl + '/SendMessage', input);
   }
 
 }

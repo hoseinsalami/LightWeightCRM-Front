@@ -260,7 +260,6 @@ export class CustomersComponent extends BaseListComponent<CustomerSpecification>
   }
 
   onSendMessage(){
-    console.log(this.dataMessage)
     this.loading.show();
     this.customerService.sendMessage(this.dataMessage).subscribe({
       next: (out) => {
@@ -270,7 +269,7 @@ export class CustomersComponent extends BaseListComponent<CustomerSpecification>
       },
       error: (err) => {
         this.loading.hide();
-        this.showDialogSms = true;
+        this.showDialogSms = false;
       }
     })
   }
