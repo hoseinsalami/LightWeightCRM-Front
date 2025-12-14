@@ -18,7 +18,8 @@ export class BaseUserDetailComponent<T>{
               private userService: UserService,
               protected loading: LoadingService,
               protected activeRoute: ActivatedRoute) {
-    this.userType = Utilities.ConvertEnumToKeyPairArray(UserTypesEnum , UserTypesEnum2LabelMapping)
+    this.userType = Utilities.ConvertEnumToKeyPairArray(UserTypesEnum , UserTypesEnum2LabelMapping).slice(0,-1)
+
     this.activeRoute.params.subscribe(res => {
       if (res['id']){
         this.isId = true;

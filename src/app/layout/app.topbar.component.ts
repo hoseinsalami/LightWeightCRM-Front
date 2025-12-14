@@ -167,7 +167,7 @@ export class AppTopBarComponent implements OnInit{
         command: () => {this.clearTableDataInLocalStorage('accustom')},
       },
       {
-        label: 'مدیریت برچسب ها',
+        label: 'برچسب ها',
         icon: 'pi pi-fw pi-tags',
         routerLink: ['/setting/tag'],
         permission: ['everyOne'],
@@ -379,7 +379,7 @@ export class AppTopBarComponent implements OnInit{
         break;
       case 'tag':
         localStorage.removeItem('tagTable');
-        this.setActiveItem('مدیریت برچسب ها')
+        this.setActiveItem('برچسب ها')
         break;
       case 'accustom':
         localStorage.removeItem('accustomTable');

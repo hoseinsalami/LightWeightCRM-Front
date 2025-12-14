@@ -60,6 +60,9 @@
           <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2 m-1"
                   pTooltip="ویرایش"
                   [routerLink]="['edit', object.id]" ></button>
+
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2 m-1" pTooltip="حذف"
+                  (click)="deleteItem(object.id)" ></button>
         </td>
       </tr>
     </ng-template>

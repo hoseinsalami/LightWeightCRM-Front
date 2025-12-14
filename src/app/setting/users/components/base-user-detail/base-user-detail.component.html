@@ -12,6 +12,7 @@
             id="fullName"
             name="fullName"
             class="p-fieldset w-full"
+            placeholder="نام و نام خانودگی کاربر وارد نمایید"
             [(ngModel)]="manager.oneObject.fullName">
         </div>
       </div>
@@ -35,6 +36,7 @@
             inputmode="numeric"
             autocomplete="off"
             required
+            placeholder="شماره موبایل کاربر وارد نمایید"
             [(ngModel)]="manager.oneObject.mobile">
 
           <div *ngIf="(mobile.invalid && (mobile.dirty || mobile.touched))" class="text-red-500 text-sm mt-1">
@@ -52,8 +54,8 @@
       </div>
     </div>
 
-    <div class="col-12 md:col-6">
-      <div class="form-group" *ngIf="!isId">
+    <div class="col-12 md:col-6" *ngIf="!isId">
+      <div class="form-group">
         <label class="text-right">نام کاربری</label>
         <span class="text-red-500 font-bold text- mr-1">*</span>
         <div class="field">
@@ -63,6 +65,7 @@
             id="userName"
             name="userName"
             class="p-fieldset w-full"
+            placeholder="نام کاربری وارد نمایید"
             [(ngModel)]="manager.oneObject.userName">
         </div>
       </div>
@@ -98,7 +101,7 @@
           <p-dropdown [style]="{'width':'100%'}"
                       name="userType"
                       class="w-full"
-                      placeholder ="انتخاب نقش های کاربر..."
+                      placeholder ="انتخاب نقش کاربر..."
                       scrollHeight="250px"
                       display="chip"
                       optionLabel="title"
