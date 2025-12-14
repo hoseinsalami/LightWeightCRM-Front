@@ -40,6 +40,36 @@ export class NewActivitiesComponent extends BaseActivitiesDetailComponent<Activi
     let manager =
       new BaseNewManager<ActivityType>(ActivityType, activityService, messageService, {}, router, activeRoute, loading)
 
+    manager.validation = () =>{
+      if (!this.manager.oneObject.title) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'عنوان اجباری می باشد.',
+        });
+        return false;
+      }
+
+      if (!this.manager.oneObject.iconClass) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'آیکون اجباری می باشد.',
+        });
+        return false;
+      }
+
+      if (!this.manager.oneObject.defaultDuration) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'زمان تقریبی اجباری می باشد.',
+        });
+        return false;
+      }
+      return true
+    }
+
     manager.BeforeSave.subscribe((res) =>{
       this.manager.oneObject.iconClass = this.icons[this.selectedIndex].icon
     })

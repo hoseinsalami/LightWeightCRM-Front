@@ -325,15 +325,18 @@ export class NewActivityModalComponent implements OnInit{
       this.urlFile = this.newActivity.attachments ?? [];
       this.workItem = this.newActivity.workItem;
       this.companyName = this.newActivity.customer;
-      this.startDateTimeControl.patchValue(moment(res.dueDate).locale('fa').format('YYYY-MM-DD').toString());
+      if (res.dueDate){
+        this.startDateTimeControl.patchValue(moment(res?.dueDate).locale('fa').format('YYYY-MM-DD').toString());
+        // خروجی مثل همون جدول
+        const formatted = this.jalaliPipe.transform(res?.dueDate);
+        // => "19:35:00 _ 1404/02/31"
+        // جدا کردن ساعت و تاریخ
+        const [time, date] = formatted.split(' _ ');
+        this.selectedHourTime = time.split(':')[0]; // "19"
+        this.selectedMinuteTime = time.split(':')[1]; // "35"
+      }
 
-      // خروجی مثل همون جدول
-      const formatted = this.jalaliPipe.transform(res.dueDate);
-      // => "19:35:00 _ 1404/02/31"
-      // جدا کردن ساعت و تاریخ
-      const [time, date] = formatted.split(' _ ');
-      this.selectedHourTime = time.split(':')[0]; // "19"
-      this.selectedMinuteTime = time.split(':')[1]; // "35"
+
 
       // this.selectedHourTime = moment(res.dueDate).locale('fa').format('HH').toString()
       // this.selectedMinuteTime = moment(res.dueDate).locale('fa').format('mm').toString()

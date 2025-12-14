@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {SharedModule} from "primeng/api";
+import {MessageService, SharedModule} from "primeng/api";
 import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
 import {CommonModule} from "@angular/common";
@@ -30,7 +30,7 @@ export class EditFailuresComponent extends BaseFailuresDetailComponent<FailureTy
 
   constructor(
     private failureService: FailuresService,
-    private messageService: CustomMessageService,
+    private messageService: MessageService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     loading: LoadingService
@@ -43,6 +43,18 @@ export class EditFailuresComponent extends BaseFailuresDetailComponent<FailureTy
           let res = new FailureTypeList(input);
           return res
         }, failureService, messageService, activeRoute , router ,loading);
+
+    manager.validation = () =>{
+      if (!this.manager.oneObject.title) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'عنوان اجباری می باشد.',
+        });
+        return false;
+      }
+      return true;
+    }
 
     manager
       .OnSuccessfulSave

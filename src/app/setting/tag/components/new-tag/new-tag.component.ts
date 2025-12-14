@@ -37,6 +37,18 @@ export class NewTagComponent extends BaseTagDetailComponent<TagTypeBase> {
     let manager =
       new BaseNewManager<TagTypeBase>(TagTypeBase, tagService, messageService, {}, router, activeRoute, loading);
 
+    manager.validation = () =>{
+      if (!this.manager.oneObject.title) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'عنوان اجباری می باشد.',
+        });
+        return false;
+      }
+      return true;
+    }
+
     manager.OnSuccessfulSave.subscribe((i) =>{
         router.navigate(['./'], {relativeTo:activeRoute.parent});
       });

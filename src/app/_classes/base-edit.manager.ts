@@ -16,7 +16,7 @@ export class BaseEditManager<T extends GenericType<T>, TUpdate> extends BaseSave
                 private mapper:(input:T)=> TUpdate,
                 private service: BaseCrudService,
                 // private messagesService: MessageService,
-                private messagesService: CustomMessageService,
+                private messagesService: MessageService,
                 private routeS: ActivatedRoute,
                 private router: Router,
                 private loading: LoadingService) {
@@ -63,7 +63,11 @@ export class BaseEditManager<T extends GenericType<T>, TUpdate> extends BaseSave
     if (this.oneObject) {
       this.BeforeSave.emit(this.oneObject);
       this.service.update(this.oneObject).subscribe(out => {
-        this.messagesService.showSuccess("عملیات با موفقیت انجام شد");
+        this.messagesService.add({
+          severity: 'success',
+          summary: 'موفق',
+          detail: 'عملیات با موفقیت انجام شد.',
+        });
         this.isSending = false;
         this.loading.hide()
         this.OnSuccessfulSave.emit(this.oneObject);

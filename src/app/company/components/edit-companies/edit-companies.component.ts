@@ -16,6 +16,7 @@ import {LoadingService} from "../../../_services/loading.service";
 import {CompanyService} from "../../company.service";
 import {BaseCompaniesDetailComponent} from "../base-companies-detail/base-companies-detail.component";
 import {TabViewModule} from "primeng/tabview";
+import {MessageService} from "primeng/api";
 
 
 @Component({
@@ -42,7 +43,7 @@ export class EditCompaniesComponent extends BaseCompaniesDetailComponent<CreateT
 
   constructor(
     private companyService: CompanyService,
-    private messageService: CustomMessageService,
+    private messageService: MessageService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     loading: LoadingService
@@ -62,6 +63,27 @@ export class EditCompaniesComponent extends BaseCompaniesDetailComponent<CreateT
 
         }, companyService, messageService, activeRoute , router ,loading);
 
+    manager.validation = () => {
+      if (manager.oneObject.name.length <= 0) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'نام شرکت اجباری می باشد.',
+        });
+        return false;
+      }
+
+        if (manager.oneObject.dbName.length <= 0) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'خطا',
+            detail: 'نام دیتابیس اجباری می باشد.',
+          });
+          return false;
+        }
+        return true;
+    }
+
     manager.afterReadEvent.subscribe((data) => {
       if (manager.oneObject && typeof manager.oneObject.disable === 'undefined') {
         manager.oneObject.disable = false;
@@ -69,23 +91,15 @@ export class EditCompaniesComponent extends BaseCompaniesDetailComponent<CreateT
     });
 
     manager.BeforeSave.subscribe(res =>{
-      if (manager.oneObject.name.length <= 0){
-        return this.messageService.showError('نام شرکت اجباری می باشد')
-        if (manager.oneObject.dbName.length <= 0) {
-          return this.messageService.showError('نام دیتابیس اجباری می باشد')
-        }
-
-
-
         manager.oneObject.disable = !manager.oneObject.disable
         // if (!manager.oneObject.permissionIds) {
         //   manager.oneObject.permissionIds = [];
         // }
         // manager.oneObject.permissionIds = [...this.permissionIds]
-        console.log('Component this.permissionIds:', this.permissionIds)
-        console.log('Manager oneObject.permissionIds AFTER INJECTION:', manager.oneObject.permissionIds)
-        console.log(manager.oneObject)
-      }
+        // console.log('Component this.permissionIds:', this.permissionIds)
+        // console.log('Manager oneObject.permissionIds AFTER INJECTION:', manager.oneObject.permissionIds)
+        // console.log(manager.oneObject)
+      // }
     })
 
     manager.OnSuccessfulSave.subscribe((i) =>{

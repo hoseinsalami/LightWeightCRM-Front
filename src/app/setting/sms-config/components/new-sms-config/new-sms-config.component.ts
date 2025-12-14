@@ -46,6 +46,38 @@ export class NewSmsConfigComponent extends BaseSmsConfigDetailComponent<SmsProvi
 
     super(manager, smsService, loading);
 
+    manager.validation = () =>{
+      if (!this.manager.oneObject.smsProviderId) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'سرویس دهنده پیامک اجباری می باشد.',
+        });
+        return false;
+      }
+
+      if (!this.manager.oneObject.apiKey) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: ' .اجباری می باشد API Key ',
+        });
+        return false;
+      }
+
+
+      if (!this.manager.oneObject.phoneNumber) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'شماره تماس اجباری می باشد.',
+        });
+        return false;
+      }
+
+      return true;
+    }
+
     this.manager.oneObject.tenantId = this.authService.token.getValue().tenantId
     manager.OnSuccessfulSave.subscribe({
       next: (out) =>{

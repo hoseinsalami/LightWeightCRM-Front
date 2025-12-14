@@ -10,6 +10,7 @@ import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-edit-services',
@@ -28,7 +29,7 @@ export class EditServicesComponent extends BaseServicesDetailComponent<CreateSms
 
   constructor(
     private sPService: ServiceProviderService,
-    private messageService: CustomMessageService,
+    private messageService: MessageService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     loading: LoadingService

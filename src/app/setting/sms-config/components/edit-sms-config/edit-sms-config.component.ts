@@ -13,6 +13,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {InputSwitchModule} from "primeng/inputswitch";
 import {KeyFilterModule} from "primeng/keyfilter";
 import {DropdownModule} from "primeng/dropdown";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-edit-sms-config',
@@ -34,7 +35,7 @@ export class EditSmsConfigComponent extends BaseSmsConfigDetailComponent<SmsProv
 
   constructor(
     private smsService: SmsConfigService,
-    private messageService: CustomMessageService,
+    private messageService: MessageService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     loading: LoadingService
@@ -46,6 +47,38 @@ export class EditSmsConfigComponent extends BaseSmsConfigDetailComponent<SmsProv
           let res = new SmsProviderType(input)
           return res;
         }, smsService, messageService, activeRoute, router, loading)
+
+    manager.validation = () =>{
+      if (!this.manager.oneObject.smsProviderId) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'سرویس دهنده پیامک اجباری می باشد.',
+        });
+        return false;
+      }
+
+      if (!this.manager.oneObject.apiKey) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: ' .اجباری می باشد API Key ',
+        });
+        return false;
+      }
+
+
+      if (!this.manager.oneObject.phoneNumber) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'شماره تماس اجباری می باشد.',
+        });
+        return false;
+      }
+
+      return true;
+    }
 
     manager.BeforeSave.subscribe(i=>{
       delete i.tenantId;

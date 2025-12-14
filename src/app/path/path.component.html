@@ -164,12 +164,6 @@
 
       <article class="relative flex flex-column gap-3">
 
-        <!--            &lt;!&ndash; دکمه افزودن معامله جدید &ndash;&gt;-->
-        <!--            <div (click)="openModal(step.id)"-->
-        <!--                 class="border-2 border-dashed border-round border-green-500 bg-transparent text-green-500 text-center cursor-pointer mt-2 py-2 px-5">-->
-        <!--              ایجاد معامله جدید-->
-        <!--            </div>-->
-
         <div *ngFor="let workItem of step.workItems"
              class="card cursor-pointer p-2 border-round flex flex-column justify-content-around m-0"
              cdkDrag
@@ -193,12 +187,15 @@
 
 
             <div class="flex flex-column gap-1" (mouseleave)="showListPhoneNumberFor = null">
-              <p class="mb-1">{{ workItem?.customer?.name + ' ' + workItem?.customer?.family }}</p>
+              <p class="m-0 text-sm">
+                {{ workItem?.customer?.name ? workItem.customer.name : '' }}
+                {{ workItem?.customer?.family ? ' ' + workItem.customer.family : '' }}
+              </p>
 
               <div *ngIf="workItem.customer?.customerPhones?.length" class="flex align-items-center gap-1">
 
                 <div class="phone-dropdown" (click)="$event.stopPropagation()">
-                  <div class="phone-display" (click)="op.toggle($event)">
+                  <div class="phone-display" (click)="getFilteredPhones(workItem)?.length && op.toggle($event)">
                     <span class="text-sm">{{ getSelectedPhone(workItem) }}</span>
                     <!--                        <span>{{ workItem?.customer?.customerPhones[0].phoneNumber }}</span>-->
                     <i class="pi pi-chevron-down hover-block"></i>
@@ -208,7 +205,7 @@
                     <ul class="m-0 p-0 list-none flex flex-column gap-2">
                       <li *ngFor="let phone of getFilteredPhones(workItem)"
                           (click)="selectPhone(workItem, phone); op.hide()"
-                          class="cursor-pointer hover:bg-green-500 hover:text-white py-2 px-3">
+                          class="cursor-pointer border-round hover:bg-gray-400 hover:text-white p-2">
                         {{ phone.phoneNumber }}
                       </li>
                     </ul>

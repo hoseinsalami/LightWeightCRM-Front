@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {SharedModule} from "primeng/api";
+import {MessageService, SharedModule} from "primeng/api";
 import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
 import {CommonModule, NgClass, NgIf} from "@angular/common";
@@ -34,7 +34,7 @@ export class EditActivitiesComponent extends BaseActivitiesDetailComponent<Activ
   newManager: BaseEditManager<ActivityType, ActivityType>;
 
   constructor(private activityService: ActivitiesService,
-              private messageService: CustomMessageService,
+              private messageService: MessageService,
               private router: Router,
               private activeRoute: ActivatedRoute,
               loading: LoadingService) {

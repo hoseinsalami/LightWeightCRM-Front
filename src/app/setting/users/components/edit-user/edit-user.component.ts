@@ -4,7 +4,7 @@ import {ToggleButtonModule} from "primeng/togglebutton";
 import {MultiSelectModule} from "primeng/multiselect";
 import {FormsModule} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
-import {FilterService, SharedModule} from "primeng/api";
+import {FilterService, MessageService, SharedModule} from "primeng/api";
 import {ButtonModule} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
 import {BaseUserDetailComponent} from "../base-user-detail/base-user-detail.component";
@@ -40,7 +40,7 @@ export class EditUserComponent extends BaseUserDetailComponent<UserTypeUpdate>{
   newManager: BaseEditManager<UserTypeDetail, UserTypeUpdate>
 
   constructor(private service: UserService,
-              private messageService: CustomMessageService,
+              private messageService: MessageService,
               private router: Router,
               activeRoute: ActivatedRoute,
               loading: LoadingService,
@@ -64,7 +64,11 @@ export class EditUserComponent extends BaseUserDetailComponent<UserTypeUpdate>{
       const isValidMobile = /^09\d{9}$/.test(mobile);
 
       if (!isValidMobile) {
-        this.messageService.showError('شماره موبایل وارد شده معتبر نیست.');
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'شماره موبایل معتبر نیست.',
+        });
         return false;
       }
 

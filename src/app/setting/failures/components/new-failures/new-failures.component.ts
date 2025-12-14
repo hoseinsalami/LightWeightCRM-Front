@@ -38,6 +38,18 @@ export class NewFailuresComponent extends BaseFailuresDetailComponent<FailureTyp
 
     super(manager, failureService ,loading);
 
+    manager.validation = () =>{
+      if (!this.manager.oneObject.title) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'عنوان اجباری می باشد.',
+        });
+        return false;
+      }
+      return true;
+    }
+
     manager.OnSuccessfulSave.subscribe((i)=>{
       router.navigate(['./'], {relativeTo: activeRoute.parent})
     });

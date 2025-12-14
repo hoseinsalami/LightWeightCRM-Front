@@ -760,6 +760,13 @@ export class PathComponent implements OnInit, AfterViewInit{
     this.showListPhoneNumberFor = workItemId;
   }
 
+  togglePhoneNumber(event:any, workItem:any){
+    const phones = this.getFilteredPhones(workItem);
+
+    if (!phones || phones.length === 0) {
+      return; // ❌ Overlay باز نشود
+    }
+  }
   getSelectedPhone(workItem: any): string {
     if (!workItem?.customer?.customerPhones?.length) return '';
 

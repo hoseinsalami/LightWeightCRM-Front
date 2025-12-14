@@ -69,14 +69,18 @@ export class UsersComponent extends BaseListComponent<UserTypeList>{
       password: '',
       userId: this.userId
     }
-    if ((this.newPassword.length > 0 && this.reapNewPassword.length > 0) && (this.newPassword === this.reapNewPassword) ){
-      input.password = this.newPassword
-    } else {
-      return this.messageService.add({
-        severity: 'error',
-        summary: 'خطا',
-        detail: 'رمز عبور جدید با تکرار رمز عبور جدید همخوانی ندارد',
-      })
+    if (this.newPassword || this.reapNewPassword) {
+
+      if (this.newPassword !== this.reapNewPassword) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'رمز عبور جدید با تکرار آن همخوانی ندارد',
+        });
+        return;
+      }
+
+      input.password = this.newPassword;
     }
 
 

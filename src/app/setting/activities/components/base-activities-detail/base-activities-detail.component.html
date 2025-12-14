@@ -1,8 +1,7 @@
-<div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
+<div class="p-card p-4 shadow-2 mx-auto" style="width:800px; max-height:80vh">
 
-  <div class="flex-column">
-    <div class="form-group">
-
+  <div class="grid">
+    <div class="col-12">
       <ul class="flex flex-wrap list-none p-0">
         <li *ngFor="let item of icons; let i = index"
             [class]="{ 'green-bg': selectedIndex === i }"
@@ -13,48 +12,53 @@
 
       </ul>
     </div>
-    <div class="flex flex-wrap gap-3 align-content-center">
 
+    <div class="col-12 md:col-6">
       <div class="form-group">
-        <label class="font-bold text-900" for="name">عنوان </label>
+        <label class="text-sm">عنوان </label>
+        <span class="text-red-500 font-bold text- mr-1">*</span>
         <div class="field">
           <input
             pInputText
             type="text"
             id="title"
             name="title"
-            class="p-fieldset"
+            class="p-fieldset w-full"
             placeholder="عنوان فعالیت خود را وارد نمایید"
             style="width: 250px"
             [(ngModel)]="manager.oneObject.title">
         </div>
       </div>
-
-      <div class="form-group">
-        <label class="font-bold text-900" for="name">حدودا چند دقیقه زمان می‌گیرد؟ </label>
-        <div class="field">
-          <!--           [(ngModel)]="plaque1"-->
-          <p-inputNumber [(ngModel)]="manager.oneObject.defaultDuration" [inputStyle]="{'width': '250px'}" placeholder="زمان تقریبی خود را وارد نمایید"/>
-        </div>
-      </div>
-
     </div>
 
-    <div class="mt-5">
-      <button
-        class="mx-3 p-button-success"
-        pButton
-        label="ذخیره "
-        (click)="manager.save()"
-        icon="pi pi-save mx-2">
-      </button>
-      <button pButton
-              label="انصراف"
-              class="p-button-danger"
-              icon="pi pi-sign-out mx-2"
-              (click)="manager.cancel()"></button>
+    <div class="col-12 md:col-6">
+      <div class="form-group">
+        <label class="text-sm">حدودا چند دقیقه زمان می‌گیرد؟ </label>
+        <span class="text-red-500 font-bold text- mr-1">*</span>
+        <div class="field">
+          <p-inputNumber [(ngModel)]="manager.oneObject.defaultDuration" [inputStyle]="{'width': '100%'}" [style]="{width:'100%'}" class="w-full" placeholder="زمان تقریبی خود را وارد نمایید"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="mt-5 text-left">
+        <button
+          class="mx-3 p-button-success"
+          pButton
+          label="ذخیره "
+          (click)="manager.save()"
+          icon="pi pi-save mx-2">
+        </button>
+        <button pButton
+                label="انصراف"
+                class="p-button-danger"
+                icon="pi pi-sign-out mx-2"
+                (click)="manager.cancel()"></button>
+      </div>
     </div>
 
   </div>
+
 </div>
 

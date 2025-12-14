@@ -12,6 +12,7 @@ export class BaseUserDetailComponent<T>{
   pathIds = [];
 
   userType: any;
+  confirmPassword:string;
   isId:boolean = false;
   constructor(protected manager: BaseSaveManager<T>,
               private userService: UserService,
