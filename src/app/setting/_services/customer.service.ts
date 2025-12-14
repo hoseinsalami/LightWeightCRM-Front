@@ -7,6 +7,7 @@ import {environment} from "../../../environments/environment";
 import {ActivityWorkItemType, IStructureData} from "../../work-item/_types/activity-workItem.type";
 import {AccustomType} from "../_types/accustom.type";
 import {TagTypeBase} from "../_types/tag.type";
+import {SendMessageType} from "../../path/_types/send-message.type";
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,10 @@ export class CustomerService extends BaseCrudService{
 
   deleteTag(input:{tagId:number, customerId: number}){
     return this.http.put(this.baseUrl + '/DeatchTag', input)
+  }
+
+  sendMessage(input:SendMessageType){
+    return this.http.post(this.baseUrl + 'CRM/customer/SendMessage', input);
   }
 
 }

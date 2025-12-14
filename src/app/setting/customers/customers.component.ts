@@ -20,6 +20,8 @@ import {PaginatorModule} from "primeng/paginator";
 import {DividerModule} from "primeng/divider";
 import {TooltipModule} from "primeng/tooltip";
 import {TagTypeBase} from "../_types/tag.type";
+import {SendMessageType} from "../../path/_types/send-message.type";
+import {InputTextareaModule} from "primeng/inputtextarea";
 
 @Component({
   selector: 'app-customers',
@@ -41,7 +43,8 @@ import {TagTypeBase} from "../_types/tag.type";
     OverlayPanelModule,
     PaginatorModule,
     DividerModule,
-    TooltipModule
+    TooltipModule,
+    InputTextareaModule
   ]
 })
 export class CustomersComponent extends BaseListComponent<CustomerSpecification> implements OnInit{
@@ -243,4 +246,33 @@ export class CustomersComponent extends BaseListComponent<CustomerSpecification>
     this.router.navigate(['setting/customers/edit', id]);
 
   }
+
+  showDialogSms:boolean = false
+  dataMessage:SendMessageType = {}
+  openDialogSms(data:any, phone:any){
+    this.showDialogSms = true
+    this.dataMessage = {}
+    this.dataMessage.platform = 0
+    this.dataMessage.phoneNumber = phone.phoneNumber
+    this.dataMessage.workItemId = null;
+    this.dataMessage.customerId = data?.id;
+    this.dataMessage.sendDateTime = null;
+  }
+
+  onSendMessage(){
+    console.log(this.dataMessage)
+    this.loading.show();
+    this.customerService.sendMessage(this.dataMessage).subscribe({
+      next: (out) => {
+        this.loading.hide();
+        this.messageService.add({severity: 'success', summary: 'موفق', detail: 'عملیات با موفقیت انجام شد.',})
+        this.showDialogSms = false;
+      },
+      error: (err) => {
+        this.loading.hide();
+        this.showDialogSms = true;
+      }
+    })
+  }
+
 }
