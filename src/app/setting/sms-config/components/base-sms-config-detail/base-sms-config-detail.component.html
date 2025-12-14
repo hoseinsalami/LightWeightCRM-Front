@@ -1,9 +1,10 @@
-<div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
-  <div class="flex-column">
-    <div class="flex-column align-content-center">
+<div class="p-card p-4 shadow-2 mx-auto" style="width:800px; max-height:80vh">
 
+  <div class="grid">
+    <div class="col-12 md:col-6">
       <div class="form-group">
-        <label class="text-900">سرویس دهنده پیامک</label>
+        <label class="text-sm">سرویس دهنده پیامک</label>
+        <span class="text-red-500 font-bold text- mr-1">*</span>
         <div class="field">
           <p-dropdown
             [styleClass]="'clear-icon'"
@@ -11,63 +12,72 @@
             [options]="smsProvider"
             [(ngModel)]="manager.oneObject.smsProviderId"
             class="mt-2"
-            [style]="{'width':'250px'}"
+            [style]="{'width':'100%'}"
             optionLabel="title"
             optionValue="id"
             placeholder="سرویس دهنده پیامک انتخاب نمایید">
           </p-dropdown>
         </div>
       </div>
+    </div>
 
-      <div class="form-group" *ngIf="!isEditMode">
-        <div class="field-radiobutton">
-          <p-inputSwitch name="isDefault" id="isDefault" [(ngModel)]="manager.oneObject.isDefault"/>
-          <label class="text-900" for="isDefault">پیشفرض</label>
-        </div>
-      </div>
-
+    <div class="col-12 md:col-6">
       <div class="form-group">
-        <label class="text-900" for="apiKey">API KEY</label>
+        <label class="text-sm" for="apiKey">API KEY</label>
+        <span class="text-red-500 font-bold text- mr-1">*</span>
         <div class="field">
           <input
             pInputText
             type="text"
             id="apiKey"
             name="apiKey"
-            class="p-fieldset"
+            class="p-fieldset w-full"
             [(ngModel)]="manager.oneObject.apiKey">
         </div>
       </div>
+    </div>
 
+    <div class="col-12 md:col-6">
       <div class="form-group">
-        <label class="text-900" for="phoneNumber">شماره تماس </label>
+        <label class="text-sm" for="phoneNumber">شماره تماس </label>
+        <span class="text-red-500 font-bold text- mr-1">*</span>
         <div class="field">
           <input
             pInputText
             type="text"
             id="phoneNumber"
             name="phoneNumber"
-            class="p-fieldset"
+            class="p-fieldset w-full"
             [(ngModel)]="manager.oneObject.phoneNumber"
             [pKeyFilter]="'int'">
         </div>
       </div>
-
     </div>
 
-    <div class="mt-5">
-      <button
-        class="mx-3 p-button-success"
-        pButton
-        label="ذخیره"
-        (click)="manager.save()"
-        icon="pi pi-save mx-2"></button>
-      <button
-        pButton
-        label="انصراف"
-        class="p-button-danger"
-        icon="pi pi-sign-out mx-2"
-        (click)="manager.cancel()"></button>
+    <div class="col-12 md:col-6 flex align-items-center">
+      <div class="form-group" *ngIf="!isEditMode">
+        <label class="text-sm " for="isDefault">پیشفرض</label>
+        <div class="field-radiobutton mt-2">
+          <p-inputSwitch name="isDefault" id="isDefault" inputId="isDefault" [(ngModel)]="manager.oneObject.isDefault"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="mt-5 text-left">
+        <button
+          class="mx-3 p-button-success"
+          pButton
+          label="ذخیره"
+          (click)="manager.save()"
+          icon="pi pi-save mx-2"></button>
+        <button
+          pButton
+          label="انصراف"
+          class="p-button-danger"
+          icon="pi pi-sign-out mx-2"
+          (click)="manager.cancel()"></button>
+      </div>
     </div>
 
   </div>

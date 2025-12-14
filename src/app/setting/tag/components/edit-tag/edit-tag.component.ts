@@ -10,6 +10,7 @@ import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-edit-tag',
@@ -28,7 +29,7 @@ export class EditTagComponent extends BaseTagDetailComponent<TagTypeBase>{
 
   constructor(
     private tagService: TagService,
-    private messageService: CustomMessageService,
+    private messageService: MessageService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     loading: LoadingService
@@ -41,6 +42,17 @@ export class EditTagComponent extends BaseTagDetailComponent<TagTypeBase>{
           return res
         }, tagService, messageService, activeRoute, router, loading)
 
+    manager.validation = () =>{
+      if (!this.manager.oneObject.title) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'عنوان اجباری می باشد.',
+        });
+        return false;
+      }
+      return true;
+    }
 
     manager.OnSuccessfulSave.subscribe((i) =>{
         router.navigate(['./'], {relativeTo:this.activeRoute.parent});

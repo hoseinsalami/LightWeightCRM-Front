@@ -13,4 +13,8 @@ export abstract class BaseSaveManager<T> implements IHaveSaveManagerInterface<T>
 
     cancel(url:string='./') {
     }
+
+    validation():boolean{
+      return true
+    }
 }

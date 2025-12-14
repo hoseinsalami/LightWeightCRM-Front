@@ -31,7 +31,7 @@ export class EditAccustomComponent extends BaseAccustomDetailComponent<AccustomT
 
   constructor(
     private accustomService: AccustomService,
-    private messageService: CustomMessageService,
+    private messageService: MessageService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     loading: LoadingService
@@ -47,14 +47,24 @@ export class EditAccustomComponent extends BaseAccustomDetailComponent<AccustomT
 
         },accustomService, messageService ,activeRoute, router , loading)
 
-    manager
-      .OnSuccessfulSave
-      .subscribe((i) =>{
-        router.navigate(['./'], {relativeTo:this.activeRoute.parent});
-      });
-    super(manager, accustomService, loading);
+    manager.validation = () =>{
+      if (!this.manager.oneObject.title) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'عنوان اجباری می باشد.',
+        });
+        return false;
+      }
+      return true;
+    }
 
-    this.newManager = manager;
+  manager.OnSuccessfulSave.subscribe((i) =>{
+      router.navigate(['./'], {relativeTo:this.activeRoute.parent});
+    });
+  super(manager, accustomService, loading);
+
+  this.newManager = manager;
 
   }
 

@@ -19,7 +19,7 @@
 
                       <div class="flex align-items-center gap-5">
                         <div class="form-group">
-                          <label class="font-bold text-900" for="title">عنوان</label>
+                          <label class="text-sm" for="title">عنوان</label>
                           <div class="field">
                             <input
                               pInputText
@@ -32,7 +32,7 @@
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="font-bold text-900" for="title">فعال</label>
+                          <label class="text-sm" for="title">فعال</label>
                           <div class="field">
                             <p-inputSwitch [(ngModel)]="oneObject.active" />
                           </div>
@@ -40,7 +40,7 @@
                       </div>
 
                       <div class="form-group">
-                        <label class="font-bold text-900">توضیحات</label>
+                        <label class="text-sm">توضیحات</label>
                         <div class="field">
                           <textarea
                             [style]="{'width':'100%'}"
@@ -70,7 +70,7 @@
                   <div>
                     <div class="flex justify-content-between align-items-center gap-3">
                       <div class="form-group flex-1">
-                        <label for="event" class="text-right font-bold">نوع رویداد</label>
+                        <label for="event" class="text-sm">نوع رویداد</label>
                         <div class="field">
                           <p-dropdown [style]="{'width':'100%'}"
                                       name="userType"
@@ -86,7 +86,7 @@
                       </div>
 
                       <div class="form-group flex-1">
-                        <label for="filter" class="text-right font-bold">فیلتر</label>
+                        <label for="filter" class="text-sm">فیلتر</label>
                         <div class="field">
                           <p-dropdown [style]="{'width':'100%'}"
                                       name="userType"
@@ -102,7 +102,6 @@
                           </p-dropdown>
                         </div>
                       </div>
-
                     </div>
 
                     <!--                    <div class="flex flex-column border-2 border-dashed surface-border border-round surface-ground px-3 py-2">-->
@@ -260,7 +259,7 @@
 
                     <div class="flex justify-content-between align-items-center gap-3">
                       <div class="form-group">
-                        <label class="text-right font-bold">نوع اکشن</label>
+                        <label class="text-sm">نوع اکشن</label>
                         <div class="field">
                           <p-dropdown [style]="{'width':'180px'}"
                                       name="userType"
@@ -287,7 +286,7 @@
                             [(ngModel)]="actionRadio"
                             (onClick)="onActionRadioValue(i)"
                             inputId="now" />
-                          <label for="now" class="ml-2">هم اکنون</label>
+                          <label for="now" class="ml-2">بلافاصله</label>
                         </div>
 
                         <div class="flex flex-column">
@@ -324,7 +323,7 @@
                           <ng-container [ngSwitch]="f.type">
                             <div *ngSwitchCase="'string'" class="col-12">
                               <div class="flex align-items-center gap-2 mb-2">
-                                <label class="text-right font-bold text-md">{{f.label}}</label>
+                                <label class="text-sm">{{f.label}}</label>
                                 <button pButton
                                         type="button"
                                         label="انتخاب مقدار"
@@ -355,7 +354,7 @@
                             </div>
 
                             <div *ngSwitchCase="'number'" class="col-12">
-                              <label class="text-right font-bold text-md mb-2">{{f.label}}</label>
+                              <label class="text-sm">{{f.label}}</label>
                               <div class="field mb-0 mt-1">
                                 <p-inputNumber
                                   [(ngModel)]="block.actionParameters[fi].valueFormat"
@@ -371,7 +370,7 @@
                                 <p-inputSwitch #switch
                                                [(ngModel)]="booleanMap[i + '_' + fi]"
                                                (onChange)="onBooleanChange(i, fi)" />
-                                <label class="text-right font-bold text-md " for="finishDate">{{f.label}}</label>
+                                <label class="text-sm" for="finishDate">{{f.label}}</label>
                                 <div class="flex align-items-center">
                                   <button pButton
                                           label="انتخاب مقدار"
@@ -380,12 +379,12 @@
                                           (click)="getEntityData(f, 'tree', i, fi)"></button>
                                 </div>
                               </div>
-                              <input class="font-bold w-full mt-2" pInputText type="text" placeholder="مقدار" [value]="displayBooleanMap.get(i + '_' + fi) || ''" readonly />
+                              <input class="text-sm w-full mt-2" pInputText type="text" placeholder="مقدار" [value]="displayBooleanMap.get(i + '_' + fi) || ''" readonly />
                             </div>
 
                             <div *ngSwitchCase="'datetime'" class="col-12">
                               <div class="flex flex-wrap align-items.center gap-3">
-                                <label class="text-right font-bold text-md " for="finishDate">{{f.label}}:</label>
+                                <label class="text-sm" for="finishDate">{{f.label}}:</label>
                                 <div class="flex align-items-center">
                                   <button
                                     pButton
@@ -427,12 +426,12 @@
                                 </div>
 
                               </div>
-                              <input class="font-bold w-full mt-2" pInputText type="text" placeholder="مقدار" [value]="displayDateMap.get(i + '_' + fi)?.value || ''" readonly />
+                              <input class="text-sm w-full mt-2" pInputText type="text" placeholder="مقدار" [value]="displayDateMap.get(i + '_' + fi)?.value || ''" readonly />
                             </div>
 
                             <div *ngSwitchCase="'object'" class="col-12">
                               <div class="form-group">
-                                <label class="text-right font-bold text-md mb-2">{{f.label}}</label>
+                                <label class="text-sm">{{f.label}}</label>
                                 <div class="field mb-0 mt-1">
                                   <p-dropdown *ngIf="block.actionParameters?.[fi]"
                                               [style]="{'width': '100%'}"
@@ -1530,7 +1529,7 @@
   <div class="grid">
     <div class="col-6" *ngFor="let param of dialogEventParameters; let pi = index">
       <div class="form-group mt-3">
-        <label class="font-bold text-900" for="name">{{ param.label }}</label>
+        <label class="text-sm" for="name">{{ param.label }}</label>
         <div class="field mt-2">
           <input
             pInputText
@@ -1591,7 +1590,7 @@
           (onClick)="onRadioSelect('value',modal)">
         </p-radioButton>
         <div class="form-group mt-3">
-          <label class="font-bold text-900" for="name">{{ param.label }}</label>
+          <label class="text-sm" for="name">{{ param.label }}</label>
           <div class="field mt-2">
             <input
               pInputText
@@ -1766,7 +1765,7 @@
   <div class="grid" *ngIf="selectedDateContext">
     <div class="col-12">
       <div class="datePickerContainer relative" >
-        <label class="text-right font-bold text-md mb-2" for="finishDate">تاریخ</label>
+        <label class="text-sm" for="finishDate">تاریخ</label>
         <div class="flex mt-1">
           <ng-persian-datepicker
             class="w-full"
@@ -1775,7 +1774,7 @@
             [dateGregorianFormat]="'YYYY-MM-DD' "
             [dateFormat]="'YYYY-MM-DD '">
             <input [formControl]="finishDateTimeControl[selectedDateContext.blockIndex][selectedDateContext.fieldIndex]"
-                   name="date{{ selectedDateContext.blockIndex }}_{{ selectedDateContext.fieldIndex }}"  class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+                   name="date{{ selectedDateContext.blockIndex }}_{{ selectedDateContext.fieldIndex }}"  class="text-sm w-full" pInputText type="text" autocomplete="off"/>
           </ng-persian-datepicker>
         </div>
       </div>

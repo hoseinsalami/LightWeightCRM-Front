@@ -11,6 +11,7 @@ import {FormsModule} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-edit-permission',
@@ -30,7 +31,7 @@ export class EditPermissionComponent extends BasePermissionDetailComponent<Permi
   newManager: BaseEditManager<PermissionTypeDTO,PermissionTypeDTO>
   permissionList:any;
   constructor(private servicePermission:PermissionsService,
-              private messageService: CustomMessageService,
+              private messageService: MessageService,
               private router: Router,
               private activeRoute: ActivatedRoute,
               loading: LoadingService) {

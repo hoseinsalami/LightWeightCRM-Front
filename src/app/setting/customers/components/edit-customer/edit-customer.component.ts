@@ -6,7 +6,7 @@ import {LoadingService} from "../../../../_services/loading.service";
 import {CustomerService} from "../../../_services/customer.service";
 import {BaseEditManager} from "../../../../_classes/base-edit.manager";
 import {CardModule} from "primeng/card";
-import {SharedModule} from "primeng/api";
+import {MessageService, SharedModule} from "primeng/api";
 import {InputTextModule} from "primeng/inputtext";
 import {ToggleButtonModule} from "primeng/togglebutton";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -73,7 +73,7 @@ export class EditCustomerComponent extends BaseCustomerDetailComponent{
 
   constructor(private customerService: CustomerService,
               private workItem: WorkItemService,
-              private messageService: CustomMessageService,
+              private messageService: MessageService,
               private router: Router,
               private activeRoute: ActivatedRoute,
               loading: LoadingService,

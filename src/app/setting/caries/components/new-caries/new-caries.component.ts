@@ -21,6 +21,7 @@ import {DropdownModule} from "primeng/dropdown";
 import {DividerModule} from "primeng/divider";
 import {MultiSelectModule} from "primeng/multiselect";
 import {KeyFilterModule} from "primeng/keyfilter";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'app-new-caries',
@@ -44,7 +45,8 @@ import {KeyFilterModule} from "primeng/keyfilter";
     DropdownModule,
     DividerModule,
     MultiSelectModule,
-    KeyFilterModule
+    KeyFilterModule,
+    TooltipModule
   ],
   standalone: true
 })
@@ -62,6 +64,37 @@ export class NewCariesComponent extends BaseCariesDetailComponent<CreatePathType
       new BaseNewManager<any>(CreatePathType,service, messageService,{}, router, activeRoute, loading);
 
     super(manager, service, loading);
+
+    manager.validation = () =>{
+      if (!this.manager.oneObject.title) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'عنوان اجباری می باشد.',
+        });
+        return false;
+      }
+
+      if (!this.manager.oneObject.pathAdminId) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'راهبر اجباری می باشد.',
+        });
+        return false;
+      }
+
+      if (!this.manager.oneObject.pathExpertIds) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'کارشناس اجباری می باشد.',
+        });
+        return false;
+      }
+
+      return true;
+    }
 
     manager.OnSuccessfulSave.subscribe((i)=>{
       router.navigate(['./'], {relativeTo: activeRoute.parent})

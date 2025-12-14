@@ -15,6 +15,7 @@ import {CustomMessageService} from "../../../_services/custom-message.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {LoadingService} from "../../../_services/loading.service";
 import {BaseEventDetailComponent} from "../base-event-detail/base-event-detail.component";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-edit-event',
@@ -39,7 +40,7 @@ export class EditEventComponent extends BaseEventDetailComponent<EventTypeBase>{
 
   constructor(
     private eventService: EventService,
-    private messageService: CustomMessageService,
+    private messageService: MessageService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     loading: LoadingService

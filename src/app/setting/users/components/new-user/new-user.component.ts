@@ -51,33 +51,60 @@ export class NewUserComponent extends BaseUserDetailComponent<UserTypeCreate>{
 
     super(manager, service, loading, activeRoute);
 
-
-
-    manager.BeforeSave.subscribe(item => {
-
+    manager.validation = () => {
       const mobile = this.manager.oneObject.mobile;
-
       const isValidMobile = /^09\d{9}$/.test(mobile);
 
+      if (!this.manager.oneObject.fullName) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'نام و نام خانوادگی اجباری می باشد.',
+        });
+        return false;
+      }
+
+      if (!this.manager.oneObject.userName) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'نام کاربری اجباری می باشد.',
+        });
+        return false;
+      }
+
+      if (!this.manager.oneObject.userType) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'نوع کاربری اجباری می باشد.',
+        });
+        return false;
+      }
+
       if (!isValidMobile) {
-        // نمایش ارور یا جلوگیری از ذخیره
         this.messageService.add({
           severity: 'error',
           summary: 'خطا',
           detail: 'شماره موبایل وارد شده معتبر نیست.',
         });
-        // جلوگیری از ادامه ذخیره‌سازی
         return false;
       }
 
-      manager.OnSuccessfulSave.subscribe((i)=>{
-        router.navigate(['./'], {relativeTo: activeRoute.parent})
-      });
-      // item.pathIds = [...this.selectedPathIds];
-      return true;
-    })
+      if (this.manager.oneObject.password !== this.confirmPassword){
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'رمز عبور و تکرار آن یکسان نیستند.',
+        });
+        return false;
+      }
+      return true
+    }
 
-
+    manager.OnSuccessfulSave.subscribe((i)=>{
+      router.navigate(['./'], {relativeTo: activeRoute.parent})
+    });
 
 
     this.newManager = manager;

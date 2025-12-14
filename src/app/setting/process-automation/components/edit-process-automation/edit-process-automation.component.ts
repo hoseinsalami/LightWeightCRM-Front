@@ -76,7 +76,7 @@ export class EditProcessAutomationComponent extends BaseProcessAutomationDetailC
         (input) =>{
           let res = new CreateProcessType(input);
           return res;
-        },service, csutomeMessageService, activeRoute , router ,loading);
+        },service, messageService, activeRoute , router ,loading);
     super(manager, service, loading, messageService, router, activeRoute);
 
     manager.OnSuccessfulSave.subscribe((i)=>{

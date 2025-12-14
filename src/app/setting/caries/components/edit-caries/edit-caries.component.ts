@@ -24,6 +24,7 @@ import {DropdownModule} from "primeng/dropdown";
 import {DividerModule} from "primeng/divider";
 import {MultiSelectModule} from "primeng/multiselect";
 import {KeyFilterModule} from "primeng/keyfilter";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'app-edit-caries',
@@ -48,7 +49,8 @@ import {KeyFilterModule} from "primeng/keyfilter";
     DropdownModule,
     DividerModule,
     MultiSelectModule,
-    KeyFilterModule
+    KeyFilterModule,
+    TooltipModule
   ],
 })
 export class EditCariesComponent extends BaseCariesDetailComponent<CreatePathType> implements OnInit {
@@ -56,7 +58,7 @@ export class EditCariesComponent extends BaseCariesDetailComponent<CreatePathTyp
 
   constructor(
     private service: CariesService,
-    private messageService: CustomMessageService,
+    private messageService: MessageService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     loading: LoadingService,
@@ -75,6 +77,36 @@ export class EditCariesComponent extends BaseCariesDetailComponent<CreatePathTyp
         }, service, messageService, activeRoute , router ,loading);
 
     super(manager, service, loading);
+    manager.validation = () =>{
+      if (!this.manager.oneObject.title) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'عنوان کاریز اجباری می باشد.',
+        });
+        return false;
+      }
+
+      if (!this.manager.oneObject.pathAdminId) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'راهبر اجباری می باشد.',
+        });
+        return false;
+      }
+
+      if (!this.manager.oneObject.pathExpertIds) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'خطا',
+          detail: 'کارشناس اجباری می باشد.',
+        });
+        return false;
+      }
+
+      return true;
+    }
 
     manager.BeforeSave.subscribe(x =>{
       delete this.newManager.oneObject.pathExperts
