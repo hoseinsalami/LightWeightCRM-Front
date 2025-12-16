@@ -23,7 +23,7 @@ export class BaseFilterDetailComponent<T>{
   filterGroupLogic:string;
   logicOptions:any = [];
 
-  parameters = [{name: '', label:'', isErrEng:false}];
+  parameters = [{name: null, label:null, isErrEng:false}];
   showFilterModal:boolean = false;
   dialogParameters = []
   parameterOptionsDialog: { label: string, value: string }[] = [];
@@ -221,10 +221,27 @@ export class BaseFilterDetailComponent<T>{
       }));
   }
 
+  onNewFilter(){
+    const newFilter = {
+      field: null,           // هنوز چیزی انتخاب نشده
+      label: null,           // بعد از انتخاب پر می‌شود
+      selected: false,       // کنترل نمایش dropdown یا header
+      filterParameter: []
+      // selectedFilter: []     // پارامترهای داخل Fieldset
+    };
+
+    // به آرایه filters اضافه کن
+    this.filters.unshift(newFilter);
+    console.log(this.filters)
+  }
+
   // وقتی یک گزینه از dropdown اصلی انتخاب شد
-  onFieldSelected(selected: any) {
+  onFieldSelected(selected: any, fi:number) {
 
     if (!selected) return;
+    const filter = this.filters[fi]; // ردیف موجود
+    if (!filter) return;
+
     const exists = this.filters.some(f => f.field === selected.field);
     if (exists) {
       console.warn('این فیلد قبلاً اضافه شده است:', selected.field);
@@ -233,9 +250,15 @@ export class BaseFilterDetailComponent<T>{
 
     const newFilter = { ...selected };
 
+    filter.field = selected.field;
+    filter.label = selected.label;
+    filter.type = selected.type;
+    filter.filterParameter = selected.filterParameter;
+    filter.selected = true;
+
     if (selected.type === 'object' || selected.type === 'array') {
       // فقط یک selectedFilter بساز، که مقدار کاربر داخل آن قرار می‌گیرد
-      newFilter.selectedFilter = [
+      filter.selectedFilter = [
         {
           // label: selected.label,
           label: '',
@@ -245,7 +268,7 @@ export class BaseFilterDetailComponent<T>{
       ];
     } else {
       // فیلدهای ساده
-      newFilter.selectedFilter = [
+      filter.selectedFilter = [
         {
           // label: selected.label,
           label: '',
@@ -286,15 +309,15 @@ export class BaseFilterDetailComponent<T>{
     }
 
     // this.filters = [newFilter]
-    this.filters.push(newFilter);
-    const fi = this.filters.length - 1;
+    // this.filters.push(newFilter);
+    // const fi = this.filters.length - 1;
     // const fi = 0;
 
     this.radiobtn[fi] = 'and'; // یا 'and' هرکدام که میخوای
 
-    if (!this.filters[fi].selectedFilter) {
-      this.filters[fi].selectedFilter = [];
-    }
+    // if (!this.filters[fi].selectedFilter) {
+    //   this.filters[fi].selectedFilter = [];
+    // }
 
     console.log(this.filters)
   }

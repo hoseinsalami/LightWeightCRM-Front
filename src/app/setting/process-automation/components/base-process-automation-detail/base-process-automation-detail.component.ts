@@ -162,7 +162,7 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
     this.actionBlocks.forEach((block,blockIndex) => {
       block.actionParameters.forEach((param,fieldIndex) => {
 
-        if (param.type === 'object') {
+        if (param.type === 'object' || param.type === 'array') {
           const actionModal = this.showActionFilterModal.find(m => m.parameters.some(p => p.field === param.field));
           console.log(actionModal)
           if (actionModal && actionModal.filterGroup) {
@@ -1033,18 +1033,32 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
 
 
 
-  actionRadio:string;
+  actionOptions = [
+    { label: 'بلافاصله', value: 'now' },
+    { label: 'با تاخیر', value: 'timer' }
+  ];
   timerAction = new Map<string, { count: number; unitIndex: number }>();
   timerState = new Map<string, { count: number; unitIndex: number }>();
   units = ['دقیقه', 'ساعت', 'روز', 'ماه'];
+  actionRadio= [];
+  onActionRadioValue(value:any ,blockIndex:number){
+    this.actionRadio[blockIndex] = value;
+    console.log(this.actionRadio[blockIndex])
+    console.log(value)
 
-  onActionRadioValue(blockIndex:number){
-    if (this.actionRadio == 'now'){
-      const block = this.actionBlocks[blockIndex];
-      block.executionDateTime = null
-    } else {
-      this.initTimerAction(`${blockIndex}`)
+    const block = this.actionBlocks[blockIndex];
+
+    if (value.value === 'now') {
+      block.executionDateTime = null;
+    } else if (value.value === 'timer') {
+      this.initTimerAction(`${blockIndex}`);
     }
+    // if (this.actionRadio == 'now'){
+    //   const block = this.actionBlocks[blockIndex];
+    //   block.executionDateTime = null
+    // } else {
+    //   this.initTimerAction(`${blockIndex}`)
+    // }
   }
 
   initTimerAction(key: string) {
@@ -1105,29 +1119,30 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
   }
 
 
+
+  actionTimeType: Record<string, 'now' | 'timer'> = {};
   // مقدار پیش‌فرض ساختن اگر وجود نداشت
   initTimerState(key: string) {
     if (!this.timerState.has(key)) {
       this.timerState.set(key, { count: 1, unitIndex: 0 });
     }
   }
-
 // + افزایش
   increment(i: number, fi: number) {
     const key = `${i}_${fi}`;
     this.initTimerState(key);
     this.timerState.get(key)!.count++;
+    this.updateTimerValue(i, fi);
   }
-
 // - کاهش
   decrement(i: number, fi: number) {
     const key = `${i}_${fi}`;
     this.initTimerState(key);
     if (this.timerState.get(key)!.count > 1) {
       this.timerState.get(key)!.count--;
+      this.updateTimerValue(i, fi);
     }
   }
-
 // واحد بعدی
   nextUnit(i: number, fi: number) {
     const key = `${i}_${fi}`;
@@ -1135,9 +1150,9 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
     const state = this.timerState.get(key)!;
     if (state.unitIndex < this.units.length - 1) {
       state.unitIndex++;
+      this.updateTimerValue(i, fi);
     }
   }
-
 // واحد قبلی
   prevUnit(i: number, fi: number) {
     const key = `${i}_${fi}`;
@@ -1145,37 +1160,99 @@ export class BaseProcessAutomationDetailComponent<T> implements OnInit{
     const state = this.timerState.get(key)!;
     if (state.unitIndex > 0) {
       state.unitIndex--;
+      this.updateTimerValue(i, fi);
     }
   }
-  // دکمه تأخیر زمانی
-  setTimerValue(i: number, fi: number) {
-    const blockIndex = i;
-    const fieldIndex = fi;
+
+  updateTimerValue(i: number, fi: number) {
     const key = `${i}_${fi}`;
     this.initTimerState(key);
-    const block = this.actionBlocks[blockIndex];
-    // مقدار انتخاب‌شده از state
-    const timer = this.timerState.get(`${blockIndex}_${fieldIndex}`);
-    if (!timer) return;
 
-    const count = timer.count;
+    // اگر حالت تایمر نیست، کاری نکن
+    if (this.actionTimeType[key] !== 'timer') return;
+
+    const block = this.actionBlocks[i];
+    if (!block?.actionParameters?.[fi]) return;
+
+    const timer = this.timerState.get(key)!;
     const unit = this.units[timer.unitIndex];
 
-    // مپ تبدیل واحدها
-    const unitCodes: Record<string, string> = {دقیقه: 'M', ساعت: 'H', روز: 'D', ماه: 'N'};
-    const code = unitCodes[unit];   // مثلا 'S'
-    // خروجی نهایی برای بک‌اند
-    const formatted = `<!EDT(${count}${code})!>`;
-    if (block?.actionParameters?.[fieldIndex]) {
-      block.actionParameters[fieldIndex].valueFormat = formatted;
-    }
+    const unitCodes: Record<string, string> = {
+      دقیقه: 'M',
+      ساعت: 'H',
+      روز: 'D',
+      ماه: 'N'
+    };
 
-    this.displayDateMap.set(key, {value:'', type:"timer"});
-    console.log(this.timerState)
+    const code = unitCodes[unit];
+    const formatted = `<!EDT(${timer.count}${code})!>`;
 
-    setTimeout(() => {
-      this.displayDateMap.set(key, {value: 'مقدار انتخابی', type:"timer"});
+    block.actionParameters[fi].valueFormat = formatted;
+
+    this.displayDateMap.set(key, {
+      value: 'مقدار انتخابی',
+      type: 'timer'
     });
+  }
+  getActionTime(key: string): 'now' | 'timer' {
+    return this.actionTimeType[key] ?? 'now';
+  }
+  setActionTime(key: string, value: 'now' | 'timer') {
+    this.actionTimeType[key] = value;
+  }
+
+  // دکمه تأخیر زمانی
+  // setTimerValue(i: number, fi: number) {
+  //   const blockIndex = i;
+  //   const fieldIndex = fi;
+  //   const key = `${i}_${fi}`;
+  //   this.initTimerState(key);
+  //   const block = this.actionBlocks[blockIndex];
+  //   // مقدار انتخاب‌شده از state
+  //   const timer = this.timerState.get(`${blockIndex}_${fieldIndex}`);
+  //   if (!timer) return;
+  //
+  //   const count = timer.count;
+  //   const unit = this.units[timer.unitIndex];
+  //
+  //   // مپ تبدیل واحدها
+  //   const unitCodes: Record<string, string> = {دقیقه: 'M', ساعت: 'H', روز: 'D', ماه: 'N'};
+  //   const code = unitCodes[unit];   // مثلا 'S'
+  //   // خروجی نهایی برای بک‌اند
+  //   const formatted = `<!EDT(${count}${code})!>`;
+  //   if (block?.actionParameters?.[fieldIndex]) {
+  //     block.actionParameters[fieldIndex].valueFormat = formatted;
+  //   }
+  //
+  //   this.displayDateMap.set(key, {value:'', type:"timer"});
+  //   console.log(this.timerState)
+  //
+  //   setTimeout(() => {
+  //     this.displayDateMap.set(key, {value: 'مقدار انتخابی', type:"timer"});
+  //   });
+  // }
+  onActionTimeChange(data:{label:string, value:'now' | 'timer'}, i: number, fi: number) {
+    const value: 'now' | 'timer' = data.value
+    const key = `${i}_${fi}`;
+    this.actionTimeType[key] = value
+    console.log(this.actionTimeType)
+
+    const block = this.actionBlocks[i];
+
+    if (value === 'now') {
+      // ارسال null
+      if (block?.actionParameters?.[fi]) {
+        block.actionParameters[fi].valueFormat = null;
+      }
+      // state تایمر هم پاک میشه (اختیاری)
+      this.timerState.delete(key);
+      this.displayDateMap.set(key, { value: '', type: null });
+
+    } else {
+      // تأخیر → state تایمر ساخته میشه
+      this.initTimerState(key);
+      this.updateTimerValue(i, fi);
+    }
   }
 
 
