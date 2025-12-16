@@ -258,59 +258,80 @@
 <!--                    </div>-->
 
                     <div class="flex justify-content-between align-items-center gap-3">
-                      <div class="form-group">
-                        <label class="text-sm">نوع اکشن</label>
-                        <div class="field">
-                          <p-dropdown [style]="{'width':'180px'}"
-                                      name="userType"
-                                      class="w-full"
-                                      placeholder ="اکشن انتخاب کنید"
-                                      scrollHeight="250px"
-                                      display="chip"
-                                      optionLabel="label"
-                                      optionValue="action"
-                                      appendTo="body"
-                                      [(ngModel)]="block.name"
-                                      [options]="actionTypeOptions"
-                                      (onChange)="onActionInput($event, i)">
-                          </p-dropdown>
+                      <div class="flex gap-2">
+                        <div>
+                          <label class="text-sm">نوع اکشن</label>
+                          <div class="field">
+                            <p-dropdown [style]="{'width':'180px'}"
+                                        name="userType"
+                                        class="w-full"
+                                        placeholder ="اکشن انتخاب کنید"
+                                        scrollHeight="250px"
+                                        display="chip"
+                                        optionLabel="label"
+                                        optionValue="action"
+                                        appendTo="body"
+                                        [(ngModel)]="block.name"
+                                        [options]="actionTypeOptions"
+                                        (onChange)="onActionInput($event, i)">
+                            </p-dropdown>
+                          </div>
                         </div>
+
+                        <div>
+                          <label class="text-sm">تاخیر زمانی</label>
+                          <div class="field">
+                            <p-dropdown
+                              [style]="{'width':'190px'}"
+                              [options]="actionOptions"
+                              [(ngModel)]="actionRadio[i]"
+                              optionLabel="label"
+                              placeholder="انتخاب کنید"
+                              (onChange)="onActionRadioValue($event.value, i)">
+                            </p-dropdown>
+                          </div>
+                        </div>
+
                       </div>
 
                       <div class="flex gap-2">
                         <div class="flex flex-column">
-                          <p-radioButton
-                            class="mb-2"
-                            name="actionTime"
-                            value="now"
-                            [(ngModel)]="actionRadio"
-                            (onClick)="onActionRadioValue(i)"
-                            inputId="now" />
-                          <label for="now" class="ml-2">بلافاصله</label>
+<!--                          <p-radioButton-->
+<!--                            class="mb-2"-->
+<!--                            name="actionTime"-->
+<!--                            value="now"-->
+<!--                            [(ngModel)]="actionRadio"-->
+<!--                            (onClick)="onActionRadioValue(i)"-->
+<!--                            inputId="now" />-->
+<!--                          <label for="now" class="ml-2">بلافاصله</label>-->
                         </div>
 
-                        <div class="flex flex-column">
-                          <p-radioButton
-                            class="mb-2"
-                            name="actionTime"
-                            value="timer"
-                            [(ngModel)]="actionRadio"
-                            (onClick)="onActionRadioValue(i)"/>
-                          <div class="flex align-items-center gap-3">
-                            <!-- بخش شمارنده -->
-                            <div class="flex align-items-center gap-1">
-                              <button class="btn-counter" (click)="decrementAction(i)" [disabled]="actionRadio !== 'timer'">-</button>
-                              <span class="value-counter">{{ timerAction.get(i + '')?.count || 1 }}</span>
-                              <button class="btn-counter"  (click)="incrementAction(i)" [disabled]="actionRadio !== 'timer'">+</button>
-                            </div>
+                        <div class="flex gap-2">
+<!--                          <p-radioButton-->
+<!--                            class="mb-2"-->
+<!--                            name="actionTime"-->
+<!--                            value="timer"-->
+<!--                            [(ngModel)]="actionRadio"-->
+<!--                            (onClick)="onActionRadioValue(i)"/>-->
 
-                            <!-- بخش انتخاب واحد -->
-                            <div class="flex align-items-center gap-1">
-                              <button class="btn-counter"  (click)="prevUnitAction(i)" [disabled]="actionRadio !== 'timer'"> < </button>
-                              <span class="value-counter">{{ units[(timerAction.get(i + '')?.unitIndex) || 0] }}</span>
-                              <button class="btn-counter"  (click)="nextUnitAction(i)" [disabled]="actionRadio !== 'timer'"> > </button>
+<!--                          <div class="flex gap-2">-->
+
+                            <div class="flex align-items-center gap-3" *ngIf="actionRadio[i]?.value === 'timer'">
+                              <!-- بخش شمارنده -->
+                              <div class="flex align-items-center gap-1">
+                                <button class="btn-counter" (click)="decrementAction(i)" [disabled]="actionRadio[i]?.value !== 'timer'">-</button>
+                                <span class="value-counter">{{ timerAction.get(i + '')?.count || 1 }}</span>
+                                <button class="btn-counter"  (click)="incrementAction(i)" [disabled]="actionRadio[i]?.value !== 'timer'">+</button>
+                              </div>
+
+                              <!-- بخش انتخاب واحد -->
+                              <div class="flex align-items-center gap-1">
+                                <button class="btn-counter"  (click)="prevUnitAction(i)" [disabled]="actionRadio[i]?.value !== 'timer'"> < </button>
+                                <span class="value-counter">{{ units[(timerAction.get(i + '')?.unitIndex) || 0] }}</span>
+                                <button class="btn-counter"  (click)="nextUnitAction(i)" [disabled]="actionRadio[i]?.value !== 'timer'"> > </button>
+                              </div>
                             </div>
-                          </div>
+<!--                          </div>-->
 
                         </div>
                       </div>
@@ -324,21 +345,16 @@
                             <div *ngSwitchCase="'string'" class="col-12">
                               <div class="flex align-items-center gap-2 mb-2">
                                 <label class="text-sm">{{f.label}}</label>
-                                <button pButton
-                                        type="button"
-                                        label="انتخاب مقدار"
-                                        icon="pi pi-calendar"
+                                <button pButton type="button" label="انتخاب مقدار" icon="pi pi-calendar"
                                         class="p-button-success p-button-outlined p-button-sm p-2"
                                         (click)="getEntityData(f,'tree',i, fi)"></button>
                               </div>
                               <div class="field mb-0 mt-1">
                                 <div class="tags p-2 my-2" *ngIf="treeValuesMap.get(i + '_' + fi)?.length">
-                            <span class="p-2 text-white border-round ml-2 cursor-pointer bg-teal-400"
-                                  style="unicode-bidi:plaintext"
-                                  *ngFor="let val of treeValuesMap.get(i + '_' + fi)"
-                                  (click)="insertAtCursor(val,i + '_' + fi)">{{val.label}}</span>
+                                  <span class="p-2 text-white border-round ml-2 cursor-pointer bg-teal-400" style="unicode-bidi:plaintext"
+                                        *ngFor="let val of treeValuesMap.get(i + '_' + fi)"
+                                        (click)="insertAtCursor(val,i + '_' + fi)">{{val.label}}</span>
                                 </div>
-
                                 <textarea *ngIf="block.actionParameters?.[fi]"
                                           #textareaRefs
                                           [attr.data-key]="i + '_' + fi"
@@ -348,8 +364,7 @@
                                           name="description"
                                           pInputTextarea
                                           class="p-fieldset"
-                                          [(ngModel)]="block.actionParameters[fi].valueFormat">
-                          </textarea>
+                                          [(ngModel)]="block.actionParameters[fi].valueFormat"></textarea>
                               </div>
                             </div>
 
@@ -383,7 +398,7 @@
                             </div>
 
                             <div *ngSwitchCase="'datetime'" class="col-12">
-                              <div class="flex flex-wrap align-items.center gap-3">
+                              <div class="flex flex-wrap align-items.center gap-1">
                                 <label class="text-sm" for="finishDate">{{f.label}}:</label>
                                 <div class="flex align-items-center">
                                   <button
@@ -404,24 +419,41 @@
                                           (click)="getEntityData(f, 'tree', i, fi)"></button>
                                 </div>
 
-                                <div class="flex align-items-center gap-3">
-
+                                <div class="flex align-items-center gap-1">
                                   <!-- دکمه اصلی -->
-                                  <button pButton class="p-button-info p-button-outlined p-button-sm p-2" (click)="setTimerValue(i,fi)">زمان رویداد</button>
-
-                                  <!-- بخش شمارنده -->
-                                  <div class="flex align-items-center gap-1">
-                                    <button class="btn-counter" (click)="decrement(i, fi)">-</button>
-                                    <span class="value-counter">{{ timerState.get(i + '_' + fi)?.count || 1 }}</span>
-                                    <button class="btn-counter"  (click)="increment(i,fi)">+</button>
+                                  <div>
+                                    <label class="text-sm">تاخیر زمانی</label>
+                                    <div class="field">
+                                      <p-dropdown
+                                        [style]="{'width':'120px'}"
+                                        [options]="actionOptions"
+                                        [ngModel]="getActionTime(i + '_' + fi)"
+                                        (ngModelChange)="setActionTime(i + '_' + fi, $event)"
+                                        optionLabel="label"
+                                        placeholder="تاخیر زمانی انتخاب کنید"
+                                        (onChange)="onActionTimeChange($event.value, i, fi)">
+                                      </p-dropdown>
+                                    </div>
                                   </div>
 
-                                  <!-- بخش انتخاب واحد -->
-                                  <div class="flex align-items-center gap-1">
-                                    <button class="btn-counter"  (click)="prevUnit(i,fi)"> < </button>
-                                    <span class="value-counter">{{ units[(timerState.get(i + '_' + fi)?.unitIndex) || 0] }}</span>
-                                    <button class="btn-counter"  (click)="nextUnit(i,fi)"> > </button>
+                                  <div class="flex align-items-center gap-1"
+                                       *ngIf="actionTimeType[i + '_' + fi] === 'timer'">
+<!--                                    <button pButton class="p-button-info p-button-outlined p-button-sm p-2" (click)="setTimerValue(i,fi)">زمان رویداد</button>-->
+                                    <!-- بخش شمارنده -->
+                                    <div class="flex align-items-center gap-1">
+                                      <button class="btn-counter" (click)="decrement(i, fi)">-</button>
+                                      <span class="value-counter">{{ timerState.get(i + '_' + fi)?.count || 1 }}</span>
+                                      <button class="btn-counter"  (click)="increment(i,fi)">+</button>
+                                    </div>
+
+                                    <!-- بخش انتخاب واحد -->
+                                    <div class="flex align-items-center gap-1">
+                                      <button class="btn-counter"  (click)="prevUnit(i,fi)"> < </button>
+                                      <span class="value-counter">{{ units[(timerState.get(i + '_' + fi)?.unitIndex) || 0] }}</span>
+                                      <button class="btn-counter"  (click)="nextUnit(i,fi)"> > </button>
+                                    </div>
                                   </div>
+
 
                                 </div>
 
@@ -430,6 +462,24 @@
                             </div>
 
                             <div *ngSwitchCase="'object'" class="col-12">
+                              <div class="form-group">
+                                <label class="text-sm">{{f.label}}</label>
+                                <div class="field mb-0 mt-1">
+                                  <p-dropdown *ngIf="block.actionParameters?.[fi]"
+                                              [style]="{'width': '100%'}"
+                                              optionLabel="label"
+                                              [(ngModel)]="block.actionParameters[fi].filter"
+                                              [options]="mapFilterParameterOptions(f.filterParameter, block, fi)"
+                                              (onChange)="onSelectFilterParameter($event, 'action',block, fi)"
+                                              appendTo="body"
+                                              placeholder="انتخاب کنید"
+                                              class="ml-2">
+                                  </p-dropdown>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div *ngSwitchCase="'array'" class="col-12">
                               <div class="form-group">
                                 <label class="text-sm">{{f.label}}</label>
                                 <div class="field mb-0 mt-1">
