@@ -18,4 +18,8 @@ export class SmsConfigService extends BaseCrudService {
   getSmsProviders():Observable<ICommonType[]>{
     return this.http.get<ICommonType[]>(this.baseUrl + '/SmsProviders');
   }
+
+  putChangeDefault(id:number){
+    return this.http.put(this.baseUrl + `/ChangeDefault/${id}`, {})
+  }
 }
