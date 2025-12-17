@@ -10,6 +10,9 @@ import {TableModule} from "primeng/table";
 import {FormsModule} from "@angular/forms";
 import {ButtonModule} from "primeng/button";
 import {JalaliDatePipe} from "../../_pipes/jalali.date.pipe";
+import {InputSwitchModule} from "primeng/inputswitch";
+import {TooltipModule} from "primeng/tooltip";
+import {CommonModule} from "@angular/common";
 
 @Component({
   selector: 'app-sms-config',
@@ -17,12 +20,15 @@ import {JalaliDatePipe} from "../../_pipes/jalali.date.pipe";
   styleUrl: './sms-config.component.scss',
   standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
     ToolbarModule,
     TableModule,
     RouterLink,
     ButtonModule,
-    JalaliDatePipe
+    JalaliDatePipe,
+    InputSwitchModule,
+    TooltipModule
   ]
 })
 export class SmsConfigComponent extends BaseListComponent<SmsProviderType>{
@@ -41,6 +47,26 @@ export class SmsConfigComponent extends BaseListComponent<SmsProviderType>{
 
   construct(input: SmsProviderType){
     return new SmsProviderType(input)
+  }
+
+
+  switchAction(event:any ,id:number) {
+    this.loading.show();
+    this.smsService.putChangeDefault(id).subscribe({
+      next:(out) =>{
+        this.loading.hide();
+        this.lazyLoadData(this.construct,
+          this.lastTable,
+          { ...this.lastEvent, first: event.first, rows: event.rows },
+          this.lastMethodName,
+          this.lastOtherParam)
+      },
+      error: (err) =>{
+        this.loading.hide();
+        console.log(err)
+      }
+    });
+
   }
 
 

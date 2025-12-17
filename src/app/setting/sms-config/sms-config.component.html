@@ -47,6 +47,11 @@
           <p-sortIcon field="smsProvider"></p-sortIcon>
         </th>
 
+        <th pSortableColumn="isDefault">
+          پیش فرض
+          <p-sortIcon field="isDefault"></p-sortIcon>
+        </th>
+
         <th pSortableColumn="createTime">
           <!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
           تاریخ ایجاد
@@ -74,16 +79,28 @@
         </td>
 
         <td>
+          <span class="p-column-title">isDefault</span>
+          {{object.isDefault ? 'فعال' : 'غیرفعال'}}
+        </td>
+
+        <td>
           <span class="p-column-title">smsProvider</span>
           {{object.createTime | jalaliDate:'date'}}
         </td>
 
         <td>
-          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2 m-1"
-                  pTooltip="ویرایش"
-                  [routerLink]="['edit', object.id]" ></button>
-          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2 m-1" pTooltip="حذف"
-                  (click)="deleteItem(object.id)"></button>
+          <div class="flex align-items-center">
+            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2 m-1"
+                    pTooltip="ویرایش" tooltipPosition="top"
+                    [routerLink]="['edit', object.id]" ></button>
+            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2 m-1" pTooltip="حذف"
+                    tooltipPosition="top"
+                    (click)="deleteItem(object.id)"></button>
+
+            <button *ngIf="!object.isDefault" pButton pRipple class="p-button-rounded bg-gray-400 border-gray-300 hover:bg-green-500 hover:border-green-500 pi pi-check p-3 m-1"
+                    pTooltip="انتخاب پیش فرض" tooltipPosition="top"
+                    (click)="switchAction($event, object.id)"></button>
+          </div>
         </td>
       </tr>
     </ng-template>
