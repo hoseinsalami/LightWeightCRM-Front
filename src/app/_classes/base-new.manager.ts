@@ -40,13 +40,13 @@ export class BaseNewManager<T extends GenericType<T>> extends BaseSaveManager<T>
   override save()
   {
     this.loading.show()
-    if (!this.validation()) {
-      this.loading.hide();
-      return;
-    }
     if(this.oneObject)
     {
        this.BeforeSave.emit(this.oneObject);
+      if (!this.validation()) {
+        this.loading.hide();
+        return;
+      }
       this.service.create<T>(this.TClass, this.oneObject).subscribe(()=>{
         this.loading.hide()
         this.OnSuccessfulSave.emit(this.oneObject);

@@ -34,10 +34,16 @@
           <p-sortIcon field="title"></p-sortIcon>
         </th>
 
-        <th pSortableColumn="title">
+        <th pSortableColumn="entity">
           <!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
           ماهیت
-          <p-sortIcon field="title"></p-sortIcon>
+          <p-sortIcon field="entity"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="description">
+          <!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
+          توضیحات
+          <p-sortIcon field="description"></p-sortIcon>
         </th>
 
 <!--        <th></th>-->
@@ -57,6 +63,11 @@
         <td>
           <span class="p-column-title">ماهیت</span>
           {{object.entity}}
+        </td>
+
+        <td>
+          <span class="p-column-title">توضیحات</span>
+          {{object.description}}
         </td>
 
 <!--        <td>-->

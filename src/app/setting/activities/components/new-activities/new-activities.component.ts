@@ -40,6 +40,12 @@ export class NewActivitiesComponent extends BaseActivitiesDetailComponent<Activi
     let manager =
       new BaseNewManager<ActivityType>(ActivityType, activityService, messageService, {}, router, activeRoute, loading)
 
+
+
+    manager.BeforeSave.subscribe((res) =>{
+      this.manager.oneObject.iconClass = this.icons[this.selectedIndex].icon
+    })
+
     manager.validation = () =>{
       if (!this.manager.oneObject.title) {
         this.messageService.add({
@@ -69,10 +75,6 @@ export class NewActivitiesComponent extends BaseActivitiesDetailComponent<Activi
       }
       return true
     }
-
-    manager.BeforeSave.subscribe((res) =>{
-      this.manager.oneObject.iconClass = this.icons[this.selectedIndex].icon
-    })
 
     manager
       .OnSuccessfulSave

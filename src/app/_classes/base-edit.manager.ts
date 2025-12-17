@@ -62,6 +62,10 @@ export class BaseEditManager<T extends GenericType<T>, TUpdate> extends BaseSave
     this.loading.show()
     if (this.oneObject) {
       this.BeforeSave.emit(this.oneObject);
+      if (!this.validation()) {
+        this.loading.hide();
+        return;
+      }
       this.service.update(this.oneObject).subscribe(out => {
         this.messagesService.add({
           severity: 'success',
