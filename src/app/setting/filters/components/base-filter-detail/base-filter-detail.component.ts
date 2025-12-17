@@ -146,13 +146,17 @@ export class BaseFilterDetailComponent<T>{
       entity:this.filterModel.entity
     };
 
+    const payloadParameters = this.parameters
+      .filter(param => !(param.name === null && param.label === null))
+      // حذف isErrEng از هر آیتم
+      .map(({ isErrEng, ...rest }) => rest);
 
 
     const input = {
       title: this.filterModel.title,
       entity: this.filterModel.entity,
       description: this.filterModel.description,
-      parameters : this.parameters,
+      parameters : payloadParameters,
       filter: rootFilterGroup
     }
 
