@@ -9,6 +9,7 @@ import {
   IEntities, ParameterGroup,
 } from "../../../_types/filter.type";
 import {MessageService} from "primeng/api";
+import {ActivatedRoute, Router} from "@angular/router";
 
 
 export class BaseFilterDetailComponent<T>{
@@ -32,7 +33,9 @@ export class BaseFilterDetailComponent<T>{
   modeFilter = [];
   constructor(protected manager: BaseSaveManager<T>,
               public service: FiltersService,
-              protected loading: LoadingService) {
+              protected loading: LoadingService,
+              protected router: Router,
+              protected activeRoute: ActivatedRoute) {
     this.getEntitiesData()
     this.logicOptions= [
       {label: 'همه شروط', value:'and'},
@@ -200,6 +203,7 @@ export class BaseFilterDetailComponent<T>{
     this.service.onRegisterFilter(input).subscribe({
       next: (res) => {
         this.loading.hide()
+        this.router.navigate(['./'], {relativeTo: this.activeRoute.parent})
       },
       error: () =>{
         this.loading.hide()

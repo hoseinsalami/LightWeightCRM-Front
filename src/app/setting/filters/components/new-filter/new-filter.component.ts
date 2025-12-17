@@ -43,14 +43,14 @@ export class NewFilterComponent extends BaseFilterDetailComponent<CreateFilterDT
   constructor(
     private filterService: FiltersService,
     private messageService: MessageService,
-    private router: Router,
-    private activeRoute: ActivatedRoute,
+    router: Router,
+    activeRoute: ActivatedRoute,
     loading: LoadingService
     ){
     let manager =
       new BaseNewManager<CreateFilterDTO>(CreateFilterDTO, filterService, messageService, {}, router, activeRoute, loading)
 
-    super(manager, filterService, loading);
+    super(manager, filterService, loading,router,activeRoute);
 
     manager.OnSuccessfulSave.subscribe((i)=>{
       router.navigate(['./'], {relativeTo: activeRoute.parent})
