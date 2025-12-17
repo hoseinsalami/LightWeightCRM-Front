@@ -89,11 +89,13 @@
 
   <div class="grid">
     <div class="col-12 md:col-3 lg:col-2 md:p-3" *ngFor="let object of listProcess">
-      <div class="p-card h-full border-round-2xl border-1 border-gray-200 shadow-none hover:shadow-2 flex flex-column ">
+      <div class="p-card h-full border-round-2xl border-1 border-gray-200 shadow-none hover:shadow-2 flex flex-column relative text-primary-600">
         <!-- Header -->
         <div class="flex px-3 pt-3 align-items-start">
           <div class="flex flex-1 flex-column gap-2">
-          <h3 class="text-base font-bold text-900 cursor-pointer m-0">{{object.title}}</h3>
+            <div>
+              <h3 class="text-base font-bold text-900 cursor-pointer m-0">{{object.title}}</h3>
+            </div>
 
             <div class="flex flex-row flex-wrap align-items-center gap-2 text-sm text-secondary" *ngFor="let action of object.actions; let i = index">
               <i class="pi pi-filter text-purple-400"></i>
@@ -106,6 +108,17 @@
             <div class="flex align-items-center gap-2 text-sm text-secondary">
               <i class="pi pi-bolt text-teal-400"></i>
               <span tooltipPosition="left" pTooltip="فرایند"> {{object.triggerEvent}}</span>
+            </div>
+
+            <div class="flex align-items-center gap-2 text-sm text-secondary">
+              <div class="flex align-items-center gap-2">
+                <i class="pi pi-bell text-teal-400" [class]="object.active ? 'text-green-600' : 'text-red-500'"></i>
+                <span [class]="object.active ? 'text-green-600' : 'text-red-500'"> {{ object.active ? 'فعال' : 'غیرفعال' }}</span>
+              </div>
+              <div (click)="$event.stopPropagation();" class="flex align-items-end">
+                <p-inputSwitch [(ngModel)]="object.active" (onChange)="switchAction($event,object.id)" class="flex" />
+              </div>
+
             </div>
           </div>
 

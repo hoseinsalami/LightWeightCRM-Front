@@ -57,4 +57,8 @@ export class ProcessAutmationService extends BaseCrudService{
     return this.http.get<IEvent[]>(this.baseUrl + '/events');
   }
 
+  putSwitchAction(id:number){
+    return this.http.put(this.baseUrl + `/SwitchActivation/${id}` , {})
+  }
+
 }

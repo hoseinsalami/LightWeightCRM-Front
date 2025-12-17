@@ -48,6 +48,7 @@ import {OrderListModule} from "primeng/orderlist";
 import {JalaliDatePipe} from "../../_pipes/jalali.date.pipe";
 import {BaseListComponent} from "../../shared/base-list/base-list.component";
 import {CreatePathType} from "../_types/createPath.type";
+import {InputSwitchChangeEvent} from "primeng/inputswitch/inputswitch.interface";
 
 
 type FieldType = 'string' | 'number' | 'boolean' | 'datetime' | 'enum' | 'object' | 'array';
@@ -134,7 +135,8 @@ export interface ITreeNodeModal {
     RouterLink,
     OrderListModule,
     JalaliDatePipe,
-    DividerModule
+    DividerModule,
+    InputSwitchModule
   ],
   templateUrl: './process-automation.component.html',
   styleUrl: './process-automation.component.scss'
@@ -232,6 +234,29 @@ export class ProcessAutomationComponent extends BaseListComponent<CreateProcessT
     this.getListOfProccess()
 
   }
+
+  isActive = false;
+
+  switchAction(event: InputSwitchChangeEvent, id:number) {
+    this.loading.show();
+    const newValue = event.checked
+    this.processService.putSwitchAction(id).subscribe({
+      next:(out) =>{
+        this.loading.hide();
+        const item = this.listProcess.find(x => x.id === id)
+        if (item) item.active = newValue
+      },
+      error: (err) =>{
+        this.loading.hide();
+        const item = this.listProcess.find(x => x.id === id);
+        if (item) item.active = !newValue
+        console.log(err)
+      }
+    });
+
+  }
+
+
 
 //   getListOfEvent(){
 //     this.loading.show();

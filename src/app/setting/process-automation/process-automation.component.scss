@@ -1,4 +1,28 @@
 ::ng-deep{
+  .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider{
+    background: var(--green-600);
+    &:before{
+      transform: translateX(1.5rem);
+    }
+  }
+
+  .p-inputswitch{
+    height: 1.4rem;
+    .p-inputswitch-slider {
+      &:before{
+        background: #ffffff;
+        width: 1rem;
+        height: 1rem;
+        left: 0.2rem;
+        margin-top: -0.525rem;
+        border-radius: 50%;
+        transition-duration: 0.2s;
+      }
+
+    }
+  }
+
+
   .p-dropdown-clear-icon{
     right: 9rem !important;
     color: red;
@@ -16,4 +40,39 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+
+.ribbon {
+  position: absolute;
+  top: 11px;
+  left: -14px;
+  width: 65px;
+  text-align: center;
+  transform: rotate(-45deg);
+  font-size: 9px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+
+  clip-path: polygon(
+      21% 0%,   /* بالا چپ (باریک) */
+      79% 0%,   /* بالا راست */
+      100% 100%,/* پایین راست (عریض) */
+      0% 100%   /* پایین چپ */
+  );
+}
+
+.ribbon-active {
+  background-color: var(--green-600); // green
+  color: white;
+}
+
+.ribbon-inactive {
+  background-color: var(--red-500); // gray
+  color: white;
+}
+
+.ribbon:hover {
+  opacity: 0.85;
 }
