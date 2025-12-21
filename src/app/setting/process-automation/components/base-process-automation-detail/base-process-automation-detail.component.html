@@ -385,7 +385,7 @@
                                 <p-inputSwitch #switch
                                                [(ngModel)]="booleanMap[i + '_' + fi]"
                                                (onChange)="onBooleanChange(i, fi)" />
-                                <label class="text-sm" for="finishDate">{{f.label}}</label>
+                                <label class="text-sm">{{f.label}}</label>
                                 <div class="flex align-items-center">
                                   <button pButton
                                           label="انتخاب مقدار"
@@ -398,8 +398,8 @@
                             </div>
 
                             <div *ngSwitchCase="'datetime'" class="col-12">
+                              <label class="text-sm" for="finishDate">{{f.label}}:</label>
                               <div class="flex flex-wrap align-items.center gap-1">
-                                <label class="text-sm" for="finishDate">{{f.label}}:</label>
                                 <div class="flex align-items-center">
                                   <button
                                     pButton
@@ -1819,6 +1819,7 @@
         <div class="flex mt-1">
           <ng-persian-datepicker
             class="w-full"
+            [dateInitValue]="false"
             (dateOnInit)="initialFinishDatePicker($event, actionBlocks[selectedDateContext.blockIndex], selectedDateContext.fieldIndex)"
             (dateOnSelect)="selectFinishDate($event, actionBlocks[selectedDateContext.blockIndex], selectedDateContext.fieldIndex)"
             [dateGregorianFormat]="'YYYY-MM-DD' "
