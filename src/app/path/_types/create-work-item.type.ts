@@ -127,7 +127,7 @@ export class CreateCustomerPhone extends GenericType<CreateCustomerPhone> {
 export interface IMessagesType {
   id?: number;
   createTime?: string;
-  currentUser?: UserTypeBase;
+  createUser?: UserTypeBase;
   lastSend?: string;
   message?: string;
   phoneNumber?: string;

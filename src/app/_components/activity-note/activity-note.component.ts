@@ -817,8 +817,9 @@ export class ActivityNoteComponent implements OnInit{
       this.getListOfActivities()
     } else if (item === 'attachment') {
       this.getListOfAttachment()
-    } else if (item === 'sendMessage'){
-
+    } else if (item === 'changeLog'){
+      this.changeLog = [];
+      this.getChangeLogData()
     }
   }
 
