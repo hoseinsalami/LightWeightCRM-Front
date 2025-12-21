@@ -389,24 +389,16 @@
                 style="background: #808080">تاریخچه پیام های ارسالی</span>
         </div>
 
-<!--        <div class="grid" *ngIf="workItem && workItem.messages.length > 0">-->
-<!--          <ng-container *ngFor="let message of workItem.messages; let i=index">-->
-<!--            <div class="col-2"></div>-->
-<!--            <div class="co-10"></div>-->
-<!--          </ng-container>-->
-
-<!--        </div>-->
 
         <div class="flex flex-column align-items-center">
           <div class="flex flex-column align-items-start gap-1 border-1 border-dashed border-round border-gray-200 py-3 mt-3 w-6 bg-whatsapp">
 
             <div class="chat-container">
-              <!-- پیام خود کاربر -->
               <div class="chat-message sent grid align-items-end"
-                   *ngFor="let message of workItem?.messages; let i=index">
+                   *ngFor="let message of messages; let i=index">
                 <div class="col-1 flex justify-content-center">
-                  <span class="pi pi-user p-avatar-icon avatar" [pTooltip]="message?.createUser?.fullName"
-                        tooltipPosition="right"></span>
+                <span class="pi pi-user p-avatar-icon avatar" [pTooltip]="message?.createUser?.fullName"
+                      tooltipPosition="right"></span>
                 </div>
 
                 <div class="col-11">
@@ -416,11 +408,11 @@
                     <div class="bubble">
                       <p class="text">{{message.message}}</p>
                       <span class="time">
-                      <ng-container *ngIf="message.sendWasSuccessful; else pendingIcon">
-                      <i class="pi pi-check text-blue-400 ml-1"></i>
-                    </ng-container>
-                      <span class="text-nowrap">{{message.sendWasSuccessful ? (message.lastSend | jalaliDate:'hour') : ''}}</span>
-                    </span>
+                    <ng-container *ngIf="message.sendWasSuccessful; else pendingIcon">
+                    <i class="pi pi-check text-blue-400 ml-1"></i>
+                  </ng-container>
+                    <span class="text-nowrap">{{message.sendWasSuccessful ? (message.lastSend | jalaliDate:'hour') : ''}}</span>
+                  </span>
 
                       <ng-template #pendingIcon>
                         <img src="assets/images/exclamation-25.png" alt=""
@@ -435,8 +427,7 @@
 
 
 
-              </div>
-
+          </div>
             </div>
 
           </div>

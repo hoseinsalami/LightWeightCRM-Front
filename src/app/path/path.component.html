@@ -327,7 +327,7 @@
 
           <div class="form-group flex-1">
             <label class="text-right text-900 text-md mb-2">عنوان معامله</label>
-            <div class="field mt-2">
+            <div class="mt-2">
               <input
                 [style]="{'width':'100%'}"
                 pInputText
@@ -341,7 +341,7 @@
 
           <div class="flex-1" *ngIf="user.userType === UserTypesEnum.Admin || user.userType === UserTypesEnum.SuperAdmin">
             <label class="text-right text-900 text-md mb-2">کارشناس</label>
-            <div class="field mt-2">
+            <div class="mt-2">
               <p-dropdown
                 [styleClass]="'clear-icon'"
                 [showClear]="true"
@@ -357,16 +357,17 @@
           </div>
 <!--        </div>-->
 
-          <div class="form-group field flex-1">
+          <div class="form-group flex-1">
             <label class="text-right text-900 text-md mb-2" for="">جستجو مشتری</label>
-            <div class="field">
-              <p-autoComplete
+            <div class="mt-2">
+              <p-autoComplete #autoComplete
                 [inputStyle]="{'width':'100%'}"
                 [style]="{'width':'100%'}"
                 [(ngModel)]="selectedCustomer"
                 [suggestions]="filteredCustomer"
                 (completeMethod)="filterCustomer($event)"
                 (onSelect)="selectCustomer($event)"
+                (onClear)="handleClear()"
                 [showClear]="true"
                 [autofocus]="true"
                 [showEmptyMessage]="true"
@@ -417,6 +418,143 @@
 
       </div>
 
+      <ng-container *ngIf="showCustomerForm">
+        <div class="col-12">
+          <p-divider styleClass="px-5 py-2" class="w-full divider m-0" align="center" type="dashed">
+            <b class="px-2 text-base font-bold">مشخصات مشتری</b>
+          </p-divider>
+<!--            <p-fieldset [style]="{padding: '0px'}">-->
+<!--              <ng-template pTemplate="header">-->
+<!--                <p  class="text-base font-bold">مشخصات مشتری</p>-->
+<!--              </ng-template>-->
+              <div class="grid px-6">
+                <div class="col-12 md:col-4">
+                  <div class="form-group flex-1">
+                    <label class="text-right text-900 text-md mb-2">نام</label>
+                    <div class="field mt-2">
+                      <input #customerNameInput
+                        [(ngModel)]="workItems.customer.name"
+                        [style]="{'width':'100%'}"
+                        pInputText
+                        type="text"
+                        id="name"
+                        name="name"
+                        class="p-fieldset"
+                        placeholder="نام مشتری را وارد نمایید">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                  <div class="form-group flex-1">
+                    <label class="text-right text-900 text-md mb-2">نام خانوادگی</label>
+                    <div class="field mt-2">
+                      <input
+                        [(ngModel)]="workItems.customer.family"
+                        [style]="{'width':'100%'}"
+                        pInputText
+                        type="text"
+                        id="family"
+                        name="family"
+                        class="p-fieldset"
+                        placeholder="نام خانوادگی مشتری را وارد نمایید">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                  <div class="form-group flex-1">
+                    <label class="text-right text-900 text-md mb-2" for="companyName">شیوه آشنایی</label>
+                    <div class="field mt-2">
+                      <p-dropdown
+                        [styleClass]="'clear-icon'"
+                        [showClear]="true"
+                        [options]="accustom"
+                        [(ngModel)]="workItems.customer.accustomMethodId"
+                        class="mt-2"
+                        [style]="{'width':'100%'}"
+                        optionLabel="title"
+                        optionValue="id"
+                        placeholder="شیوه آشنایی را انتخاب نمایید">
+                      </p-dropdown>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                  <div class="form-group flex-1">
+                    <label class="text-right text-900 text-md mb-2">شرکت</label>
+                    <div class="field mt-2">
+                      <input
+                        [(ngModel)]="workItems.customer.companyName"
+                        [style]="{'width':'100%'}"
+                        pInputText
+                        type="text"
+                        id="companyName"
+                        name="companyName"
+                        class="p-fieldset"
+                        placeholder="شرکت مشتری را وارد نمایید">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                  <div class="form-group flex-1">
+                    <label class="text-right text-900 text-md mb-2">شماره ثابت</label>
+                    <div class="field mt-2">
+                      <input
+                        [(ngModel)]="workItems.customer.phone"
+                        #phoneInput="ngModel"
+                        [style]="{'width':'100%'}"
+                        pInputText
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        class="p-fieldset"
+                        minlength="11"
+                        maxlength="11"
+                        pattern="^[0-9]{11}$"
+                        [pKeyFilter]="'int'"
+                        placeholder="شماره ثابت مشتری را وارد نمایید">
+                      <!--            <div *ngIf="phoneInput.invalid && phoneInput.touched" class="text-red-500 text-sm mt-1">-->
+                      <!--              <div *ngIf="phoneInput.errors?.['required']">شماره همراه اجباری است.</div>-->
+                      <!--              <div *ngIf="phoneInput.errors?.['pattern']">شماره باید ۱۱ رقم باشد.</div>-->
+                      <!--            </div>-->
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                  <div class="form-group flex-1">
+                    <label class="text-right text-900 text-md mb-2">شماره موبایل</label>
+                    <div class="field mt-2">
+                      <input
+                        [(ngModel)]="workItems.customer.mobile"
+                        #mobileInput="ngModel"
+                        [style]="{'width':'100%'}"
+                        pInputText
+                        type="text"
+                        id="mobile"
+                        name="mobile"
+                        class="p-fieldset"
+                        minlength="11"
+                        maxlength="11"
+                        pattern="^[0-9]{11}$"
+                        [pKeyFilter]="'int'"
+                        placeholder="شماره همراه مشتری را وارد نمایید">
+                      <!--            <div *ngIf="mobileInput.invalid && mobileInput.touched" class="text-red-500 text-sm mt-1">-->
+                      <!--              <div *ngIf="mobileInput.errors?.['required']">شماره همراه اجباری است.</div>-->
+                      <!--              <div *ngIf="mobileInput.errors?.['pattern']">شماره باید ۱۱ رقم باشد.</div>-->
+                      <!--            </div>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+<!--            </p-fieldset>-->
+        </div>
+      </ng-container>
+
+
       <div class="col-12">
         <div class="form-group">
           <label class="text-right text-900 text-md">توضیحات</label>
@@ -458,168 +596,6 @@
 
 </p-dialog>
 <!--************************** end newWorkItem modal *************************************-->
-
-<!--************************** begin newCustomer modal *************************************-->
-<p-dialog
-  [styleClass]="'modal-medium'"
-  [style]="{direction:'rtl'}"
-  [(visible)]="showModalNewCustomer"
-  [appendTo]="'body'"
-  header="افزودن مشتری جدید"
-  [modal]="true">
-
-  <!--  <ng-container *ngIf="selectedWorkItem">-->
-
-  <div *ngIf="showCustomerForm" class="grid">
-    <div class="col-12 md:col-6">
-      <div class="form-group flex-1">
-        <label class="text-right text-900 text-md mb-2">نام</label>
-        <div class="field mt-2">
-          <input
-            [(ngModel)]="workItems.customer.name"
-            [style]="{'width':'100%'}"
-            pInputText
-            type="text"
-            id="name"
-            name="name"
-            class="p-fieldset"
-            placeholder="نام مشتری را وارد نمایید">
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 md:col-6">
-      <div class="form-group flex-1">
-        <label class="text-right text-900 text-md mb-2">نام خانوادگی</label>
-        <div class="field mt-2">
-          <input
-            [(ngModel)]="workItems.customer.family"
-            [style]="{'width':'100%'}"
-            pInputText
-            type="text"
-            id="family"
-            name="family"
-            class="p-fieldset"
-            placeholder="نام خانوادگی مشتری را وارد نمایید">
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 md:col-6">
-      <div class="form-group flex-1">
-        <label class="text-right text-900 text-md mb-2" for="companyName">شیوه آشنایی</label>
-        <div class="field mt-2">
-          <p-dropdown
-            [styleClass]="'clear-icon'"
-            [showClear]="true"
-            [options]="accustom"
-            [(ngModel)]="workItems.customer.accustomMethodId"
-            class="mt-2"
-            [style]="{'width':'100%'}"
-            optionLabel="title"
-            optionValue="id"
-            placeholder="شیوه آشنایی را انتخاب نمایید">
-          </p-dropdown>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 md:col-6">
-      <div class="form-group flex-1">
-        <label class="text-right text-900 text-md mb-2">شرکت</label>
-        <div class="field mt-2">
-          <input
-            [(ngModel)]="workItems.customer.companyName"
-            [style]="{'width':'100%'}"
-            pInputText
-            type="text"
-            id="companyName"
-            name="companyName"
-            class="p-fieldset"
-            placeholder="شرکت مشتری را وارد نمایید">
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 md:col-6">
-      <div class="form-group flex-1">
-        <label class="text-right text-900 text-md mb-2">شماره ثابت</label>
-        <div class="field mt-2">
-          <input
-            [(ngModel)]="workItems.customer.phone"
-            #phoneInput="ngModel"
-            [style]="{'width':'100%'}"
-            pInputText
-            type="text"
-            id="phone"
-            name="phone"
-            class="p-fieldset"
-            minlength="11"
-            maxlength="11"
-            pattern="^[0-9]{11}$"
-            [pKeyFilter]="'int'"
-            placeholder="شماره ثابت مشتری را وارد نمایید">
-          <!--            <div *ngIf="phoneInput.invalid && phoneInput.touched" class="text-red-500 text-sm mt-1">-->
-          <!--              <div *ngIf="phoneInput.errors?.['required']">شماره همراه اجباری است.</div>-->
-          <!--              <div *ngIf="phoneInput.errors?.['pattern']">شماره باید ۱۱ رقم باشد.</div>-->
-          <!--            </div>-->
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 md:col-6">
-      <div class="form-group flex-1">
-        <label class="text-right text-900 text-md mb-2">شماره موبایل</label>
-        <div class="field mt-2">
-          <input
-            [(ngModel)]="workItems.customer.mobile"
-            #mobileInput="ngModel"
-            [style]="{'width':'100%'}"
-            pInputText
-            type="text"
-            id="mobile"
-            name="mobile"
-            class="p-fieldset"
-            minlength="11"
-            maxlength="11"
-            pattern="^[0-9]{11}$"
-            [pKeyFilter]="'int'"
-            placeholder="شماره همراه مشتری را وارد نمایید">
-          <!--            <div *ngIf="mobileInput.invalid && mobileInput.touched" class="text-red-500 text-sm mt-1">-->
-          <!--              <div *ngIf="mobileInput.errors?.['required']">شماره همراه اجباری است.</div>-->
-          <!--              <div *ngIf="mobileInput.errors?.['pattern']">شماره باید ۱۱ رقم باشد.</div>-->
-          <!--            </div>-->
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!--  </ng-container>-->
-
-  <ng-template pTemplate="footer">
-
-    <button
-      pButton
-      pRipple
-      label="تایید"
-      class="p-button-success p-mr-2"
-      (click)="onRegisterNewCustomer()"
-    ></button>
-
-    <button
-      pButton
-      pRipple
-      label="انصراف"
-      class="p-button-danger p-mr-2"
-      (click)="closeModalNewCustomer()"
-    ></button>
-
-
-  </ng-template>
-
-</p-dialog>
-<!--************************** end newCustomer modal *************************************-->
 
 <!--************************** begin searchWorkItem modal *************************************-->
 <p-dialog

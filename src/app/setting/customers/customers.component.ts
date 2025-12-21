@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from 
 import {CustomerService} from "../_services/customer.service";
 import {LoadingService} from "../../_services/loading.service";
 import {ToolbarModule} from "primeng/toolbar";
-import {ConfirmationService, MessageService, SharedModule} from "primeng/api";
+import {ConfirmationService, MessageService, SharedModule, TableState} from "primeng/api";
 import {ButtonModule} from "primeng/button";
 import {Table, TableModule} from "primeng/table";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
@@ -91,6 +91,23 @@ export class CustomersComponent extends BaseListComponent<CustomerSpecification>
     if (table.filteredValue !== null) {
       return true
     } else return false
+
+  }
+
+  onStateRestore(event: TableState) {
+    if (event.filters) {
+      let find = false
+      for (let item of Object.entries(event.filters)) {
+        // @ts-ignore
+        for (let x of item[1]) {
+          if (x.value) {
+            find = true
+            break;
+          }
+        }
+        this.showTableHaveFilter = find;
+      }
+    }
 
   }
 

@@ -1,4 +1,9 @@
 ::ng-deep{
+
+  .p-overlaypanel-content{
+    padding: 0.5rem !important;
+  }
+
   .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider{
     background: var(--green-600);
     &:before{

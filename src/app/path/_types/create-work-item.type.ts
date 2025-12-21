@@ -78,6 +78,7 @@ export class CustomerSpecification extends GenericType<CustomerSpecification>{
   customerPhones?: CreateCustomerPhone[];
   accustomMethodId?: number;
   accustomMethod?: AccustomType;
+  messages?: IMessagesType[]
   workItems?: WorkItemType[];
   tickets?:TicketBaseType[];
   tags?: TagTypeBase[];

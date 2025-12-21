@@ -17,7 +17,7 @@ import {DialogModule} from "primeng/dialog";
 import {JalaliDatePipe} from "../../_pipes/jalali.date.pipe";
 import {ActivityType} from "../../setting/_types/activity.type";
 import {UserTypeBase} from "../../setting/_types/user.type";
-import {CustomerSpecification, WorkItemType} from "../../path/_types/create-work-item.type";
+import {CustomerSpecification, IMessagesType, WorkItemType} from "../../path/_types/create-work-item.type";
 import {AttachmentType, CreateActivityType, CreateAttachmentDTO, TimePeriod} from "../../_types/create-activity.type";
 import {NoteType} from "../../work-item/_types/note.type";
 import {WorkItemService} from "../../work-item/work-item.service";
@@ -98,6 +98,7 @@ export class ActivityNoteComponent implements OnInit{
   modalState = 'new' || 'edit';
 
   @Input() workItem?: WorkItemType;
+  @Input() messages?: IMessagesType[];
   @Input() workItemId?: string | null = null;
   @Input() ticketId?: string | null = null;
   @Input() customerId?: string | null = null;
