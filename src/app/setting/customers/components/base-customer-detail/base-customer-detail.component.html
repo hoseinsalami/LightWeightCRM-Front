@@ -138,7 +138,7 @@
       <div class="grid" *ngIf="customerId">
         <div class="col-12">
 
-          <app-activity-note [customerId]="customerId"></app-activity-note>
+          <app-activity-note [messages]="manager.oneObject.messages" [customerId]="customerId"></app-activity-note>
 
         </div>
 

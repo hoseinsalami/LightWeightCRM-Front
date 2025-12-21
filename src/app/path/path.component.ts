@@ -59,6 +59,7 @@ import {debounceTime} from "rxjs";
 import {SendMessageType} from "./_types/send-message.type";
 import {AccustomType} from "../setting/_types/accustom.type";
 import {CustomerService} from "../setting/_services/customer.service";
+import {FieldsetModule} from "primeng/fieldset";
 
 @Component({
   selector: 'app-path',
@@ -91,7 +92,8 @@ import {CustomerService} from "../setting/_services/customer.service";
     DropdownModule,
     TooltipModule,
     MultiSelectModule,
-    OverlayPanelModule
+    OverlayPanelModule,
+    FieldsetModule
   ],
   providers:[JalaliDatePipe]
 })
@@ -99,6 +101,7 @@ export class PathComponent implements OnInit, AfterViewInit{
 
   @ViewChild('datePicker') datePicker:NgPersianDatepickerComponent;
   @ViewChild('scrollableElement')  scrollableElement!: ElementRef;
+  @ViewChild('customerNameInput') customerNameInput!: ElementRef<HTMLInputElement>;
 
   paginationData: { [stepId: string]: { from: number; rows: number; isLoading:boolean, hasMore:boolean } } = {};
   workItems?: CreateWorkItemType = new CreateWorkItemType({})
@@ -117,9 +120,8 @@ export class PathComponent implements OnInit, AfterViewInit{
 
   isRequired:boolean = true
   showModal: boolean = false;
-  showModalNewCustomer:boolean = false;
   showModalSearchWorkItem:boolean = false;
-  showCustomerForm:boolean = true;
+  showCustomerForm:boolean = false;
   selectedWorkItem: any = null
 
   pathId = null;
@@ -134,6 +136,7 @@ export class PathComponent implements OnInit, AfterViewInit{
   @ViewChildren('column') columns!: QueryList<ElementRef>;
   @ViewChild('headerSteps') headerSteps!: ElementRef;
   @ViewChild('bodyWrapper') bodyWrapper!: ElementRef;
+  @ViewChild('autoComplete') autoComplete!: AutoComplete;
   @ViewChildren('stepColumn', { read: ElementRef }) stepColumns!: QueryList<ElementRef>;
   lastCardBottom = 0
   showScrollButtons: boolean = false;
@@ -372,6 +375,29 @@ export class PathComponent implements OnInit, AfterViewInit{
 
   onRegister(){
 
+    if (this.showCustomerForm){
+      if (!this.workItems.customer.name){
+        return this.messagesService.showError('نام مشتری اجباری می باشد.')
+      }
+      if (!this.workItems.customer.family){
+        return this.messagesService.showError('نام خانوادگی مشتری اجباری می باشد.')
+      }
+      if (!this.workItems.customer.phone && !this.workItems.customer.mobile){
+        return this.messagesService.showError('حداقل یکی از شماره همراه یا ثابت باید وارد شود.')
+      }
+      // if (this.workItems.customer.companyName === undefined || this.workItems.customer.companyName == null){
+      //   return this.messagesService.showError('نام شرکت اجباری می باشد.')
+      // }
+      if ((!/^\d{11}$/.test(this.workItems.customer.phone || '')) && (!/^\d{11}$/.test(this.workItems.customer.mobile || ''))) {
+        return this.messagesService.showError('شماره تماس باید دقیقاً ۱۱ رقم باشد.');
+      }
+
+      this.workItems.customer.fullName = `${this.workItems.customer.name} ${this.workItems.customer.family}`;
+      this.selectedCustomer = this.workItems.customer;
+    }
+    if (!this.workItems.customerId && Object.keys(this.workItems.customer).length === 0){
+      return this.messagesService.showError('جستجو مشتری اجباری می باشد.')
+    }
     this.loading.show()
     this.workItems.stepId = this.selectedWorkItem;
     this.workItems.pathId = +this.pathId;
@@ -386,7 +412,7 @@ export class PathComponent implements OnInit, AfterViewInit{
     if (input.customerId){
       input.customer = null
     }
-
+    // console.log(input)
     this.service.onCreateWorkItemTask(input).subscribe(res => {
       this.loading.hide()
       this.showModal = false
@@ -403,27 +429,7 @@ export class PathComponent implements OnInit, AfterViewInit{
     })
   }
 
-  onRegisterNewCustomer(){
-    if (!this.workItems.customer.name){
-      return this.messagesService.showError('نام مشتری اجباری می باشد.')
-    }
-    if (!this.workItems.customer.family){
-      return this.messagesService.showError('نام خانوادگی مشتری اجباری می باشد.')
-    }
-    if (!this.workItems.customer.phone && !this.workItems.customer.mobile){
-      return this.messagesService.showError('حداقل یکی از شماره همراه یا ثابت باید وارد شود.')
-    }
-    // if (this.workItems.customer.companyName === undefined || this.workItems.customer.companyName == null){
-    //   return this.messagesService.showError('نام شرکت اجباری می باشد.')
-    // }
-    if ((!/^\d{11}$/.test(this.workItems.customer.phone || '')) && (!/^\d{11}$/.test(this.workItems.customer.mobile || ''))) {
-      return this.messagesService.showError('شماره تماس باید دقیقاً ۱۱ رقم باشد.');
-    }
 
-    this.workItems.customer.fullName = `${this.workItems.customer.name} ${this.workItems.customer.family}`;
-    this.selectedCustomer = this.workItems.customer;
-    this.showModalNewCustomer = false
-  }
 
   selectStartDate(event: IActiveDate) {
     this.startDate = event.gregorian
@@ -446,6 +452,11 @@ export class PathComponent implements OnInit, AfterViewInit{
 
   selectCustomer(filter: any){
     this.workItems.customerId = filter.value.id
+  }
+
+  handleClear() {
+    this.workItems.customer = new  CustomerSpecification({})
+    this.showCustomerForm = false;
   }
 
   filterWorkItems(event: AutoCompleteCompleteEvent){
@@ -481,9 +492,14 @@ export class PathComponent implements OnInit, AfterViewInit{
   }
 
   openModalNewCustomer(){
-    this.showModalNewCustomer = true;
     this.showCustomerForm = true;
-    this.getListOfAccustom()
+    this.getListOfAccustom();
+    if (this.autoComplete && this.autoComplete.overlayVisible) {
+      this.autoComplete.hide();
+    }
+    setTimeout(() => {
+      this.customerNameInput?.nativeElement.focus();
+    });
   }
 
   closeModal(){
@@ -491,10 +507,6 @@ export class PathComponent implements OnInit, AfterViewInit{
     this.selectedWorkItem = null;
   }
 
-  closeModalNewCustomer(){
-    this.workItems.customer = new CustomerSpecification({});
-    this.showModalNewCustomer = false;
-  }
 
   drop(event: CdkDragDrop<any[]> , targetStepId: number) {
 

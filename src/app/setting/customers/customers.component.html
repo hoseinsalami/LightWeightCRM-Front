@@ -1,13 +1,8 @@
-<div class="p-card p-4 shadow-2 mx-auto max-w-60rem ">
-  <p-toolbar styleClass="p-mb-4">
-    <ng-template pTemplate="left">
-      <button pButton pRipple  label="جدید" icon="pi pi-plus" class="p-button-success p-mr-2"
-              routerLink="new"  ></button>
-
-    </ng-template>
-
-  </p-toolbar>
-
+<div class="p-4 mx-auto max-w-60rem ">
+<!--  <div class="text-left mb-3">-->
+<!--    <button pButton pRipple  label="جدید" icon="pi pi-plus" class="p-button-success p-mr-2"-->
+<!--            routerLink="new"></button>-->
+<!--  </div>-->
   <p-table #dt
            [rows]="20"
            [value]="many?many:[]"
@@ -27,7 +22,8 @@
            class="overflow-x-hidden"
            stateStorage="local"
            stateKey="customerTable"
-           (onFilter)="onFilterTable($event)">
+           (onFilter)="onFilterTable($event)"
+           (onStateRestore)="onStateRestore($event)">
 
     <!--        {first} تا {last} از  {totalRecords}-->
 
@@ -43,17 +39,17 @@
             <div class="flex flex-wrap col-12">
 
               <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2" pSortableColumn="name">
-                <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+                <p-columnFilter type="text" field="name" display="menu" [showClearButton]="false"></p-columnFilter>
                 نام
                 <p-sortIcon field="name"></p-sortIcon>
               </div>
               <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2" pSortableColumn="family">
-                <p-columnFilter type="text" field="family" display="menu"></p-columnFilter>
+                <p-columnFilter type="text" field="family" display="menu" [showClearButton]="false"></p-columnFilter>
                 نام خانوادگی
                 <p-sortIcon field="family"></p-sortIcon>
               </div>
               <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2" pSortableColumn="companyName">
-                <p-columnFilter type="text" field="companyName" display="menu"></p-columnFilter>
+                <p-columnFilter type="text" field="companyName" display="menu" [showClearButton]="false"></p-columnFilter>
                 شرکت
                 <p-sortIcon field="companyName"></p-sortIcon>
               </div>
@@ -138,9 +134,16 @@
   </p-table>
 
 
-  <div class="grid">
+  <div class="grid mt-1">
+    <div class="col-12 md:col-3 xl:col-2" routerLink="new"
+         pTooltip="مشتری جدید" tooltipPosition="top">
+      <div class="h-full relative flex justify-content-center align-items-center p-4 shadow-1 hover:shadow-2 cursor-pointer border-round-2xl border-1 border-solid border-dashed border-green-500 text-green-500 hover:bg-green-100">
+          <i class="pi pi-plus " style="font-size:40px; opacity: 0.3;"></i>
+      </div>
+    </div>
+
     <div class="col-12 md:col-3 xl:col-2" *ngFor="let object of many" (click)="openDetails(object.id)">
-      <div class="h-full relative flex flex-column justify-content-between border-1 surface-border p-4 border-round shadow-1 hover:shadow-2 bg-white cursor-pointer">
+      <div class="h-full relative flex flex-column justify-content-between border-1 surface-border p-4 border-round-2xl shadow-1 hover:shadow-2 bg-white cursor-pointer">
         <!-- Top Section -->
         <div>
           <h2 class="flex align-items-center justify-content-between text-xl font-bold text-900 white-space-nowrap overflow-hidden text-overflow-ellipsis">
@@ -203,6 +206,7 @@
     </div>
     <div class="col-12">
       <p-paginator
+        [style]="{background:'#f7f7f7'}"
         (onPageChange)="onPageChange($event)"
         [first]="lastEvent.first"
         [rows]="lastEvent.rows"

@@ -1,16 +1,16 @@
-<div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
-  <p-toolbar styleClass="p-mb-4">
-    <ng-template pTemplate="left">
-      <button pButton pRipple  label="جدید" icon="pi pi-plus" class="p-button-success p-mr-2"
-              routerLink="new"></button>
+<div class="p-4 mx-auto max-w-60rem">
+<!--  <p-toolbar styleClass="p-mb-4">-->
+<!--    <ng-template pTemplate="left">-->
+<!--      <button pButton pRipple  label="جدید" icon="pi pi-plus" class="p-button-success p-mr-2"-->
+<!--              routerLink="new"></button>-->
 
-    </ng-template>
-    <!--        routerLink="new"-->
+<!--    </ng-template>-->
+<!--    &lt;!&ndash;        routerLink="new"&ndash;&gt;-->
 
-    <!--        <ng-template pTemplate="right">-->
-    <!--            <button pButton pRipple label="خروجی" icon="pi pi-upload" class="p-button-help"></button>-->
-    <!--        </ng-template>-->
-  </p-toolbar>
+<!--    &lt;!&ndash;        <ng-template pTemplate="right">&ndash;&gt;-->
+<!--    &lt;!&ndash;            <button pButton pRipple label="خروجی" icon="pi pi-upload" class="p-button-help"></button>&ndash;&gt;-->
+<!--    &lt;!&ndash;        </ng-template>&ndash;&gt;-->
+<!--  </p-toolbar>-->
 
 
 
@@ -88,6 +88,15 @@
 
 
   <div class="grid">
+
+    <div class="col-12 md:col-3 lg:col-2 md:p-3" routerLink="new" >
+      <div pTooltip="فرایند جدید" tooltipPosition="top"
+        class="h-full flex justify-content-center align-items-center p-4 shadow-none hover:shadow-2 cursor-pointer border-round-2xl border-1 border-solid border-dashed border-green-500 text-green-500 hover:bg-green-100">
+        <i class="pi pi-plus " style="font-size:40px; opacity: 0.3;"></i>
+      </div>
+
+    </div>
+
     <div class="col-12 md:col-3 lg:col-2 md:p-3" *ngFor="let object of listProcess">
       <div class="p-card h-full border-round-2xl border-1 border-gray-200 shadow-none hover:shadow-2 flex flex-column relative text-primary-600">
         <!-- Header -->
@@ -135,10 +144,11 @@
 
         </div>
 
-        <div class="border-round-bottom-2xl border-top-1 border-gray-200 bg-gray-100 p-2 mt-2 h-full">
-          <div class="flex flex-1 align-items-center gap-2 text-sm text-secondary">
+        <div class="border-round-bottom-2xl border-top-1 border-gray-200 p-2 mt-2 h-full" style="background:#cef0f1">
+          <div class="flex flex-1 align-items-center gap-2 text-sm text-black-alpha-90" >
             <!-- <i class="pi pi-comment"></i> -->
-            <span tooltipPosition="left" [pTooltip]="object.description.length > 50 ? object.description : null">{{ object.description | slice:0:50 }}{{ object.description.length > 50 ? '...' : '' }}</span>
+            <span tooltipPosition="left" [pTooltip]="object.description.length > 50 ? object.description : null">
+              {{ object.description | slice:0:50 }}{{ object.description.length > 50 ? '...' : '' }}</span>
           </div>
         </div>
       </div>
