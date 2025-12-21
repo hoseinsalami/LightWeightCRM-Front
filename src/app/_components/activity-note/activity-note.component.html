@@ -13,7 +13,7 @@
           یادداشت ها
           <p-badge styleClass="text-xs mr-2" [value]="workItem?.noteCount ? workItem?.noteCount : 0" severity="success" />
         </button>
-        <!--            <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200" (click)="setActive('sendMessage')" [class]="{'activePanel' : activeItem === 'sendMessage'}" >پیام های ارسالی</button>-->
+        <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200" (click)="setActive('sendMessage')" [class]="{'activePanel' : activeItem === 'sendMessage'}" >پیام های ارسالی</button>
         <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200" *ngIf="workItemId || ticketId"
                 (click)="setActive('changeLog')" [class]="{'activePanel' : activeItem === 'changeLog'}">تاریخچه تغییرات</button>
       </div>
@@ -389,13 +389,13 @@
                 style="background: #808080">تاریخچه پیام های ارسالی</span>
         </div>
 
-        <div class="grid" *ngIf="workItem && workItem.messages.length > 0">
-          <ng-container *ngFor="let message of workItem.messages; let i=index">
-            <div class="col-2"></div>
-            <div class="co-10"></div>
-          </ng-container>
+<!--        <div class="grid" *ngIf="workItem && workItem.messages.length > 0">-->
+<!--          <ng-container *ngFor="let message of workItem.messages; let i=index">-->
+<!--            <div class="col-2"></div>-->
+<!--            <div class="co-10"></div>-->
+<!--          </ng-container>-->
 
-        </div>
+<!--        </div>-->
 
         <div class="flex flex-column align-items-center">
           <div class="flex flex-column align-items-start gap-1 border-1 border-dashed border-round border-gray-200 py-3 mt-3 w-6 bg-whatsapp">
@@ -403,15 +403,15 @@
             <div class="chat-container">
               <!-- پیام خود کاربر -->
               <div class="chat-message sent grid align-items-end"
-                   *ngFor="let message of workItem.messages; let i=index">
+                   *ngFor="let message of workItem?.messages; let i=index">
                 <div class="col-1 flex justify-content-center">
-                  <span class="pi pi-user p-avatar-icon avatar" [pTooltip]="message?.currentUser?.fullName"
+                  <span class="pi pi-user p-avatar-icon avatar" [pTooltip]="message?.createUser?.fullName"
                         tooltipPosition="right"></span>
                 </div>
 
                 <div class="col-11">
                   <div [pTooltip]="message.phoneNumber"
-                       tooltipPosition="left">
+                       tooltipPosition="top">
                     <!--                  <p class="m-0 text-left text-xs text-color-secondary">0915</p>-->
                     <div class="bubble">
                       <p class="text">{{message.message}}</p>

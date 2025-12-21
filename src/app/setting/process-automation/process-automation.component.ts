@@ -49,6 +49,7 @@ import {JalaliDatePipe} from "../../_pipes/jalali.date.pipe";
 import {BaseListComponent} from "../../shared/base-list/base-list.component";
 import {CreatePathType} from "../_types/createPath.type";
 import {InputSwitchChangeEvent} from "primeng/inputswitch/inputswitch.interface";
+import {OverlayPanelModule} from "primeng/overlaypanel";
 
 
 type FieldType = 'string' | 'number' | 'boolean' | 'datetime' | 'enum' | 'object' | 'array';
@@ -136,12 +137,14 @@ export interface ITreeNodeModal {
     OrderListModule,
     JalaliDatePipe,
     DividerModule,
-    InputSwitchModule
+    OverlayPanelModule
   ],
   templateUrl: './process-automation.component.html',
   styleUrl: './process-automation.component.scss'
 })
 export class ProcessAutomationComponent extends BaseListComponent<CreateProcessType> implements OnInit{
+
+  override lastMethodName = '/list'
 
   @ViewChild('sendDateTimeInput') sendDateTimeInput!: ElementRef<HTMLInputElement>;
   listProcess:ProcessTypeBase[] = []
@@ -1073,6 +1076,21 @@ export class ProcessAutomationComponent extends BaseListComponent<CreateProcessT
         if (out.items.length < this.paginationData.rows) this.paginationData.hasMore = false;
         this.listProcess = [...this.listProcess, ...out.items];
         this.paginationData.from += out.items.length;
+      },
+      error: (err) =>{
+        this.loading.hide();
+      }
+    })
+  }
+
+  onDeleteAutomatedProcess(id:number){
+    this.loading.show();
+    this.processService.deleteAutomatedProcess(id).subscribe({
+      next: (out) =>{
+        this.loading.hide();
+        this.paginationData = {from: 0, rows: 20, hasMore: true};
+        this.listProcess = [];
+        this.getListOfProccess();
       },
       error: (err) =>{
         this.loading.hide();

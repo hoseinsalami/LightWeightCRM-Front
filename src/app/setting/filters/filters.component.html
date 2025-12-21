@@ -46,7 +46,7 @@
           <p-sortIcon field="description"></p-sortIcon>
         </th>
 
-<!--        <th></th>-->
+        <th></th>
       </tr>
 
     </ng-template>
@@ -70,11 +70,11 @@
           {{object.description}}
         </td>
 
-<!--        <td>-->
-<!--          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2 m-1"-->
-<!--                  pTooltip="ویرایش"-->
-<!--                  [routerLink]="['edit', object.id]" ></button>-->
-<!--        </td>-->
+        <td>
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger m-1"
+                  pTooltip="حذف"
+                  (click)="deleteItem(object.id)"></button>
+        </td>
 
       </tr>
     </ng-template>

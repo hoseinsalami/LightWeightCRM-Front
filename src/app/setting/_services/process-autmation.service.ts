@@ -29,6 +29,10 @@ export class ProcessAutmationService extends BaseCrudService{
     return this.http.post<any>(this.baseUrl + '/list', input)
   }
 
+  deleteAutomatedProcess(id:number){
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
   getDataJson(entity:string):Observable<any>{
     return this.http.get(this.baseUrl + '/filters/' + entity)
   }

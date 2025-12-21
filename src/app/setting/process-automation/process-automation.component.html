@@ -93,8 +93,19 @@
         <!-- Header -->
         <div class="flex px-3 pt-3 align-items-start">
           <div class="flex flex-1 flex-column gap-2">
-            <div>
+            <div class="flex justify-content-between">
               <h3 class="text-base font-bold text-900 cursor-pointer m-0">{{object.title}}</h3>
+              <div>
+                <i class="pi pi-ellipsis-h cursor-pointer" (click)="op.toggle($event)"></i>
+                <p-overlayPanel #op>
+                  <div class="flex flex-column gap-3 w-9rem">
+                    <div (click)="onDeleteAutomatedProcess(object.id)" class="flex justify-content-end align-items-center hover:bg-red-400 border-round p-2 cursor-pointer hover:text-white">
+                      <span class="hover:text-white">حذف</span>
+                      <i class="pi pi-trash text-red-600 ml-2"></i>
+                    </div>
+                  </div>
+                </p-overlayPanel>
+              </div>
             </div>
 
             <div class="flex flex-row flex-wrap align-items-center gap-2 text-sm text-secondary" *ngFor="let action of object.actions; let i = index">
