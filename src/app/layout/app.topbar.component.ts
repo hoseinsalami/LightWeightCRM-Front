@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from "./service/app.layout.service";
 import {Router, RouterLink} from '@angular/router';
@@ -23,80 +23,124 @@ import {ActivityNoteService} from "../_components/activity-note/activity-note.se
 import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
 import {debounceTime} from "rxjs";
+import {SidebarModule} from "primeng/sidebar";
+import {PanelMenuModule} from "primeng/panelmenu";
 
 @Component({
     selector: 'app-topbar',
     templateUrl: './app.topbar.component.html',
-  styles: [`
-      ul li {
-        position: relative;
-      }
-      ul li.active-tab::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        height: 2px;
-        width: 100%;
-        background-color: #22c55e;
-        color: #22c55e;
-        border-radius: 2px;
-      }
-      li {
-        cursor: pointer;
-        padding-bottom: 0.2rem;
-        position: relative;
-        color: #374151; /* پیش‌فرض خاکستری تیره */
-        transition: color 0.2s ease;
-      }
+    encapsulation: ViewEncapsulation.None,
+    styles: [`
+        ul li {
+          position: relative;
+        }
+        ul li.active-tab::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          height: 2px;
+          width: 100%;
+          background-color: #22c55e;
+          color: #22c55e;
+          border-radius: 2px;
+        }
+        li {
+          cursor: pointer;
+          padding-bottom: 0.2rem;
+          position: relative;
+          color: #374151; /* پیش‌فرض خاکستری تیره */
+          transition: color 0.2s ease;
+        }
 
-      li.active-tab {
-        color: #22c55e !important;
-      }
-      .p-card::-webkit-scrollbar {
-        width: 6px; /* پهنای اسکرول */
-      }
+        li.active-tab {
+          color: #22c55e !important;
+        }
+        .p-card::-webkit-scrollbar {
+          width: 6px; /* پهنای اسکرول */
+        }
 
-      .p-card::-webkit-scrollbar-track {
-        background: #f1f1f1;      /* رنگ بک‌گراند */
-        border-radius: 10px;
-      }
+        .p-card::-webkit-scrollbar-track {
+          background: #f1f1f1;      /* رنگ بک‌گراند */
+          border-radius: 10px;
+        }
 
-      .p-card::-webkit-scrollbar-thumb {
-        background: #9ca3af;      /* رنگ خود اسکرول */
-        border-radius: 10px;
-      }
+        .p-card::-webkit-scrollbar-thumb {
+          background: #9ca3af;      /* رنگ خود اسکرول */
+          border-radius: 10px;
+        }
 
-      .p-card::-webkit-scrollbar-thumb:hover {
-        background: #6b7280;      /* رنگ موقع هاور */
-      }
+        .p-card::-webkit-scrollbar-thumb:hover {
+          background: #6b7280;      /* رنگ موقع هاور */
+        }
 
-      /* برای فایرفاکس */
-      .p-card {
-        scrollbar-width: thin;          /* باریک */
-        scrollbar-color: #9ca3af #f1f1f1; /* رنگ اسکرول + رنگ بک‌گراند */
-      }
+        /* برای فایرفاکس */
+        .p-card {
+          scrollbar-width: thin;          /* باریک */
+          scrollbar-color: #9ca3af #f1f1f1; /* رنگ اسکرول + رنگ بک‌گراند */
+        }
 
-      .search-input{
-        background-color: rgba(255, 255, 255, 0.1);
-        border: 1px solid #6b7280;
-        border-radius: 0.375rem;
-        padding: 0.5rem 1rem 0.5rem 2.5rem;
-        color: #ffffff;
-        outline: none;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      }
+        .search-input{
+          background-color: rgba(255, 255, 255, 0.1);
+          border: 1px solid #6b7280;
+          border-radius: 0.375rem;
+          padding: 0.5rem 1rem 0.5rem 2.5rem;
+          color: #ffffff;
+          outline: none;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
 
-      .search-input::placeholder{
-        /*color: #9ca3af;*/
-        color: #fff;
-      }
+        .search-input::placeholder{
+          /*color: #9ca3af;*/
+          color: #fff;
+        }
 
-      .search-input:focus{
-        border-color: #3B82F6;
-        box-shadow: 0 0 0 2px #3B82F6;
-        color: #000
-      }
+        .search-input:focus{
+          border-color: #3B82F6;
+          box-shadow: 0 0 0 2px #3B82F6;
+          color: #000
+        }
+
+        /* استایل های ساید بار موبایل */
+        p-sidebar{
+          hr{ border-color:#656565; }
+          .p-panelmenu-header-content{
+            background:none !important;
+            border-color:#656565;
+          }
+          .p-panelmenu-header-action{
+            padding: 1rem 0.5rem !important;
+            color:#b5cf38;
+          }
+
+          .p-panelmenu-content{
+            background:#444;
+            border-color:#656565;
+          }
+
+          .p-sidebar-active{
+            background:#444;
+            color:#b5cf38;
+          }
+
+          .p-menuitem-text , .p-menuitem-icon{
+            color:#b5cf38
+          }
+
+          /* استایل active-item زمان کلیک روی ایتم های منو(routerLinkActive) */
+          .p-menuitem-link-active {
+            background: #f2d066 !important;
+            .p-menuitem-text, .p-menuitem-icon{
+              color: #111827 !important;
+            }
+
+          }
+          .p-panelmenu .p-panelmenu-content .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover{
+            background:none !important;
+          }
+        }
+
+
     `],
     standalone: true,
     imports: [
@@ -112,13 +156,16 @@ import {debounceTime} from "rxjs";
       DatePipe,
       JalaliDatePipe,
       InputTextModule,
-      FormsModule
+      FormsModule,
+      SidebarModule,
+      PanelMenuModule
     ],
   providers:[JalaliDatePipe]
 })
 export class AppTopBarComponent implements OnInit{
 
     items!: MenuItem[];
+    mobileMenuVisible = false;
 
     @ViewChild('menubutton') menuButton!: ElementRef;
 
@@ -234,6 +281,7 @@ export class AppTopBarComponent implements OnInit{
 
     cariesItem: MenuItem[];
     ticketItem: MenuItem[];
+    panelMenuItems: MenuItem[];
 
 
   dashboardRes?:DashboardTypeBase;
@@ -319,6 +367,7 @@ export class AppTopBarComponent implements OnInit{
         this.dashboardRes = res;
         this.cariesItem = [];
         this.ticketItem = [];
+        this.panelMenuItems = []
 
         const ticketStorageData = res.ticketPaths.map(t => ({
           ticketType: t.ticketType,
@@ -335,11 +384,14 @@ export class AppTopBarComponent implements OnInit{
         this.dashboardRes.otherPaths.forEach(item =>{
           this.cariesItem.push({
             label: item.title,
+            routerLinkActiveOptions: { exact: true },
+            routerLink: [`/path/${item.id}`],
             command: () => {
               this.setActiveItem(item.title);
-              this.router.navigate([`/path/${item.id}`]);
+              // this.router.navigate([`/path/${item.id}`]);
+              // this.mobileMenuVisible = false
             }
-          })
+          });
         })
 
         this.dashboardRes.ticketPaths.forEach(item => {
@@ -356,6 +408,22 @@ export class AppTopBarComponent implements OnInit{
             }
           })
         })
+
+        this.panelMenuItems.push(
+          {
+            label: 'کاریز',
+            icon: 'pi pi-folder',
+            expanded: this.router.url.startsWith('/path'),
+            items: this.cariesItem
+          },
+          {
+            label: 'تنظیمات',
+            icon: 'pi pi-cog',
+            expanded: this.router.url.startsWith('/setting'),
+            items: this.profileItem
+          }
+        )
+
       })
     }
 
