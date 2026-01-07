@@ -94,7 +94,7 @@
                       class="absolute left-0 bottom-0 text-lg pi pi-info-circle text-red-500"
                       pTooltip="زمان بررسی تیکت گذشته است" tooltipPosition="top"></i>
 
-                    <div *ngIf="user.userType !== UserTypesEnum.Expert && !item.closeDateTime" (click)="modalAssignmentPolicy(item.id)"
+                    <div *ngIf="user.userType !== UserTypesEnum.Expert && !item.closeDateTime" (click)="modalAssignmentPolicy(item.id); $event.stopPropagation();"
                          class="absolute right-0 bottom-0 flex align-items-center gap-2 cursor-pointer hover:bg-blue-100 hover:text-blue-600 border-round px-2">
                       <i class="pi pi-user-edit text-blue-600 ml-2"></i>
                       ویرایش کارشناس

@@ -67,6 +67,11 @@ export class CreateWorkItemType extends WorkItemType{
 export class CustomerSpecification extends GenericType<CustomerSpecification>{
   name?: string;
   family?: string;
+  birthdate?:any;
+  title?: string;
+  email?: string;
+  introducer?: CustomerSpecification;
+  introducerId?: number;
   phone?: string;
   mobile?: string;
   companyName?: string;
@@ -109,6 +114,11 @@ export class CustomerSpecification extends GenericType<CustomerSpecification>{
 
     if (model.tags){
       this.tags = model.tags.map(t => {return new TagTypeBase(t)});
+    }
+
+    if (model?.introducer){
+      this.introducer = new CustomerSpecification(model.introducer)
+      this.introducerId = model?.introducer.id
     }
 
 

@@ -21,15 +21,22 @@
 
             <div class="col-12 md:col-6">
               <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
-                <span class="text-600 text-sm">کد ملی:</span>
-                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject.nationalId ?? 'نامشخص'}}</span>
+                <span class="text-600 text-sm">تاریخ تولد:</span>
+                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject.birthdate | jalaliDate:'date'}}</span>
               </div>
             </div>
 
             <div class="col-12 md:col-6">
               <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
-                <span class="text-600 text-sm">جنسیت:</span>
-                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject?.gender == 0 ? 'زن' : 'مرد' }}</span>
+                <span class="text-600 text-sm">پست الکترونیکی:</span>
+                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject.email ?? 'نامشخص'}}</span>
+              </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+                <span class="text-600 text-sm">معرف:</span>
+                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject?.introducer?.name + ' ' +manager.oneObject?.introducer?.family}}</span>
               </div>
             </div>
 
@@ -44,13 +51,6 @@
               <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
                 <span class="text-600 text-sm">شیوه آشنایی:</span>
                 <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject?.accustomMethod?.title}}</span>
-              </div>
-            </div>
-
-            <div class="col-12 md:col-6">
-              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
-                <span class="text-600 text-sm">گروه:</span>
-                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject?.group ?? 'نامشخص'}}</span>
               </div>
             </div>
 
@@ -191,6 +191,88 @@
       </div>
 
       <div class="col-12 md:col-6">
+        <div class="form-group relative">
+          <label class="text-900" for="family">تاریخ تولد</label>
+          <ng-persian-datepicker
+            [style]="{'width':'220px'}"
+            [dateInitValue]="false"
+            (dateOnSelect)="selectStartDate($event)"
+            [dateGregorianFormat]="'YYYY-MM-DD '"
+            [dateFormat]="'YYYY-MM-DD '">
+            <input [formControl]="birthDateTimeControl" id="birthDate" name="birthDate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+          </ng-persian-datepicker>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="form-group">
+          <label class="text-900">معرف</label>
+          <div class="field">
+            <p-autoComplete #autoComplete
+                            [inputStyle]="{'width':'100%'}"
+                            [style]="{'width':'100%'}"
+                            [(ngModel)]="manager.oneObject.introducerId"
+                            [suggestions]="filteredCustomer"
+                            (completeMethod)="filterCustomer($event)"
+                            (onSelect)="selectCustomer($event)"
+                            [autofocus]="true"
+                            [showEmptyMessage]="true"
+                            emptyMessage="موردی یافت نشد"
+                            appendTo="body"
+                            optionLabel="fullName"
+                            optionValue="id"
+                            styleClass="w-full mx-auto"
+                            scrollHeight="400px"
+                            class="p-autocomplete w-full mx-auto"
+                            placeholder="نام خانوادگی | شماره تلفن | شرکت">
+
+              <ng-template let-filteredCustomers pTemplate="item">
+                <div class="grid align-items-end justify-content-between" style="direction: rtl">
+
+
+                  <div class="col-12 overflow-hidden flex gap-2">
+                    <p class=" my-0 ">{{filteredCustomers.name}}</p>
+                    <p
+                      class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">
+                      {{filteredCustomers.family}} ({{filteredCustomers.companyName ? filteredCustomers.companyName :''}})
+                    </p>
+                  </div>
+
+
+                </div>
+              </ng-template>
+
+              <ng-template pTemplate="empty">
+                <div class="text-center px-2 flex align-items-baseline justify-content-between" style="direction: rtl">
+                  <p class="m-0">موردی یافت نشد</p>
+                </div>
+              </ng-template>
+
+            </p-autoComplete>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="form-group">
+          <label class="text-900" for="family">القاب</label>
+          <div class="field">
+            <p-dropdown
+              [styleClass]="'clear-icon'"
+              [showClear]="true"
+              [options]="optionalLabel"
+              [(ngModel)]="manager.oneObject.title"
+              class="mt-2"
+              [style]="{'width':'100%'}"
+              optionLabel="title"
+              optionValue="title"
+              placeholder="عنوان انتخاب نمایید">
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
         <div class="form-group">
           <label class="text-900" for="companyName">شرکت</label>
           <div class="field">
@@ -248,7 +330,7 @@
 
               <div class="flex gap-3 align-items-center my-3" *ngFor="let field of manager.oneObject.customerPhones; let i = index; let last = last">
                 <div>
-                  <label class="text-900">عنوان</label>
+                  <label class="text-900" *ngIf="i == 0">عنوان</label>
                   <div class="field">
                     <input
                       [(ngModel)]="field.title"
@@ -263,7 +345,7 @@
                 </div>
 
                 <div>
-                  <label class="text-900">شماره تماس</label>
+                  <label class="text-900" *ngIf="i == 0">شماره تماس</label>
                   <div class="field">
                     <input
                       pInputText
@@ -369,16 +451,12 @@
   [modal]="true">
 
   <div class="grid">
-    <div class="col-12">
-
-      <div class="flex-column">
-        <div class="flex flex-wrap gap-4 align-content-center">
-
-          <div class="form-group">
-            <label class="font-bold text-900 text-lg" for="name">نام</label>
+    <div class="col-12 md:col-4">
+      <div class="form-group">
+            <label class="text-900" for="name">نام</label>
             <div class="field">
               <input
-                [style]="{'width':'200px'}"
+                [style]="{'width':'100%'}"
                 pInputText
                 type="text"
                 id="name"
@@ -388,12 +466,14 @@
                 [(ngModel)]="customerJson.name">
             </div>
           </div>
+    </div>
 
-          <div class="form-group">
-            <label class="font-bold text-900 text-lg" for="family">نام خانوادگی </label>
+    <div class="col-12 md:col-4">
+      <div class="form-group">
+            <label class="text-900" for="family">نام خانوادگی </label>
             <div class="field">
               <input
-                [style]="{'width':'200px'}"
+                [style]="{'width':'100%'}"
                 pInputText
                 type="text"
                 id="family"
@@ -403,12 +483,50 @@
                 [(ngModel)]="customerJson.family">
             </div>
           </div>
+    </div>
 
-          <div class="form-group">
-            <label class="font-bold text-900 text-lg" for="companyName">شرکت</label>
+    <div class="col-12 md:col-4">
+      <div class="form-group relative">
+        <label class="text-900" for="family">تاریخ تولد</label>
+        <div class="field">
+          <ng-persian-datepicker
+            #datePicker
+            id="birthdate"
+            [style]="{'width':'220px'}"
+            [dateInitValue]="false"
+            [dateIsGregorian]="true"
+            (dateOnSelect)="selectStartDateJson($event)"
+            [dateGregorianFormat]="'YYYY-MM-DD'"
+            [dateFormat]="'YYYY-MM-DD'">
+            <input [formControl]="birthDateJsonTimeControl" id="birthdate" name="birthdate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+          </ng-persian-datepicker>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-4">
+      <div class="form-group">
+        <label class="text-900" for="family">پست الکترونیکی</label>
+        <div class="field">
+          <input
+            [style]="{'width':'100%'}"
+            pInputText
+            type="text"
+            id="email"
+            name="email"
+            placeholder="پست الکترونیکی را وارد نمایید."
+            class="p-fieldset"
+            [(ngModel)]="customerJson.email">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-4">
+      <div class="form-group">
+            <label class="text-900" for="companyName">شرکت</label>
             <div class="field">
               <input
-                [style]="{'width':'200px'}"
+                [style]="{'width':'100%'}"
                 pInputText
                 type="text"
                 id="companyName"
@@ -418,9 +536,11 @@
                 [(ngModel)]="customerJson.companyName">
             </div>
           </div>
+    </div>
 
-          <div class="form-group">
-            <label class="font-bold text-900 text-lg" for="companyName">شیوه آشنایی</label>
+    <div class="col-12 md:col-4">
+      <div class="form-group">
+            <label class="text-900" for="companyName">شیوه آشنایی</label>
             <div class="field">
               <p-dropdown
                 [styleClass]="'clear-icon'"
@@ -428,95 +548,74 @@
                 [options]="accustom"
                 [(ngModel)]="customerJson.accustomMethodId"
                 class="mt-2"
-                [style]="{'width':'220px'}"
+                [style]="{'width':'100%'}"
                 optionLabel="title"
                 optionValue="id"
                 placeholder="شیوه آشنایی">
               </p-dropdown>
             </div>
           </div>
+    </div>
 
-        </div>
-
-        <!--        <p-fieldset>-->
-
-        <!--          <ng-template pTemplate="header">-->
-        <!--            <div>-->
-        <!--              <i class=" ml-2 pi pi-info-circle"></i>-->
-        <!--              <span>شماره تماس</span>-->
-        <!--            </div>-->
-        <!--          </ng-template>-->
-
-        <!--          <div class="flex-column">-->
-
-        <!--            <div class="grid">-->
-
-        <!--              <div class="col-12 mt-2">-->
-        <!--                <button type="submit"-->
-        <!--                        pButton-->
-        <!--                        class="p-button-success"-->
-        <!--                        (click)="addField()">اضافه کردن شماره جدید</button>-->
-        <!--                <div class="flex gap-3 align-items-center my-3" *ngFor="let field of manager.oneObject.customerPhones; let i = index">-->
-        <!--                  <div>-->
-        <!--                    <label class="font-bold text-900 text-lg">عنوان</label>-->
-        <!--                    <div class="field">-->
-        <!--                      <input-->
-        <!--                        [(ngModel)]="field.title"-->
-        <!--                        [style]="{'width':'220px'}"-->
-        <!--                        pInputText-->
-        <!--                        type="text"-->
-        <!--                        id="title"-->
-        <!--                        name="title-{{i}}"-->
-        <!--                        placeholder="عنوان تماس مشتری را وارد نمایید."-->
-        <!--                        class="p-fieldset"/>-->
-        <!--                    </div>-->
-        <!--                  </div>-->
-
-        <!--                  <div>-->
-        <!--                    <label class="font-bold text-900 text-lg">شماره تماس</label>-->
-        <!--                    <div class="field">-->
-        <!--                      <input-->
-        <!--                        [style]="{'width':'220px'}"-->
-        <!--                        pInputText-->
-        <!--                        type="text"-->
-        <!--                        id="phoneNumber"-->
-        <!--                        name="phoneNumber-{{i}}"-->
-        <!--                        placeholder="شماره تماس مشتری را وارد نمایید."-->
-        <!--                        class="p-fieldset"-->
-        <!--                        [(ngModel)]="field.phoneNumber"-->
-        <!--                        [pKeyFilter]="'num'" />-->
-        <!--                    </div>-->
-        <!--                  </div>-->
-
-        <!--                  <div>-->
-        <!--                    <button-->
-        <!--                      type="button"-->
-        <!--                      pButton-->
-        <!--                      pRipple-->
-        <!--                      class="p-button-danger mt-3"-->
-        <!--                      (click)="removeField(i)"-->
-        <!--                      [disabled]="manager.oneObject.customerPhones.length === 1">-->
-        <!--                      حذف-->
-        <!--                    </button>-->
-        <!--                  </div>-->
-
-        <!--                </div>-->
-
-        <!--              </div>-->
-
-        <!--            </div>-->
-
-        <!--          </div>-->
-        <!--        </p-fieldset>-->
-
-      </div>
-
+    <div class="col-12 md:col-4">
       <div class="form-group">
-        <p-divider styleClass="px-5 py-2" class="w-full divider" align="center" type="dashed">
-          <b class="px-2 text-lg ">شماره تماس</b>
+        <label class="text-900" for="companyName">معرف</label>
+        <div class="field">
+          <p-autoComplete #autoComplete
+                          [inputStyle]="{'width':'100%'}"
+                          [style]="{'width':'100%'}"
+                          [(ngModel)]="customerJson.introducerId"
+                          [suggestions]="filteredCustomer"
+                          (completeMethod)="filterCustomer($event)"
+                          (onSelect)="selectCustomer($event)"
+                          [autofocus]="true"
+                          [showEmptyMessage]="true"
+                          emptyMessage="موردی یافت نشد"
+                          appendTo="body"
+                          optionLabel="name"
+                          optionValue="id"
+                          styleClass="w-full mx-auto"
+                          scrollHeight="400px"
+                          class="p-autocomplete w-full mx-auto"
+                          placeholder="نام خانوادگی | شماره تلفن | شرکت">
+
+            <ng-template let-filteredCustomers pTemplate="item">
+              <div class="grid align-items-end justify-content-between" style="direction: rtl">
+
+
+                <div class="col-12 overflow-hidden flex gap-2">
+                  <p class=" my-0 ">{{filteredCustomers.name}}</p>
+                  <p
+                    class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">
+                    {{filteredCustomers.family}} ({{filteredCustomers.companyName ? filteredCustomers.companyName :''}})
+                  </p>
+                </div>
+
+
+              </div>
+            </ng-template>
+
+            <ng-template pTemplate="empty">
+              <div class="text-center px-2 flex align-items-baseline justify-content-between" style="direction: rtl">
+                <p class="m-0">موردی یافت نشد</p>
+              </div>
+            </ng-template>
+
+          </p-autoComplete>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-group">
+        <p-divider styleClass="px-5 py-0 m-0" class="w-full divider" align="center" type="dashed">
+          <b class="px-2 text-900 ">شماره تماس</b>
         </p-divider>
       </div>
+    </div>
 
+
+    <div class="col-12 md:col-3">
       <div class="flex-column">
 
         <div class="grid">
@@ -536,15 +635,12 @@
 
             <div class="flex gap-3 align-items-center my-3" *ngFor="let field of customerJson.customerPhones; let i = index; let last = last">
               <button
-                type="button"
-                pButton
-                pRipple
-                class="p-button p-button-danger p-button-sm mt-3 border-round-3xl p-2 pi pi-times"
-                (click)="removeField(i)"
+                type="button" pButton pRipple class="p-button p-button-danger p-button-sm mt-3 border-round-3xl p-2 pi pi-times"
+                (click)="removeField(i)" style="min-width:28px"
                 [disabled]="customerJson.customerPhones.length === 1">
               </button>
               <div>
-                <label class="font-bold text-900 text-lg">عنوان</label>
+                <label class="text-900" *ngIf="i == 0">عنوان</label>
                 <div class="field">
                   <input
                     [(ngModel)]="field.title"
@@ -559,7 +655,7 @@
               </div>
 
               <div>
-                <label class="font-bold text-900 text-lg">شماره تماس</label>
+                <label class="text-900" *ngIf="i == 0">شماره تماس</label>
                 <div class="field">
                   <input
                     [style]="{'width':'220px'}"
@@ -586,8 +682,8 @@
         </div>
 
       </div>
-
     </div>
+
   </div>
 
   <ng-template pTemplate="footer">

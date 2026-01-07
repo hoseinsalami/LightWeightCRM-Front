@@ -12,19 +12,20 @@ export class JalaliDatePipe implements PipeTransform, OnChanges {
 
     }
     transform(date: string | undefined | Date | null, format?:'date'|'hour'|'full'|'shortTime'|'custom', customFormat?:string | undefined): string {
+        // .utc(false) حذف شد
         if (typeof date === 'string' && date.startsWith('0001-01-01') || date == '' || date == undefined) {
             return ' فاقد تاریخ ';
         } else {
           if(format == 'custom')
-            return moment(date).utc(false).locale('fa').format(customFormat).toString();
+            return moment(date).locale('fa').format(customFormat).toString();
           if(format == 'shortTime')
-            return moment(date).utc(false).locale('fa').format('HH:mm').toString();
+            return moment(date).locale('fa').format('HH:mm').toString();
             else if(format == 'hour')
-                return moment(date).utc(false).locale('fa').format('HH:mm:ss').toString();
+                return moment(date).locale('fa').format('HH:mm:ss').toString();
             else if (format == 'date')
-                return moment(date).utc(false).locale('fa').format('YYYY/MM/DD ').toString();
+                return moment(date).locale('fa').format('YYYY/MM/DD').toString();
             else
-                return moment(date).utc(false).locale('fa').format('HH:mm:ss _ YYYY/MM/DD ').toString();
+                return moment(date).locale('fa').format('HH:mm:ss _ YYYY/MM/DD').toString();
 
         }
     }
