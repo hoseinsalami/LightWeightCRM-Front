@@ -11,7 +11,7 @@ import {CreateActivityType} from "../../../../_types/create-activity.type";
 import {ActivityWorkItemType} from "../../../../work-item/_types/activity-workItem.type";
 import {WorkItemService} from "../../../../work-item/work-item.service";
 import {AutoCompleteCompleteEvent} from "primeng/autocomplete";
-import {IActiveDate} from "ng-persian-datepicker";
+import {IActiveDate, NgPersianDatepickerComponent} from "ng-persian-datepicker";
 import {ActivatedRoute} from "@angular/router";
 import {DomSanitizer} from "@angular/platform-browser";
 import {MessageService} from "primeng/api";
@@ -22,12 +22,32 @@ import {Utilities} from "../../../../_classes/utilities";
 import {TicketTypeEnum, TicketTypeEnum2LabelMapping} from "../../../../_enums/ticket-type.enum";
 import {TagTypeBase} from "../../../_types/tag.type";
 import {OverlayPanel} from "primeng/overlaypanel";
+import * as moment from 'jalali-moment';
+import {Jalali} from "jalali-ts";
+import {Component, ViewChild} from "@angular/core";
 
+@Component({
+  template:''
+})
 
 export class BaseCustomerDetailComponent{
 
+  birthDate!: string;
+  birthDateJson!: string;
+  birthDateTimeControl = new FormControl(null)
+  birthDateJsonTimeControl = new FormControl(null)
   customerId:string;
   accustom : AccustomType[] = [];
+  filteredCustomer: CustomerSpecification[] = [];
+  customerJson:any;
+  optionalLabel = [
+    {title:'جناب آقای'},
+    {title:'سرکار خانم'},
+    {title:'ریاست محترم'},
+    {title:'مدیر محترم'},
+    {title:'مهندس'},
+    {title:'دکتر'},
+  ]
 
   showModalWorkItem:boolean = false
   showModalBranches:boolean = false
@@ -66,6 +86,9 @@ export class BaseCustomerDetailComponent{
     })
     this.getListOfAccustom()
     this.getListOfTag();
+
+    this.birthDateTimeControl.setValue(null);
+    this.birthDateJsonTimeControl.setValue(null);
   }
 
 
@@ -93,6 +116,7 @@ export class BaseCustomerDetailComponent{
     this.loading.show();
     this.manager.oneObject = this.customerJson
     this.manager.oneObject.customerPhones = this.customerJson.customerPhones.filter(phone => phone.title.trim() !== '' && phone.phoneNumber.trim() !== '');
+    this.manager.oneObject.birthdate = this.birthDateJson ? this.birthDateJson.trim().concat('T' + '00:00:00') : null
     this.customerServices.onUpdateCustomer(+this.customerId , this.manager.oneObject as CustomerSpecification).subscribe((res) => {
       this.loading.hide()
       this.showCustomerModal = false;
@@ -156,12 +180,29 @@ export class BaseCustomerDetailComponent{
   }
 
   showCustomerModal:boolean = false;
-  customerJson:any;
+  @ViewChild('datePicker') datePicker!: NgPersianDatepickerComponent;
   onOpenCustomerModal(){
     this.customerJson = structuredClone(this.manager.oneObject)
+    console.log(this.customerJson)
+
+    // نمایش تاریخ
+    setTimeout(() => {
+      if (!this.datePicker) return;
+      const isoDate = this.customerJson.birthdate.split('T')[0]; // "2025-10-23"
+      const m = (moment as any)(isoDate, 'YYYY-MM-DD');
+      const jalaliDate = new Jalali(new Date(m.year(), m.month(), m.date()));
+      this.datePicker.changeSelectedDate(jalaliDate as any, true);
+    });
+
     if (!this.customerJson.customerPhones || this.customerJson.customerPhones.length === 0){
       this.customerJson.customerPhones = [{title:'', phoneNumber:''}]
     }
+
+    if (this.customerJson.introducer.id === this.customerJson.introducerId) {
+      this.filteredCustomer = [this.customerJson.introducer];
+      this.customerJson.introducerId = this.customerJson.introducer.id;
+    }
+
     this.showCustomerModal = true;
   }
 
@@ -221,5 +262,72 @@ export class BaseCustomerDetailComponent{
     }
   }
 
+
+  selectStartDate(event: IActiveDate) {
+    this.birthDate = event.gregorian
+  }
+  initialStartDatePicker(event: IActiveDate) {
+    this.birthDateJson = event.gregorian;
+  }
+  selectStartDateJson(event:IActiveDate){
+    this.birthDateJson = event.gregorian
+  }
+
+
+  filterCustomer(event: AutoCompleteCompleteEvent) {
+    this.customerServices.onSearchCustomer(event.query).subscribe(res => {
+      this.filteredCustomer = res.map(customer =>({
+        ...customer,
+        fullName: `${customer.name} ${customer.family}`
+      })) as CustomerSpecification[];
+    })
+  }
+
+  selectCustomer(filter: any){
+    this.manager.oneObject.introducerId = filter.value.id
+  }
+
+  gregorianToJalaliDisplay(gregorianDate: string): string {
+    try {
+      // جدا کردن سال، ماه و روز از رشته (بدون در نظر گرفتن timezone)
+      let year: number, month: number, day: number;
+
+      // اگر format: "2025-12-22T00:00:00" است
+      const datePart = gregorianDate.split('T')[0]; // "2025-12-22"
+      const parts = datePart.split('-').map(Number);
+
+      if (parts.length === 3) {
+        year = parts[0];
+        month = parts[1];
+        day = parts[2];
+      } else {
+        throw new Error('Invalid date format');
+      }
+
+      // ایجاد یک Date object در timezone محلی (اما فقط برای Jalali)
+      // با تنظیم ساعت به 12 ظهر برای جلوگیری از مشکلات
+      const tempDate = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+
+      // استفاده از Jalali
+      const jalali = new Jalali(tempDate);
+      const jalaliYear = jalali.getFullYear();
+      const jalaliMonth = jalali.getMonth() + 1; // 0-based to 1-based
+      const jalaliDay = jalali.getDate();
+
+      return `${jalaliYear}/${jalaliMonth.toString().padStart(2, '0')}/${jalaliDay.toString().padStart(2, '0')}`;
+
+    }catch (error) {
+      console.error('Error with format method:', error);
+
+      // روش جایگزین
+      const date = new Date(gregorianDate);
+      const jalali = new Jalali(date);
+      const year = jalali.getFullYear();
+      const month = jalali.getMonth() + 1;
+      const day = jalali.getDate();
+
+      return `${year}/${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;
+    }
+  }
 
 }

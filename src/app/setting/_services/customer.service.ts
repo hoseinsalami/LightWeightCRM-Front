@@ -60,4 +60,8 @@ export class CustomerService extends BaseCrudService{
     return this.http.post(this.baseUrl + '/SendMessage', input);
   }
 
+  onSearchCustomer(input:string):Observable<CustomerSpecification[]>{
+    return this.http.get<CustomerSpecification[]>(this.baseUrl + '/SearchCustomer/'+ input)
+  }
+
 }

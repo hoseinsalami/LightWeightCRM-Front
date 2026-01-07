@@ -65,7 +65,7 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
     TabViewModule,
     RouterLink,
     InputNumberModule,
-    OverlayPanelModule
+    OverlayPanelModule,
   ]
 })
 export class EditCustomerComponent extends BaseCustomerDetailComponent{

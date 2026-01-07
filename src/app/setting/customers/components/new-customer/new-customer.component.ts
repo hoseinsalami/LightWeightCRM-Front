@@ -89,7 +89,7 @@ export class NewCustomerComponent extends BaseCustomerDetailComponent{
     this.manager.oneObject.customerPhones = [new  CreateCustomerPhone({ title: '', phoneNumber: '' })]
 
     manager.BeforeSave.subscribe((a) => {
-
+      a.birthdate = this.birthDate ? this.birthDate.trim().concat('T' + '00:00:00') : null
     })
 
 

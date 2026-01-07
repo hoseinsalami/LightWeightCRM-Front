@@ -505,6 +505,7 @@ export class PathComponent implements OnInit, AfterViewInit{
   closeModal(){
     this.showModal = false;
     this.selectedWorkItem = null;
+    this.handleClear()
   }
 
 
