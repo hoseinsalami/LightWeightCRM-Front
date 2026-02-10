@@ -9,6 +9,7 @@ import {CollectorSignalRService} from "./_services/collector-signal-r.service";
 import {CreateActivityType} from "./_types/create-activity.type";
 import {NotificationToastComponent} from "./_components/notification-toast/notification-toast.component";
 import {NotificationToastService} from "./_components/notification-toast/notification-toast.service";
+import {webSocket} from "rxjs/webSocket";
 
 @Component({
     selector: 'app-root',

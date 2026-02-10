@@ -396,7 +396,7 @@ export class PathComponent implements OnInit, AfterViewInit{
       this.selectedCustomer = this.workItems.customer;
     }
     if (!this.workItems.customerId && Object.keys(this.workItems.customer).length === 0){
-      return this.messagesService.showError('جستجو مشتری اجباری می باشد.')
+      return this.messagesService.showError('مشتری اجباری می باشد.')
     }
     this.loading.show()
     this.workItems.stepId = this.selectedWorkItem;
@@ -512,8 +512,8 @@ export class PathComponent implements OnInit, AfterViewInit{
   drop(event: CdkDragDrop<any[]> , targetStepId: number) {
 
     this.confirmationService.confirm({
-      header: 'تغییر گام',
-      message: 'آیا از تغییر گام مطمئن هستید؟',
+      header: 'تغییر گام قلم کاری',
+      message: 'آیا از تغییر گام قلم کاری مطمئن هستید؟',
 
       accept: () => {
         const previousContainerData = event.previousContainer.data;
@@ -590,39 +590,50 @@ export class PathComponent implements OnInit, AfterViewInit{
   }
 
   dropStep(event: CdkDragDrop<any[]>){
-    const isRtl = (this.dir && this.dir.value === 'rtl')
-      || getComputedStyle(this.headerSteps.nativeElement).direction === 'rtl'
-      || document.dir === 'rtl';
+    this.confirmationService.confirm({
+      header: 'تغییر گام',
+      message: 'آیا از تغییر گام مطمئن هستید؟',
 
-    let prev = event.previousIndex;
-    let curr = event.currentIndex;
+      accept: () => {
 
-    if (isRtl) {
-      const len = this.steps.length;
-      // نگاشت اندیس بصری -> اندیس منطقی آرایه
-      prev = len - 1 - prev;
-      curr = len - 1 - curr;
-      const draggedItem = event.item.data;
-      const draggedId = draggedItem.id;
-      // console.log(prev , curr, draggedItem , draggedId)
+        const isRtl = (this.dir && this.dir.value === 'rtl')
+          || getComputedStyle(this.headerSteps.nativeElement).direction === 'rtl'
+          || document.dir === 'rtl';
 
-      this.loading.show();
-      const input = {
-        stepId: draggedId,
-        pathId: +this.pathId,
-        newOrder:  curr +1
-      }
-      this.service.changeOrderStep(input).subscribe({
-        next: (out) => {
-          this.loading.hide();
-          this.getListOfSteps();
-        },
-        error: err => {
-          this.loading.hide();
+        let prev = event.previousIndex;
+        let curr = event.currentIndex;
+
+        if (isRtl) {
+          const len = this.steps.length;
+          // نگاشت اندیس بصری -> اندیس منطقی آرایه
+          prev = len - 1 - prev;
+          curr = len - 1 - curr;
+          const draggedItem = event.item.data;
+          const draggedId = draggedItem.id;
+          // console.log(prev , curr, draggedItem , draggedId)
+
+          this.loading.show();
+          const input = {
+            stepId: draggedId,
+            pathId: +this.pathId,
+            newOrder:  curr +1
+          }
+          this.service.changeOrderStep(input).subscribe({
+            next: (out) => {
+              this.loading.hide();
+              this.getListOfSteps();
+            },
+            error: err => {
+              this.loading.hide();
+            }
+          })
+
         }
-      })
 
-    }
+      }
+    });
+
+
 
     console.log(event)
   }

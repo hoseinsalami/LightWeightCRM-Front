@@ -16,6 +16,7 @@ import {FieldsetModule} from "primeng/fieldset";
 import {CommonModule} from "@angular/common";
 import {OrderList, OrderListModule} from "primeng/orderlist";
 import {CreatePathType} from "../_types/createPath.type";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'app-caries',
@@ -36,7 +37,8 @@ import {CreatePathType} from "../_types/createPath.type";
     CommonModule,
     OrderListModule,
     ReactiveFormsModule,
-    JalaliDatePipe
+    JalaliDatePipe,
+    TooltipModule
   ]
 })
 export class CariesComponent extends BaseListComponent<CreatePathType>{

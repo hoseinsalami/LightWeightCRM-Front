@@ -1,0 +1,504 @@
+<div class="p-card mx-auto max-w-60rem">
+  <div class="grid">
+    <div class="col-12">
+
+      <p-tabView (onChange)="onStepChange($event)">
+        <p-tabPanel [header]="step.title"  *ngFor="let step of steps; let stepIndex = index">
+          <div class="grid">
+            <div class="col-12">
+
+              <div class="popup flex-container">
+                <div class="tabs">
+                  <div class="event-tab py-4 z-5 cursor-pointer label-hover" #eventTab
+                       *ngFor="let event of step.events; let i = index" (click)="selectEvent(step, i)">
+                    <input type="radio"
+                      [id]="'tab' + stepIndex + '_' + i"
+                      [name]="'tab' + stepIndex"
+                      [checked]="i === selectedEventIndex">
+                    <label class="event-title" [for]="'tab' + stepIndex + '_' + i">{{ event.title }}</label>
+                  </div>
+
+                  <div class="marker" [style.transform]="'translateY(' + markerY + ')'">
+                    <div id="top"></div>
+                    <div id="bottom"></div>
+                  </div>
+                </div>
+
+                <div class="event-content">
+                  <!-- event ها -->
+                  <div *ngIf="step.events[step.selectedEventIndex] as event">
+                    <h3>{{ event.title }}</h3>
+
+                    <div class="p-card p-4">
+                      <div class="flex flex-column">
+                        <div class="flex justify-content-end">
+                          <button type="button" pButton pRipple class="p-button-success"
+                                  label="اکشن جدید" icon="pi pi-plus mx-2" (click)="addActionCard(event)"></button>
+                          <button type="button" pButton pRipple class="p-button-success mx-2"
+                                  label="ذخیره" icon="pi pi-save mx-2" (click)="saveCurrentEvent(step)"></button>
+                        </div>
+
+                        <div class="grid">
+                          <div class="col-12 text-center" *ngIf="!event.actions || event.actions.length <= 0">
+                            <img src="assets/images/Frame3.png" class="cursor-pointer" style="width:240px" (click)="addActionCard(event)">
+                            <div class="block text-teal-600">
+                              <p class="m-0 text-lg font-bold">بزن بریم اکشن جدید بسازیم...</p>
+                            </div>
+                          </div>
+
+                          <div class="col-12 p-3 border-round surface-100 mt-4" *ngFor="let action of event.actions; let ai = index">
+
+                            <div class="flex justify-content-between mb-3">
+                              <p-dropdown
+                                [options]="options"
+                                optionLabel="title"
+                                optionValue="value"
+                                [(ngModel)]="action.type"
+                                (onChange)="onchangeAction(action, $event.value)"
+                                [style]="{'width':'250px'}"
+                                appendTo="body"
+                                placeholder="اکشن خود را انتخاب نمایید">
+                              </p-dropdown>
+
+                              <button type="button" pButton pRipple class="p-button-danger ml-2"
+                                      label="حذف اکشن" icon="pi pi-trash" (click)="removeActionCard(event, ai)"></button>
+                            </div>
+
+                            <ng-container [ngSwitch]="action.type">
+
+                              <!-- ارسال پیام -->
+                              <div *ngSwitchCase="StepEventActionType.SendSms">
+                                <label>متن پیام</label>
+
+                                <ul class="flex align-items-center gap-2 list-none p-0">
+                                  <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
+                                      (click)="appendPlaceholder(action, item)">{{item.caption}}</li>
+                                </ul>
+
+                                <textarea [name]="'message'+ai" pInputTextarea
+                                  [(ngModel)]="action.data.message"
+                                  rows="3" class="p-fieldset w-full">
+                                </textarea>
+                              </div>
+
+                              <!-- تغییر گام -->
+                              <div *ngSwitchCase="StepEventActionType.ChangeStep">
+                                <div class="flex flex-column">
+                                  <label>انتخاب گام</label>
+                                  <p-dropdown
+                                    [options]="steps"
+                                    optionLabel="title"
+                                    optionValue="id"
+                                    [(ngModel)]="action.data.stepId"
+                                    [style]="{'width':'250px'}"
+                                    appendTo="body"
+                                    placeholder="گام خود را انتخاب نمایید">
+                                  </p-dropdown>
+                                </div>
+                              </div>
+
+                              <!-- ایجاد معامله -->
+                              <div *ngSwitchCase="StepEventActionType.CreateWorkItem">
+                                <label>نام معامله</label>
+                                <input type="text" pInputText [(ngModel)]="action.data.title" class="w-full mb-3">
+                                <label>توضیحات</label>
+                                <textarea [name]="'description'+ai" class="p-fieldset" pInputTextarea [(ngModel)]="action.data.description" rows="3" class="w-full"></textarea>
+                                <div class="flex flex-column">
+                                  <label>گام</label>
+                                  <p-dropdown
+                                    [options]="steps"
+                                    optionLabel="title"
+                                    optionValue="id"
+                                    [(ngModel)]="action.data.stepId"
+                                    [style]="{'width':'250px'}"
+                                    appendTo="body"
+                                    placeholder="گام خود را انتخاب نمایید">
+                                  </p-dropdown>
+                                </div>
+                              </div>
+
+                              <div *ngSwitchCase="StepEventActionType.SendSurveyActionRequest">
+                                <label>نظرسنجی</label>
+                                <p-dropdown
+                                  [options]="steps"
+                                  optionLabel="title"
+                                  optionValue="id"
+                                  [(ngModel)]="action.data.stepId"
+                                  [style]="{'width':'250px'}"
+                                  appendTo="body"
+                                  placeholder="گام خود را انتخاب نمایید">
+                                </p-dropdown>
+                                <label>پیام</label>
+                                <textarea [name]="'descriptionSurvey'+ai" class="p-fieldset" pInputTextarea [(ngModel)]="action.data.description" rows="3" class="w-full"></textarea>
+                              </div>
+
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+<!--                        <p-fieldset [style]="{padding:'0px'}">-->
+<!--&lt;!&ndash;                          <ng-template pTemplate="header">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="flex align-items-center justify-content-center gap-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                              <i class="pi pi-plus text-green-500 cursor-pointer"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                              <p class="m-0">اکشن</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                              <p-dropdown&ndash;&gt;-->
+<!--&lt;!&ndash;                                [styleClass]="'clear-icon'"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [options]="options"&ndash;&gt;-->
+<!--&lt;!&ndash;                                optionLabel="title"&ndash;&gt;-->
+<!--&lt;!&ndash;                                optionValue="value"&ndash;&gt;-->
+<!--&lt;!&ndash;                                class="mt-2"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [style]="{'width':'300px'}"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [appendTo]="'body'"&ndash;&gt;-->
+<!--&lt;!&ndash;                                placeholder="اکشن خود را انتخاب نمایید"&ndash;&gt;-->
+<!--&lt;!&ndash;                                (onChange)="onchangeAction(event, $event.value)"></p-dropdown>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                          </ng-template>&ndash;&gt;-->
+
+<!--                          <div class="grid">-->
+<!--                            &lt;!&ndash; users &ndash;&gt;-->
+
+<!--                            <div class="col-12 md:col-12" *ngFor="let action of event.actions; let ai = index">-->
+
+<!--                              <ng-container [ngSwitch]="action.type">-->
+
+<!--                                &lt;!&ndash; ارسال پیام &ndash;&gt;-->
+<!--                                <ng-container *ngSwitchCase="0">-->
+<!--                                  <div [class]="first ? 'm-0' : 'mt-3'" *ngFor="let msg of action.data.messages; let mi = index; let first = first">-->
+<!--                                    <div class="form-group flex align-items-center gap-3" >-->
+<!--                                      <label class="text-sm" *ngIf="first">ارسال پیام</label>-->
+<!--                                      <div class="flex gap-2">-->
+<!--                                        <i class="pi pi-plus text-sm text-green-500 cursor-pointer flex align-items-center justify-content-center border-solid border-1 border-round-3xl"-->
+<!--                                           style="width:25px; height:25px"-->
+<!--                                           (click)="addField(action)"></i>-->
+<!--                                        <i class="pi pi-times text-sm text-red-500 cursor-pointer flex align-items-center justify-content-center border-solid border-1 border-round-3xl"-->
+<!--                                           style="width:25px; height:25px"-->
+<!--                                           (click)="removeField(action, mi)"></i>-->
+<!--                                      </div>-->
+<!--                                    </div>-->
+<!--                                    <textarea pInputTextarea-->
+<!--                                              [(ngModel)]="action.data.messages[mi]"-->
+<!--                                              rows="4"-->
+<!--                                              class="w-full mt-2"-->
+<!--                                              placeholder="متن پیام را وارد کنید">-->
+<!--                                    </textarea>-->
+<!--                                  </div>-->
+<!--                                </ng-container>-->
+<!--                                -->
+<!--                                <ng-container *ngSwitchCase="1">1</ng-container>-->
+
+<!--                              </ng-container>-->
+
+
+
+<!--                            </div>-->
+
+<!--                            &lt;!&ndash;                    <div class="col-12 md:col-12">&ndash;&gt;-->
+
+<!--                            &lt;!&ndash;                      <div class="form-group">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                        <label class="text-sm">اکشن</label>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                        <div class="field">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                          <p-dropdown&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            [styleClass]="'clear-icon'" [showClear]="true"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            [options]="options"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            optionLabel="title"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            optionValue="value"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            class="mt-2"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            [style]="{'width':'300px'}"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            [appendTo]="'body'"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            placeholder="اکشن خود را انتخاب نمایید"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                          (onChange)="onchangeAction(event, $event.value)">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                          </p-dropdown>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                      </div>&ndash;&gt;-->
+
+<!--                            &lt;!&ndash;                    </div>&ndash;&gt;-->
+
+<!--                            &lt;!&ndash;                    <div class="col-12 md:col-12" *ngFor="let action of event.actions; let ai = index">&ndash;&gt;-->
+
+<!--                            &lt;!&ndash;                      <ng-container [ngSwitch]="action.type">&ndash;&gt;-->
+
+<!--                            &lt;!&ndash;                        &lt;!&ndash; ارسال پیام &ndash;&gt;&ndash;&gt;-->
+<!--                            &lt;!&ndash;                        <ng-container *ngSwitchCase="0">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                          <div [class]="first ? 'm-0' : 'mt-3'" *ngFor="let msg of action.data.messages; let mi = index; let first = first">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            <div class="form-group flex align-items-center gap-3" >&ndash;&gt;-->
+<!--                            &lt;!&ndash;                              <label class="text-sm" *ngIf="first">ارسال پیام</label>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                              <div class="flex gap-2">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                <i class="pi pi-plus text-sm text-green-500 cursor-pointer flex align-items-center justify-content-center border-solid border-1 border-round-3xl"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                   style="width:25px; height:25px"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                   (click)="addField(action)"></i>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                <i class="pi pi-times text-sm text-red-500 cursor-pointer flex align-items-center justify-content-center border-solid border-1 border-round-3xl"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                   style="width:25px; height:25px"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                   (click)="removeField(action, mi)"></i>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                              </div>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            <textarea pInputTextarea&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                      [(ngModel)]="action.data.messages[mi]"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                      rows="4"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                      class="w-full mt-2"&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                      placeholder="متن پیام را وارد کنید">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                          </textarea>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                          </div>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                        </ng-container>&ndash;&gt;-->
+
+<!--                            &lt;!&ndash;                      </ng-container>&ndash;&gt;-->
+
+
+
+<!--                            &lt;!&ndash;                    </div>&ndash;&gt;-->
+
+
+<!--                          </div>-->
+
+<!--                      </p-fieldset>-->
+
+<!--                      <div class="grid">-->
+<!--                        <div class="col-12 md:col-12" *ngFor="let action of event.actions; let ai = index">-->
+<!--                          <ng-container [ngSwitch]="action.type">-->
+
+<!--                            &lt;!&ndash; ارسال پیام &ndash;&gt;-->
+<!--                            <ng-container *ngSwitchCase="0">-->
+<!--                              <p>ارسال پیام: </p>-->
+<!--                            </ng-container>-->
+
+<!--                            &lt;!&ndash; نوع دیگر action &ndash;&gt;-->
+<!--                            <ng-container *ngSwitchCase="1">-->
+<!--                              <p>عملیات نوع 1: {{ action.data.info }}</p>-->
+<!--                            </ng-container>-->
+
+<!--                            &lt;!&ndash; حالت پیش‌فرض &ndash;&gt;-->
+<!--                            <ng-container *ngSwitchDefault>-->
+<!--                              <p>نوع ناشناخته: {{ action.type }}</p>-->
+<!--                            </ng-container>-->
+
+<!--                          </ng-container>-->
+<!--                        </div>-->
+<!--                      </div>-->
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+<!--              <p-accordion [style]="{'margin-top':'10px'}" class="mt-3">-->
+<!--                <p-accordionTab *ngFor="let event of events">-->
+<!--                  <ng-template  pTemplate="header">-->
+<!--                    <span  class="flex align-items-center gap-2 w-full">{{event.title}}</span>-->
+<!--                  </ng-template>-->
+
+<!--                  <p-fieldset [style]="{padding:'0px'}">-->
+<!--                    <ng-template pTemplate="header">-->
+<!--                      <div class="flex align-items-center justify-content-center gap-2">-->
+<!--                        <i class="pi pi-plus text-green-500 cursor-pointer"></i>-->
+<!--                        <p class="m-0">اکشن</p>-->
+<!--                        <p-dropdown-->
+<!--                          [styleClass]="'clear-icon'"-->
+<!--                          [options]="options"-->
+<!--                          optionLabel="title"-->
+<!--                          optionValue="value"-->
+<!--                          class="mt-2"-->
+<!--                          [style]="{'width':'300px'}"-->
+<!--                          [appendTo]="'body'"-->
+<!--                          placeholder="اکشن خود را انتخاب نمایید"-->
+<!--                          (onChange)="onchangeAction(event, $event.value)"></p-dropdown>-->
+<!--                      </div>-->
+<!--                    </ng-template>-->
+
+<!--                  <div class="grid">-->
+<!--                    &lt;!&ndash; users &ndash;&gt;-->
+
+<!--                    <div class="col-12 md:col-12" *ngFor="let action of event.actions; let ai = index">-->
+
+<!--                      <ng-container [ngSwitch]="action.type">-->
+
+<!--                        &lt;!&ndash; ارسال پیام &ndash;&gt;-->
+<!--                        <ng-container *ngSwitchCase="0">-->
+<!--                          <div [class]="first ? 'm-0' : 'mt-3'" *ngFor="let msg of action.data.messages; let mi = index; let first = first">-->
+<!--                            <div class="form-group flex align-items-center gap-3" >-->
+<!--                              <label class="text-sm" *ngIf="first">ارسال پیام</label>-->
+<!--                              <div class="flex gap-2">-->
+<!--&lt;!&ndash;                                <i class="pi pi-plus text-sm text-green-500 cursor-pointer flex align-items-center justify-content-center border-solid border-1 border-round-3xl"&ndash;&gt;-->
+<!--&lt;!&ndash;                                   style="width:25px; height:25px"&ndash;&gt;-->
+<!--&lt;!&ndash;                                   (click)="addField(action)"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <i class="pi pi-times text-sm text-red-500 cursor-pointer flex align-items-center justify-content-center border-solid border-1 border-round-3xl"&ndash;&gt;-->
+<!--&lt;!&ndash;                                   style="width:25px; height:25px"&ndash;&gt;-->
+<!--&lt;!&ndash;                                   (click)="removeField(action, mi)"></i>&ndash;&gt;-->
+<!--                              </div>-->
+<!--                            </div>-->
+<!--                            <textarea pInputTextarea-->
+<!--                                      [(ngModel)]="action.data.messages[mi]"-->
+<!--                                      rows="4"-->
+<!--                                      class="w-full mt-2"-->
+<!--                                      placeholder="متن پیام را وارد کنید">-->
+<!--                          </textarea>-->
+<!--                          </div>-->
+<!--                        </ng-container>-->
+
+
+<!--                        <ng-container *ngSwitchCase="1">-->
+<!--                          1-->
+
+<!--                        </ng-container>-->
+
+<!--                      </ng-container>-->
+
+
+
+<!--                    </div>-->
+
+<!--&lt;!&ndash;                    <div class="col-12 md:col-12">&ndash;&gt;-->
+
+<!--&lt;!&ndash;                      <div class="form-group">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <label class="text-sm">اکشن</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="field">&ndash;&gt;-->
+<!--&lt;!&ndash;                          <p-dropdown&ndash;&gt;-->
+<!--&lt;!&ndash;                            [styleClass]="'clear-icon'" [showClear]="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                            [options]="options"&ndash;&gt;-->
+<!--&lt;!&ndash;                            optionLabel="title"&ndash;&gt;-->
+<!--&lt;!&ndash;                            optionValue="value"&ndash;&gt;-->
+<!--&lt;!&ndash;                            class="mt-2"&ndash;&gt;-->
+<!--&lt;!&ndash;                            [style]="{'width':'300px'}"&ndash;&gt;-->
+<!--&lt;!&ndash;                            [appendTo]="'body'"&ndash;&gt;-->
+<!--&lt;!&ndash;                            placeholder="اکشن خود را انتخاب نمایید"&ndash;&gt;-->
+<!--&lt;!&ndash;                          (onChange)="onchangeAction(event, $event.value)">&ndash;&gt;-->
+<!--&lt;!&ndash;                          </p-dropdown>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                      </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    <div class="col-12 md:col-12" *ngFor="let action of event.actions; let ai = index">&ndash;&gt;-->
+
+<!--&lt;!&ndash;                      <ng-container [ngSwitch]="action.type">&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        &lt;!&ndash; ارسال پیام &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                        <ng-container *ngSwitchCase="0">&ndash;&gt;-->
+<!--&lt;!&ndash;                          <div [class]="first ? 'm-0' : 'mt-3'" *ngFor="let msg of action.data.messages; let mi = index; let first = first">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="form-group flex align-items-center gap-3" >&ndash;&gt;-->
+<!--&lt;!&ndash;                              <label class="text-sm" *ngIf="first">ارسال پیام</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                              <div class="flex gap-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <i class="pi pi-plus text-sm text-green-500 cursor-pointer flex align-items-center justify-content-center border-solid border-1 border-round-3xl"&ndash;&gt;-->
+<!--&lt;!&ndash;                                   style="width:25px; height:25px"&ndash;&gt;-->
+<!--&lt;!&ndash;                                   (click)="addField(action)"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <i class="pi pi-times text-sm text-red-500 cursor-pointer flex align-items-center justify-content-center border-solid border-1 border-round-3xl"&ndash;&gt;-->
+<!--&lt;!&ndash;                                   style="width:25px; height:25px"&ndash;&gt;-->
+<!--&lt;!&ndash;                                   (click)="removeField(action, mi)"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                              </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <textarea pInputTextarea&ndash;&gt;-->
+<!--&lt;!&ndash;                                      [(ngModel)]="action.data.messages[mi]"&ndash;&gt;-->
+<!--&lt;!&ndash;                                      rows="4"&ndash;&gt;-->
+<!--&lt;!&ndash;                                      class="w-full mt-2"&ndash;&gt;-->
+<!--&lt;!&ndash;                                      placeholder="متن پیام را وارد کنید">&ndash;&gt;-->
+<!--&lt;!&ndash;                          </textarea>&ndash;&gt;-->
+<!--&lt;!&ndash;                          </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </ng-container>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                      </ng-container>&ndash;&gt;-->
+
+
+
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+
+
+<!--                  </div>-->
+
+<!--                  </p-fieldset>-->
+
+<!--                </p-accordionTab>-->
+<!--              </p-accordion>-->
+
+
+
+
+<!--              <div class="event-layout">-->
+
+<!--                <div class="event-tabs" #tabsContainer>-->
+
+<!--                  <div-->
+<!--                    class="event-item"-->
+<!--                    *ngFor="let event of events; let i = index"-->
+<!--                    [class.active]="selectedEventIndex === i"-->
+<!--                    (click)="selectEvent(i)" #eventItem>-->
+<!--                    {{ event.title }}-->
+<!--                  </div>-->
+
+<!--                  &lt;!&ndash; marker &ndash;&gt;-->
+<!--                  <div-->
+<!--                    class="marker"-->
+<!--                    [style.transform]="'translateY(' + markerTop + 'px)'">-->
+<!--                    <div class="marker-top"></div>-->
+<!--                    <div class="marker-bottom"></div>-->
+<!--                  </div>-->
+
+<!--                </div>-->
+
+<!--                &lt;!&ndash; content &ndash;&gt;-->
+<!--                <div class="event-content-wrapper">-->
+<!--                  <div class="event-content-header">-->
+<!--                    {{ selectedEvent?.title }}-->
+<!--                  </div>-->
+<!--                  <div class="event-content-body">-->
+<!--                    {{ selectedEvent?.description }}-->
+<!--                  </div>-->
+<!--                </div>-->
+
+<!--              </div>-->
+
+
+
+              <!--              <div class="event-layout">-->
+
+<!--                &lt;!&ndash; ستون سمت راست: لیست event ها &ndash;&gt;-->
+<!--                <div class="event-list">-->
+<!--                  <div-->
+<!--                    class="event-item"-->
+<!--                    *ngFor="let event of events; let i = index"-->
+<!--                    [class.active]="selectedEventIndex === i"-->
+<!--                    (click)="selectEvent(i)">-->
+<!--                    <div class="event-title">{{ event.title }}</div>-->
+<!--                  </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; ستون سمت چپ: محتوای event &ndash;&gt;-->
+<!--                <div class="event-content-wrapper shadow-1" *ngIf="selectedEvent">-->
+<!--                  <div class="event-content-header">-->
+<!--                    {{ selectedEvent.title }}-->
+<!--                  </div>-->
+<!--                  <div class="event-content-body">-->
+<!--                    <p>{{ selectedEvent.description }}</p>-->
+<!--                  </div>-->
+<!--                </div>-->
+
+<!--              </div>-->
+
+
+
+
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+
+    </div>
+
+<!--    <div class="col-12">-->
+<!--      <div class="text-left mt-3">-->
+<!--        <button type="button" pButton pRipple-->
+<!--                class="p-button-success"-->
+<!--                label="ثبت" icon="pi pi-save mx-2"-->
+<!--                (click)="save()">-->
+<!--        </button>-->
+<!--        <button type="button" pButton pRipple-->
+<!--                class="mr-4 p-button-danger"-->
+<!--                label="انصراف" icon="pi pi-sign-out mx-2"-->
+<!--                (click)="cancel()">-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+  </div>
+</div>

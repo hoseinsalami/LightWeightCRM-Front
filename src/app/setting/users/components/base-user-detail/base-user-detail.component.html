@@ -1,9 +1,22 @@
 <div class="p-card p-4 shadow-2 mx-auto" style="width:800px;">
 
   <div class="grid">
+    <div class="col-12 bg-bluegray-50 border-round mb-3">
+      <div class="flex justify-content-between align-items-center">
+        <h6 class="font-bold text-green-500 m-0">{{ isId ? 'ویرایش کاربر' : 'کاربر جدید' }}</h6>
+      </div>
+    </div>
+
+<!--    <div class="col-12">-->
+<!--      <p-divider type="solid" [style]="{'border-top':'1px solid #f7f7f7',}"/>-->
+<!--    </div>-->
+
+  </div>
+
+  <div class="grid">
     <div class="col-12 md:col-6">
       <div class="form-group">
-        <label class="text-900">نام و نام خانوادگی </label>
+        <label class="text-sm">نام و نام خانوادگی </label>
         <span class="text-red-500 font-bold text- mr-1">*</span>
         <div class="field">
           <input
@@ -20,7 +33,7 @@
 
     <div class="col-12 md:col-6">
       <div class="form-group">
-        <label class="text-900">شماره موبایل</label>
+        <label class="text-sm">شماره موبایل</label>
         <span class="text-red-500 font-bold text- mr-1">*</span>
         <div class="field">
           <input
@@ -56,7 +69,7 @@
 
     <div class="col-12 md:col-6" *ngIf="!isId">
       <div class="form-group">
-        <label class="text-right">نام کاربری</label>
+        <label class="text-sm">نام کاربری</label>
         <span class="text-red-500 font-bold text- mr-1">*</span>
         <div class="field">
           <input
@@ -71,31 +84,9 @@
       </div>
     </div>
 
-    <div class="col-12 md:col-6" *ngIf="!isId">
-      <div class="form-group">
-        <label class="text-900">رمز عبور</label>
-        <span class="text-red-500 font-bold text- mr-1">*</span>
-        <div class="field">
-          <p-password class="w-full" inputStyleClass="w-full" [style]="{'width':'100%'}"
-                      [(ngModel)]="manager.oneObject.password" [autocomplete]="'off'" [feedback]="false"/>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 md:col-6" *ngIf="!isId">
-      <div class="form-group">
-        <label class="text-900">تکرار رمز عبور</label>
-        <span class="text-red-500 font-bold text- mr-1">*</span>
-        <div class="field">
-          <p-password class="w-full" inputStyleClass="w-full" [style]="{'width':'100%'}"
-                      [(ngModel)]="confirmPassword" [autocomplete]="'off'" [feedback]="false"/>
-        </div>
-      </div>
-    </div>
-
     <div class="col-12 md:col-6">
       <div class="form-group">
-        <label class="text-900">نوع کاربر</label>
+        <label class="text-sm">نوع کاربر</label>
         <span class="text-red-500 font-bold text- mr-1">*</span>
         <div class="field">
           <p-dropdown [style]="{'width':'100%'}"
@@ -110,6 +101,28 @@
                       [options]="userType">
 
           </p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-6" *ngIf="!isId">
+      <div class="form-group">
+        <label class="text-sm">رمز عبور</label>
+        <span class="text-red-500 font-bold text- mr-1">*</span>
+        <div class="field">
+          <p-password class="w-full" inputStyleClass="w-full" [style]="{'width':'100%'}"
+                      [(ngModel)]="manager.oneObject.password" [autocomplete]="'off'" [feedback]="false"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-6" *ngIf="!isId">
+      <div class="form-group">
+        <label class="text-sm">تکرار رمز عبور</label>
+        <span class="text-red-500 font-bold text- mr-1">*</span>
+        <div class="field">
+          <p-password class="w-full" inputStyleClass="w-full" [style]="{'width':'100%'}"
+                      [(ngModel)]="confirmPassword" [autocomplete]="'off'" [feedback]="false"/>
         </div>
       </div>
     </div>

@@ -16,6 +16,8 @@
         <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200" (click)="setActive('sendMessage')" [class]="{'activePanel' : activeItem === 'sendMessage'}" >پیام های ارسالی</button>
         <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200" *ngIf="workItemId || ticketId"
                 (click)="setActive('changeLog')" [class]="{'activePanel' : activeItem === 'changeLog'}">تاریخچه تغییرات</button>
+        <button pButton class="border-0 bg-white text-900 hover:bg-yellow-200" *ngIf="showCustomerEventHistory"
+                (click)="setActive('customerEvent')" [class]="{'activePanel' : activeItem === 'customerEvent'}">تاریخچه وقایع</button>
       </div>
 
     </div>
@@ -139,7 +141,7 @@
         <div *ngIf="undoneActivities.length == 0" class="flex align-items-center justify-content-center bg-white border-round my-3 py-7 overflow-hidden">
           <img src="assets/images/Frame2.png" alt="" style="width:140px">
           <div class="block text-orange-400">
-            <p class="mb-2">هیچ فعالیتی برای این معامله برنامه ریزی نکردی!</p>
+            <p class="mb-2">هیچ فعالیتی برای این قلم کاری برنامه ریزی نکردی!</p>
             <p class="m-0">برای اینکه از دستش ندهی یک فعالیت برایش تعریف کن.</p>
           </div>
 
@@ -381,6 +383,78 @@
 
       </ng-container>
 
+      <!-- begin customerEvent section -->
+      <ng-container *ngIf="activeItem == 'customerEvent'">
+
+        <div class="flex flex-column align-items-center">
+          <div class="flex gap-1 border-1 border-dashed border-round border-gray-400 bg-teal-100 p-2 mt-3 w-6" *ngFor="let item of customerEvents; let i=index" style="font-size:12px">
+            <span class="font-light font-italic m-0" *ngIf="item.eventTitle === 'ایجاد فعالیت'">
+              فعالیت
+              <span class="text-900 font-semibold">{{item.eventData?.title ?? ''}}</span>
+              در تاریخ
+              <span class="text-900 font-semibold">{{item.dateTime | jalaliDate:'date'}}</span>
+              توسط
+              <span class="text-900 font-semibold">{{item.triggerUser.fullName}}</span>
+              ایجاد شد.
+            </span>
+
+            <span class="font-light font-italic m-0" *ngIf="item.eventTitle === 'ارسال پیام'">
+              یک پیام توسط
+              <span class="text-900 font-semibold">{{item.triggerUser.fullName}}</span>
+              در تاریخ
+              <span class="text-900 font-semibold">{{item.dateTime | jalaliDate:'date'}}</span>
+              ارسال شد.
+            </span>
+
+            <span class="font-light font-italic m-0" *ngIf="item.eventTitle === 'ایجاد معامله'">
+              قلم کاری جدید
+              <span class="text-900 font-semibold">{{item.eventData?.workItemTitle ?? ''}}</span>
+              در جریان
+              <span class="text-900 font-semibold">{{item.eventData?.pathTitle ?? ''}}</span>
+              در تاریخ
+              <span class="text-900 font-semibold">{{item.dateTime | jalaliDate:'date'}}</span>
+              توسط
+              <span>{{item.triggerUser.fullName}}</span>
+              ایجاد شد.
+            </span>
+
+            <span class="font-light font-italic m-0" *ngIf="item.eventTitle === 'تغییر وضعیت'">
+               قلم کاری
+              <span class="text-900 font-semibold">{{item.eventData?.workItemTitle ?? ''}}</span>
+              در جریان
+              <span class="text-900 font-semibold">{{item.eventData?.pathTitle ?? ''}}</span>
+              توسط
+              <span class="text-900 font-semibold">{{item.triggerUser.fullName}}</span>
+              در تاریخ
+              <span class="text-900 font-semibold">{{item.dateTime | jalaliDate:'date'}}</span>
+              تغییر وضعیت
+              <span class="text-900 font-semibold" *ngIf="item.eventData.newStatus">{{workItemStatesEnum[item.eventData.newStatus].value}}</span>
+              داده شد.
+            </span>
+
+            <span class="font-light font-italic m-0" *ngIf="item.eventTitle === 'تغییر گام'">
+              در جریان
+              <span class="text-900 font-semibold">{{item.eventData?.pathTitle ?? ''}}</span>
+              قلم کاری
+              <span class="text-900 font-semibold">{{item.eventData?.workItemTitle ?? ''}}</span>
+              در تاریخ
+              <span class="text-900 font-semibold">{{item.dateTime | jalaliDate:'date'}}</span>
+              توسط
+              <span class="text-900 font-semibold">{{item.triggerUser.fullName}}</span>
+              به گام
+              <span class="text-900 font-semibold">{{item.eventData.stepTitle}}</span>
+              انتقال داده شد.
+            </span>
+
+
+
+
+          </div>
+        </div>
+
+
+      </ng-container>
+
       <!-- begin sendMessages -->
       <ng-container *ngIf="activeItem == 'sendMessage'">
 
@@ -396,15 +470,13 @@
             <div class="chat-container">
               <div class="chat-message sent grid align-items-end"
                    *ngFor="let message of messages; let i=index">
-                <div class="col-1 flex justify-content-center">
-                <span class="pi pi-user p-avatar-icon avatar" [pTooltip]="message?.createUser?.fullName"
-                      tooltipPosition="right"></span>
-                </div>
 
-                <div class="col-11">
+                <div class="col-12 flex align-items-center gap-2">
+                  <span class="pi pi-user p-avatar-icon avatar" [pTooltip]="message?.createUser?.fullName"
+                        tooltipPosition="right"></span>
+
                   <div [pTooltip]="message.phoneNumber"
                        tooltipPosition="top">
-                    <!--                  <p class="m-0 text-left text-xs text-color-secondary">0915</p>-->
                     <div class="bubble">
                       <p class="text">{{message.message}}</p>
                       <span class="time">

@@ -17,7 +17,12 @@ import {DialogModule} from "primeng/dialog";
 import {JalaliDatePipe} from "../../_pipes/jalali.date.pipe";
 import {ActivityType} from "../../setting/_types/activity.type";
 import {UserTypeBase} from "../../setting/_types/user.type";
-import {CustomerSpecification, IMessagesType, WorkItemType} from "../../path/_types/create-work-item.type";
+import {
+  CustomerSpecification,
+  ICustomerEvents,
+  IMessagesType,
+  WorkItemType
+} from "../../path/_types/create-work-item.type";
 import {AttachmentType, CreateActivityType, CreateAttachmentDTO, TimePeriod} from "../../_types/create-activity.type";
 import {NoteType} from "../../work-item/_types/note.type";
 import {WorkItemService} from "../../work-item/work-item.service";
@@ -34,7 +39,7 @@ import {ActivityWorkItemType} from "../../work-item/_types/activity-workItem.typ
 import {CustomerService} from "../../setting/_services/customer.service";
 import {HttpResponse} from "@angular/common/http";
 import moment from "jalali-moment";
-import {ConfirmationService, MessageService} from "primeng/api";
+import {ConfirmationService, MenuItem, MessageService} from "primeng/api";
 import {AccordionModule} from "primeng/accordion";
 import {ActivitiesService} from "../../activities/activities.service";
 import {TimeUnitsEnum, TimeUnitsEnum2LabelMapping} from "../../_enums/TimeUnits.enum";
@@ -47,6 +52,8 @@ import {NewActivityModalComponent} from "../new-activity-modal/new-activity-moda
 import {ChangeLogType} from "../../_types/change-log.type";
 import {WorkItemChangeLogTypesEnum2LableMapping} from "../../_enums/workItem-change-log-types.enum";
 import {BadgeModule} from "primeng/badge";
+import {WorkItemStatesEnum, WorkItemStatesEnum2LabelMapping} from "../../path/_enums/work-item-states.enum";
+import {TableModule} from "primeng/table";
 
 @Component({
   selector: 'app-activity-note',
@@ -79,7 +86,8 @@ import {BadgeModule} from "primeng/badge";
     AccordionModule,
     TooltipModule,
     NewActivityModalComponent,
-    BadgeModule
+    BadgeModule,
+    TableModule
   ],
   providers:[JalaliDatePipe]
 })
@@ -88,6 +96,7 @@ export class ActivityNoteComponent implements OnInit{
 
   fileType:any
   TimeUnits:any
+  workItemStatesEnum:any
   fileTypeValue:any
   urlFile = []
   selectedFileType:any
@@ -99,11 +108,14 @@ export class ActivityNoteComponent implements OnInit{
 
   @Input() workItem?: WorkItemType;
   @Input() messages?: IMessagesType[];
+  @Input() customerEvents?: ICustomerEvents[];
   @Input() workItemId?: string | null = null;
   @Input() ticketId?: string | null = null;
   @Input() customerId?: string | null = null;
+  @Input() customerDocuments?: MenuItem[] = [];
   @Input() expertId?: number| null = null;
   @Input() pathId?: number | null = null;
+  @Input() showCustomerEventHistory?: boolean = false;
   isCollapsed: boolean = true;
   activeContent: string | null = null;
   startDate!: string;
@@ -177,6 +189,7 @@ export class ActivityNoteComponent implements OnInit{
               private authService:AuthenticationService,) {
     this.fileType = Utilities.ConvertEnumToKeyPairArray(FileTypeEnum , FileTypeEnum2LabelMapping)
     this.TimeUnits = Utilities.ConvertEnumToKeyPairArray(TimeUnitsEnum,TimeUnitsEnum2LabelMapping)
+    this.workItemStatesEnum = Utilities.ConvertEnumToKeyPairArray(WorkItemStatesEnum, WorkItemStatesEnum2LabelMapping)
 
     authService.token?.pipe(take(1)).subscribe(token => {
       this.user = token
@@ -190,7 +203,6 @@ export class ActivityNoteComponent implements OnInit{
     this.setActive('activities');
     this.getChangeLogData()
     this.reminders = [new TimePeriod()];
-    console.log(this.workItem)
   }
 
 

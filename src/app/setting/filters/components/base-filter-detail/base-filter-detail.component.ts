@@ -10,6 +10,10 @@ import {
 } from "../../../_types/filter.type";
 import {MessageService} from "primeng/api";
 import {ActivatedRoute, Router} from "@angular/router";
+import {IActiveDate} from "ng-persian-datepicker";
+import {FormControl} from "@angular/forms";
+import {TabViewChangeEvent} from "primeng/tabview/tabview.interface";
+import {OverlayPanel} from "primeng/overlaypanel";
 
 
 export class BaseFilterDetailComponent<T>{
@@ -176,8 +180,22 @@ export class BaseFilterDetailComponent<T>{
           select.filterParameter.forEach(field => {
             field.filter.forEach(i =>{
               i.filters.forEach(ff=>{
-                if (ff.conditions?.length) {
+                if (ff.conditions?.length && item.type !== 'datetime') {
                   filterField.conditions.push(...ff.conditions);
+                } else {
+                  if (this.dateTime && this.dateTime.length > 0){
+                    ff.conditions.forEach(item => item.value = this.dateTime.trim().concat('T' + '00:00:00'))
+                  }
+                  if (this.syncDayCounter && this.syncDayCounter.length > 0){
+                    ff.conditions.forEach((item) =>{
+                      const unitCodes: Record<string, string> = {دقیقه: 'M', ساعت: 'H', روز: 'D', ماه: 'N'};
+                      const value = this.syncDayCounter.split(' ');
+                      const data = unitCodes[value[1]]
+                      value[1] = data
+                      const join = value.join('')
+                      item.value = join
+                    })
+                  }
                 }
               })
             })
@@ -693,5 +711,120 @@ export class BaseFilterDetailComponent<T>{
       this.dialogParameters.forEach(p => p.value = '');
     }
   }
+
+  dateTime:string = '';
+  dateTimeControl = new FormControl(null)
+  units = ['دقیقه', 'ساعت', 'روز', 'ماه'];
+  // timerAction = new Map<string, { count: number; unitIndex: number }>();
+  timerAction: { [key: string]: { count: number; unitIndex: number } } = {};
+  syncDayCounter:string = ''
+  selectStartDateTime(event: IActiveDate) {
+    this.dateTime = event.gregorian
+    console.log(this.dateTimeControl.value)
+  }
+
+
+  incrementAction(i: number) {
+    const key = `${i}`;
+    this.initTimerAction(key);
+    // this.timerAction.get(key)!.count++;
+    this.timerAction[key].count++;
+    this.syncExecutionDateTime(i);
+  }
+  decrementAction(i: number) {
+    const key = `${i}`;
+    this.initTimerAction(key);
+    // if (this.timerAction.get(key)!.count > 1) {
+    //   this.timerAction.get(key)!.count--;
+    //   this.syncExecutionDateTime(i);
+    // }
+    if (this.timerAction[key].count > 1) {
+      this.timerAction[key].count--; // دسترسی مستقیم به آبجکت
+      this.syncExecutionDateTime(i);
+    }
+  }
+
+  initTimerAction(key: string) {
+    // if (!this.timerAction.has(key)) {
+    //   this.timerAction.set(key, { count: 1, unitIndex: 0 });
+    // }
+    if (!this.timerAction[key]) {
+      this.timerAction[key] = { count: 1, unitIndex: 0 }; // تنظیم مقدار پیش‌فرض
+    }
+    this.syncExecutionDateTime(+key);
+  }
+
+  nextUnitAction(i: number) {
+    const key = `${i}`;
+    this.initTimerAction(key);
+    // const state = this.timerAction.get(key)!;
+    // if (state.unitIndex < this.units.length - 1) {
+    //   state.unitIndex++;
+    //   this.syncExecutionDateTime(i);
+    // }
+    const state = this.timerAction[key]; // دسترسی مستقیم به آبجکت
+    if (state.unitIndex < this.units.length - 1) {
+      state.unitIndex++;
+      this.syncExecutionDateTime(i);
+    }
+  }
+
+  prevUnitAction(i: number) {
+    const key = `${i}`;
+    this.initTimerAction(key);
+    // const state = this.timerAction.get(key)!;
+    // if (state.unitIndex > 0) {
+    //   state.unitIndex--;
+    //   this.syncExecutionDateTime(i);
+    // }
+    const state = this.timerAction[key]; // دسترسی مستقیم به آبجکت
+    if (state.unitIndex > 0) {
+      state.unitIndex--;
+      this.syncExecutionDateTime(i);
+    }
+  }
+
+  syncExecutionDateTime(i: number) {
+    const key = `${i}`;
+    // const timer = this.timerAction.get(key);
+    const timer = this.timerAction[key];
+    if (!timer) return null;
+
+    const unitCodes: Record<string, string> = {دقیقه: 'M', ساعت: 'H', روز: 'D', ماه: 'N'};
+
+    const count = timer.count;
+    const unit = this.units[timer.unitIndex]; // ساعت روز ماه دقیقه
+    const code = unitCodes[unit]; // D G M N تبدیل واحد به
+
+    this.syncDayCounter = `${count} ${unit}`;
+  }
+
+  initDateTime(event, op: OverlayPanel){
+    event.value = this.dateTimeControl.value
+    op.hide()
+  }
+
+  initDayCounter(event, op: OverlayPanel){
+    event.value = this.syncDayCounter;
+    op.hide()
+  }
+
+  onChangeTab(event:TabViewChangeEvent) {
+    this.dateTimeControl.setValue(null);
+    this.dateTime = null;
+    this.syncDayCounter = null;
+  }
+
+  removeValue(cond:any){
+    cond.value = null
+    this.dateTimeControl.setValue(null);
+    this.dateTime = null;
+    this.syncDayCounter = null;
+  }
+
+  overlayPanelToggle(op: OverlayPanel, $event, item:any) {
+    if (!item.parameter) op.toggle($event)
+  }
+
 
 }

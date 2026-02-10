@@ -2,7 +2,8 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 // const baseUrl = 'https://192.168.88.249:44345/api/';
-const baseUrl = 'http://192.168.88.244:44345/api/';
+// const baseUrl = 'http://crm.fatap.ir:8080/api/';
+const baseUrl = 'https://192.168.88.244:44345/api/';
 // const baseUrl = 'https://192.168.88.249:44345/api/';
 // const baseUrl = 'https://localhost:44345/api/';
 //const baseUrl = 'http://payesh.mashhad.ir/api/';

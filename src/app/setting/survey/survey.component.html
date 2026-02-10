@@ -1,0 +1,106 @@
+<div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
+  <p-toolbar styleClass="p-mb-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple  label="جدید" icon="pi pi-plus" class="p-button-success p-mr-2"
+              routerLink="new"  ></button>
+
+    </ng-template>
+  </p-toolbar>
+
+  <p-table #dt
+           [rows]="10"
+           [value]="many?many:[]"
+           [paginator]="true"
+           [rowHover]="true"
+           dataKey="id"
+           [showCurrentPageReport]="true"
+           [lazy]="true"
+           (onLazyLoad)="lazyLoadData(construct, dt,$event,'/list')"
+           [totalRecords]="totalRecords? totalRecords : 0"
+           [loading]="tableLoading"
+           [rowsPerPageOptions]="[10,25,50,100,200,500]"
+           currentPageReportTemplate=" از {first}  تا {last} از مجموع {totalRecords} نتیجه"
+           responsiveLayout="scroll"
+           styleClass="p-datatable-responsive-demo p-datatable-sm"
+           stateStorage="local"
+           stateKey="surveyTable">
+
+    <!--        {first} تا {last} از  {totalRecords}-->
+
+    <ng-template pTemplate="header">
+      <tr>
+
+        <th pSortableColumn="title">
+          <!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
+          عنوان
+<!--          <p-sortIcon field="title"></p-sortIcon>-->
+        </th>
+
+
+        <th></th>
+      </tr>
+
+    </ng-template>
+
+
+    <ng-template pTemplate="body" let-object>
+      <tr>
+
+        <td>
+          <span class="p-column-title">عنوان</span>
+          {{object.title}}
+        </td>
+
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning m-1"
+                  pTooltip="ویرایش" tooltipPosition="top" [routerLink]="['edit', object.id]">
+          </button>
+
+          <button pButton pRipple icon="pi pi-file-word" class="p-button-rounded p-button-help m-1"
+                  pTooltip="سوالات" tooltipPosition="top" [routerLink]="['questions', object.id]" ></button>
+
+          <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info m-1"
+                  pTooltip="پیش نمایش سوالات" tooltipPosition="top" (click)="showPreviewQuestions(object.id)" ></button>
+
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger m-1"
+                  pTooltip="حذف" tooltipPosition="top" (click)="deleteItem(object.id)" ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+</div>
+
+<!--************ begin Preview Questions *************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showDialog"
+  [appendTo]="'body'"
+  [header]="'پیش نمایش سوالات'"
+  [modal]="true"
+  [closable]="false">
+
+  <div class="grid">
+    <div class="col-12 p-card p-4 shadow-none border-1 border-gray-300 my-2 bg-gray-100" *ngFor="let item of oneObject.questions; let index = index">
+      <h6>{{index+1}}- {{item.title}}</h6>
+      <ul class="flex flex-wrap gap-6 list-disc">
+        <li *ngFor="let op of item.options; let i = index"
+            class="py-2 px-0">
+          <span class="">{{op.title}}</span>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+
+  <ng-template pTemplate="footer">
+
+    <button pButton pRipple
+      label="بستن" class="p-button-success"
+      (click)="showDialog=false"></button>
+  </ng-template>
+
+</p-dialog>
+<!--************ end Preview Questions *************-->

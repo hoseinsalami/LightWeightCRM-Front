@@ -286,7 +286,92 @@
                             </ng-container>
 
                             <!-- مقدار -->
-                            <input pInputText [(ngModel)]="cond.value" [disabled]="!!cond.parameter" placeholder="مقدار" />
+                            <input pInputText *ngIf="filter.type !== 'datetime'" [(ngModel)]="cond.value" [disabled]="!!cond.parameter" placeholder="مقدار" />
+
+                            <div *ngIf="filter.type === 'datetime'" style="width:150px; height:45px"
+                                 class="border-round border-1 border-solid border-gray-300 flex align-items-center justify-content-between px-2"
+                                 (click)="overlayPanelToggle(op, $event, cond)">
+                                    {{cond.value ? cond.value : 'مقدار'}}
+                                    <i class="pi pi-times text-red-500" *ngIf="cond.value" (click)="removeValue(cond)"></i>
+                            </div>
+
+<!--                            <input pInputText *ngIf="filter.type === 'datetime'" (click)="op.toggle($event)"-->
+<!--                                   [(ngModel)]="cond.value" [disabled]="!!cond.parameter" placeholder="مقدار" />-->
+                            <p-overlayPanel #op>
+                              <div class="grid">
+                                <div class="col-12">
+                                  <p-tabView (onChange)="onChangeTab($event)">
+                                    <p-tabPanel>
+                                      <ng-template pTemplate="header" >
+                                        <i class="ml-2 pi pi-book"></i>
+                                        <span>تاریخ</span>
+                                      </ng-template>
+                                      <div class="grid">
+                                        <div class="col-12 md:col-12">
+                                          <div class="datePickerContainer relative">
+                                            <label class="text-right font-bold mb-2" for="dateTime">تاریخ</label>
+                                            <ng-persian-datepicker
+                                              [style]="{'width':'220px'}"
+                                              [dateInitValue]="false"
+                                              (dateOnSelect)="selectStartDateTime($event)"
+                                              [dateGregorianFormat]="'YYYY-MM-DD '"
+                                              [dateFormat]="'YYYY-MM-DD '">
+                                              <input [formControl]="dateTimeControl" id="dateTime" name="dateTime" class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+                                            </ng-persian-datepicker>
+                                          </div>
+                                        </div>
+
+                                        <div class="col-12 flex justify-content-end gap-3">
+                                          <button type="button" pButton pRipple class="p-button-success w-6rem" label="ثبت"
+                                           (click)="initDateTime(cond,op)"></button>
+                                        </div>
+
+                                      </div>
+                                    </p-tabPanel>
+
+                                    <p-tabPanel>
+                                      <ng-template pTemplate="header" >
+                                        <i class="ml-2 pi pi-book"></i>
+                                        <span>روز شمار</span>
+                                      </ng-template>
+
+                                      <div class="grid">
+                                        <div class="col-12">
+                                          <div class="flex align-items-center gap-3" >
+                                            <!-- بخش شمارنده -->
+                                            <div class="flex align-items-center gap-1">
+                                              <button class="btn-counter" (click)="decrementAction(ci2)">-</button>
+<!--                                              <span class="value-counter">{{ timerAction.get(ci2 + '')?.count || 1 }}</span>-->
+                                              <span class="value-counter">{{ timerAction[ci2 + '']?.count || 1 }}</span>
+                                              <button class="btn-counter"  (click)="incrementAction(ci2)">+</button>
+                                            </div>
+
+                                            <!-- بخش انتخاب واحد -->
+                                            <div class="flex align-items-center gap-1">
+                                              <button class="btn-counter"  (click)="prevUnitAction(ci2)"> < </button>
+<!--                                              <span class="value-counter">{{ units[(timerAction.get(ci2 + '')?.unitIndex) || 0] }}</span>-->
+                                              <span class="value-counter">{{ units[(timerAction[ci2 + '']?.unitIndex) || 0] }}</span>
+                                              <button class="btn-counter"  (click)="nextUnitAction(ci2)"> > </button>
+                                            </div>
+                                          </div>
+
+                                        </div>
+
+                                        <div class="col-12 flex justify-content-end gap-3">
+                                          <button type="button" pButton pRipple class="p-button-success w-6rem" label="ثبت"
+                                           (click)="initDayCounter(cond,op)"></button>
+                                        </div>
+
+                                      </div>
+
+                                    </p-tabPanel>
+
+                                  </p-tabView>
+                                </div>
+                              </div>
+                            </p-overlayPanel>
+
+
 
                             <!-- انتخاب پارامتر -->
                             <p-dropdown

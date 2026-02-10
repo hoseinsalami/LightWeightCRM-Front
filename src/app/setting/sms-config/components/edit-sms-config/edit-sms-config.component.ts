@@ -37,7 +37,7 @@ export class EditSmsConfigComponent extends BaseSmsConfigDetailComponent<SmsProv
     private smsService: SmsConfigService,
     private messageService: MessageService,
     private router: Router,
-    private activeRoute: ActivatedRoute,
+    activeRoute: ActivatedRoute,
     loading: LoadingService
   ) {
     let manager =
@@ -91,7 +91,7 @@ export class EditSmsConfigComponent extends BaseSmsConfigDetailComponent<SmsProv
       }
     })
 
-    super(manager, smsService, loading);
+    super(manager, smsService, loading, activeRoute);
 
     this.newManager = manager;
   }

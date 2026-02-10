@@ -1,0 +1,259 @@
+<div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
+  <p-toolbar styleClass="p-mb-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple  label="سوال جدید" icon="pi pi-plus" class="p-button-success" (click)="isShowDialog()"></button>
+      <button pButton pRipple  label="بازگشت" icon="pi pi-sign-out" class="p-button-danger mr-2" [routerLink]="['/setting/survey']"></button>
+      <button pButton pRipple  label="ترتیب سوالات" icon="pi pi-sort-alt" class="p-button-info mr-2" (click)="onShowDialogSort()"></button>
+
+    </ng-template>
+  </p-toolbar>
+
+  <p-table #dt
+           [rows]="10"
+           [value]="many?many:[]"
+           [paginator]="true"
+           [rowHover]="true"
+           dataKey="id"
+           [showCurrentPageReport]="true"
+           [lazy]="true"
+           (onLazyLoad)="getListOfQuestion($event)"
+           [totalRecords]="totalRecords? totalRecords : 0"
+           [loading]="tableLoading"
+           [rowsPerPageOptions]="[10,25,50,100,200,500]"
+           currentPageReportTemplate=" از {first}  تا {last} از مجموع {totalRecords} نتیجه"
+           responsiveLayout="scroll"
+           styleClass="p-datatable-responsive-demo p-datatable-sm"
+           stateStorage="local"
+           stateKey="questionsTable">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ردیف</th>
+
+        <th pSortableColumn="title">
+          <!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
+          عنوان
+<!--          <p-sortIcon field="title"></p-sortIcon>-->
+        </th>
+
+
+        <th></th>
+      </tr>
+
+    </ng-template>
+
+
+    <ng-template pTemplate="body" let-object let-i="rowIndex">
+      <tr>
+        <td>
+          <span class="p-column-title">ردیف</span>
+          {{ i +1 }}
+        </td>
+
+        <td>
+          <span class="p-column-title">عنوان</span>
+          {{object.title}}
+        </td>
+
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2 m-1"
+                  pTooltip="ویرایش"
+                  (click)="isShowDialog(object.id)" ></button>
+
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2 m-1" pTooltip="حذف"
+                  (click)="onDeleteQuestion(object.id)" ></button>
+        </td>
+      </tr>
+    </ng-template>
+
+
+  </p-table>
+</div>
+
+
+<!--************ begin add Question *************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showDialog"
+  [appendTo]="'body'"
+  [header]="'سوال جدید'"
+  [modal]="true"
+  [closable]="false">
+
+  <div class="grid">
+    <div class="col-12">
+      <div class="form-group">
+        <label class="text-sm" for="name">متن سوال </label>
+        <span class="text-red-500 font-bold text- mr-1">*</span>
+        <div class="field">
+          <input
+            pInputText
+            type="text"
+            id="title"
+            name="title"
+            class="p-fieldset w-full"
+            placeholder="متن سوال وارد نمایید"
+            [(ngModel)]="oneObject.title">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <p-fieldset [style]="{padding:'0px'}">
+        <ng-template pTemplate="header">
+          <p>گزینه ها</p>
+        </ng-template>
+
+        <div class="border-2 border-dashed surface-border border-round surface-ground px-3 py-2 mb-2"
+             *ngFor="let option of oneObject.options; let i = index; let first = first">
+          <div class="grid">
+            <div class="col12 md:col-6">
+              <div class="form-group">
+                <label class="text-sm" for="title">متن</label>
+                <div class="field">
+                  <input
+                    pInputText
+                    type="text"
+                    id="text"
+                    name="text"
+                    class="p-fieldset"
+                    [style]="{'width': '100%'}"
+                    [(ngModel)]="option.title">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 md:col-6 flex align-items-center justify-content-between">
+
+              <div class="flex gap-2">
+                <i class="pi pi-plus text-green-500 cursor-pointer flex align-items-center p-2 border-round bg-green-100"
+                   (click)="decreaseScore(option)"></i>
+                <div class="form-group flex align-items-center gap-2">
+                  <label class="text-sm">امتیاز</label>
+                  {{ option.score }}
+                </div>
+                <i class="pi pi-minus text-red-500 cursor-pointer flex align-items-center p-2 border-round bg-red-100"
+                   (click)="increaseScore(option)"></i>
+              </div>
+
+              <div class="flex gap-2">
+                <i *ngIf="first" class="pi pi-plus text-green-500 cursor-pointer flex align-items-center p-2 bg-green-100 border-round"
+                   (click)="addOption()"></i>
+                <i class="pi pi-trash text-red-500 cursor-pointer flex align-items-center p-2 bg-red-100 border-round"
+                   (click)="removeOption(i)"></i>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </p-fieldset>
+    </div>
+
+  </div>
+
+
+  <ng-template pTemplate="footer">
+
+    <button
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success button"
+      (click)="onSave(oneObject.id)"></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger"
+      (click)="showDialog = false"></button>
+
+  </ng-template>
+
+</p-dialog>
+<!--************ begin add Question *************-->
+
+<!--************ begin add sort *************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showDialogTable"
+  [appendTo]="'body'"
+  [header]="'سوال جدید'"
+  [modal]="true"
+  [closable]="false">
+
+  <div class="grid">
+    <div class="col-12">
+      <p-table #dt
+               [rows]="10"
+               [value]="sortList?sortList:[]"
+               [rowHover]="true"
+               (onRowReorder)="onRowReorder($event)"
+               dataKey="id"
+               [showCurrentPageReport]="true"
+               [totalRecords]="totalRecords? totalRecords : 0"
+               [loading]="tableLoading"
+               currentPageReportTemplate=" از {first}  تا {last} از مجموع {totalRecords} نتیجه"
+               responsiveLayout="scroll"
+               styleClass="p-datatable-responsive-demo p-datatable-sm">
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th></th>
+
+            <th>ردیف</th>
+
+            <th pSortableColumn="title">
+              <!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
+              عنوان
+              <!--          <p-sortIcon field="title"></p-sortIcon>-->
+            </th>
+
+            <th></th>
+          </tr>
+
+        </ng-template>
+
+
+        <ng-template pTemplate="body" let-object let-i="rowIndex">
+          <tr [pReorderableRow]="i">
+            <td style="width: 40px">
+              <i class="pi pi-bars cursor-pointer" pReorderableRowHandle></i>
+            </td>
+
+            <td>
+              <span class="p-column-title">ردیف</span>
+              {{ i +1 }}
+            </td>
+
+            <td>
+              <span class="p-column-title">عنوان</span>
+              {{object.title}}
+            </td>
+
+          </tr>
+        </ng-template>
+
+
+      </p-table>
+    </div>
+  </div>
+
+
+  <ng-template pTemplate="footer">
+
+    <button
+      pButton
+      pRipple
+      label="ثبت"
+      class="p-button-success"
+      (click)="onSubmitDialogTable()"></button>
+
+  </ng-template>
+
+</p-dialog>
+<!--************ begin add sort *************-->

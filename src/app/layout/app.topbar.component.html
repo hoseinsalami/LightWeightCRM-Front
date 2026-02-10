@@ -9,7 +9,7 @@
 <!--    </button>-->
     <div class="flex gap-2" *ngIf="user.userType != UserTypesEnum.SystemAdmin; else systemAdmin">
 
-      <div style="z-index:999; position:relative">
+      <div #container class="search-wrapper" style="z-index:999; position:relative">
         <input type="text" pInputText
                style="width:250px"
                (focus)="showCard()"
@@ -74,7 +74,7 @@
       <div class="flex align-items-center gap-1">
         <button (click)="menu.toggle($event)"
                 class="p-link p-2 m-0 hover:bg-yellow-200 hover:text-gray-600"
-                style="color:#b5cf38">کاریز ها</button>
+                style="color:#b5cf38">جریان ها</button>
 
         <p class="p-link p-2 m-0 hover:bg-yellow-200 hover:text-gray-600 flex align-items-center"
            style="color:#b5cf38"
@@ -92,7 +92,6 @@
              [routerLink]="['tickets/'+ticket.id]"
              routerLinkActive="active-item"
              [routerLinkActiveOptions]="{ exact: true }">
-            <!--             (click)="setActiveItem(ticket.label)" [class]="{'active-item' : selectedItem === ticket.label}">-->
             {{ticket.label}}
             <span style="font-size:11px"
                   class="flex align-items-center justify-content-center border-round-3xl pt-1 text-white font-light">({{ticket.badge}})</span>
@@ -123,6 +122,11 @@
            style="color:#b5cf38"
            routerLink="/admin/permissions"
            routerLinkActive="active-item">دسترسی ها</p>
+
+        <p class="p-link p-3 m-0 hover:bg-yellow-200 hover:text-gray-600 flex align-items-center"
+           style="color:#b5cf38"
+           routerLink="/admin/tickets"
+           routerLinkActive="active-item">پشتیبانی</p>
 
       </div>
     </ng-template>
@@ -161,7 +165,7 @@
 
 
 
-      <button class="p-link layout-topbar-button hover:bg-yellow-200 " [routerLink]="'/activities'" title="داشبورد">
+      <button *ngIf="user.userType != UserTypesEnum.SystemAdmin" class="p-link layout-topbar-button hover:bg-yellow-200 " [routerLink]="'/activities'" title="داشبورد">
         <i class="pi pi-home"  style="color:#b5cf38" ></i>
         <span>داشبورد</span>
       </button>
@@ -171,11 +175,11 @@
         <p class="flex align-items-center mb-0 ml-3">{{user?.fullName}}</p>
         <div *ngIf="user" class="flex align-items-center">
           <p-avatar  icon="pi pi-user" class="md:ml-3" [style]="{'background-color': '#9c27b0', 'color': '#ffffff'}" shape="circle"
-                     pTooltip="<div style='direction:rtl;color:white;margin-left:10px;'><span >{{UserTypesEnum2LabelMapping[user.userType]}} - {{user.fullName}}<br> شرکت: {{user.tenant}} <br> آخرین ورود:<br>{{user.lastLogin | jalaliDate}} </span></div>"
+                     pTooltip="<div style='direction:rtl;color:white;margin-left:10px;'><span >{{UserTypesEnum2LabelMapping[user.userType]}} - {{user.fullName}}<br> شرکت: {{user.tenant}} <br> آخرین ورود:<br>{{user.lastLogin | jalaliDate}}<br> آخرین ورود:<br>{{user.lastLogin | jalaliDate}} <br> ساعت سیستم:<br>{{serverTime$ | async | jalaliDate}}</span></div>"
                      [escape]="false" tooltipPosition="right">
           </p-avatar>
 
-          <!--                <p-menu #menu [popup]="true" [model]="profileItem"></p-menu>-->
+          <!-- <p-menu #menu [popup]="true" [model]="profileItem"></p-menu>-->
           <button class="p-link layout-topbar-button hover:bg-yellow-200" [routerLink]="'/logout'" title="خروج">
             <p class="pi pi-sign-out text-red-500 m-0" style="font-size: 18px"></p>
             <span>خروج</span>

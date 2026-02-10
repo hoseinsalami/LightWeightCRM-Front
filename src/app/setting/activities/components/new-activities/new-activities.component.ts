@@ -11,6 +11,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {LoadingService} from "../../../../_services/loading.service";
 import {ActivitiesService} from "../../../_services/activities.service";
 import {InputNumberModule} from "primeng/inputnumber";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'app-new-activities',
@@ -25,7 +26,8 @@ import {InputNumberModule} from "primeng/inputnumber";
     FormsModule,
     NgClass,
     InputNumberModule,
-    NgIf
+    NgIf,
+    DividerModule
   ]
 })
 export class NewActivitiesComponent extends BaseActivitiesDetailComponent<ActivityType>{
@@ -34,9 +36,9 @@ export class NewActivitiesComponent extends BaseActivitiesDetailComponent<Activi
   constructor(
     private activityService: ActivitiesService,
     private messageService: MessageService,
-              private router: Router,
-              private activeRoute: ActivatedRoute,
-              loading: LoadingService) {
+    private router: Router,
+    activeRoute: ActivatedRoute,
+    loading: LoadingService) {
     let manager =
       new BaseNewManager<ActivityType>(ActivityType, activityService, messageService, {}, router, activeRoute, loading)
 
@@ -82,7 +84,7 @@ export class NewActivitiesComponent extends BaseActivitiesDetailComponent<Activi
         router.navigate(['./'], {relativeTo:activeRoute.parent});
       });
 
-    super(manager,activityService,loading);
+    super(manager,activityService,loading, activeRoute);
 
     // this.mode = 'New';
 

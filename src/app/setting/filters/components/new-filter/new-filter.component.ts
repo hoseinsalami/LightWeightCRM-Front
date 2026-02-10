@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
 import {CommonModule} from "@angular/common";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MessageService, SharedModule} from "primeng/api";
 import {DropdownModule} from "primeng/dropdown";
 import {InputTextareaModule} from "primeng/inputtextarea";
@@ -16,6 +16,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {LoadingService} from "../../../../_services/loading.service";
 import {BaseNewManager} from "../../../../_classes/base-new.manager";
 import {DialogModule} from "primeng/dialog";
+import {OverlayPanel, OverlayPanelModule} from "primeng/overlaypanel";
+import { NgPersianDatepickerModule} from "ng-persian-datepicker";
+import {TabViewModule} from "primeng/tabview";
+import {TabViewChangeEvent} from "primeng/tabview/tabview.interface";
 
 @Component({
   selector: 'app-new-filter',
@@ -26,6 +30,7 @@ import {DialogModule} from "primeng/dialog";
     SharedModule,
     FormsModule,
     CommonModule,
+    ReactiveFormsModule,
     InputTextModule,
     ButtonModule,
     DropdownModule,
@@ -34,6 +39,9 @@ import {DialogModule} from "primeng/dialog";
     RadioButtonModule,
     DividerModule,
     DialogModule,
+    OverlayPanelModule,
+    NgPersianDatepickerModule,
+    TabViewModule
   ]
 })
 export class NewFilterComponent extends BaseFilterDetailComponent<CreateFilterDTO>{

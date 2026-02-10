@@ -10,6 +10,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'app-new-failures',
@@ -21,7 +22,8 @@ import {FormsModule} from "@angular/forms";
     InputTextModule,
     ButtonModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    DividerModule
   ]
 })
 export class NewFailuresComponent extends BaseFailuresDetailComponent<FailureTypeList>{
@@ -30,13 +32,13 @@ export class NewFailuresComponent extends BaseFailuresDetailComponent<FailureTyp
   constructor(
     private failureService: FailuresService,
     private messageService: MessageService,
-              private router: Router,
-              private activeRoute: ActivatedRoute,
-              loading: LoadingService) {
+    private router: Router,
+    activeRoute: ActivatedRoute,
+    loading: LoadingService) {
     let manager =
       new BaseNewManager<FailureTypeList>(FailureTypeList, failureService , messageService, {} ,router ,activeRoute, loading)
 
-    super(manager, failureService ,loading);
+    super(manager, failureService ,loading, activeRoute);
 
     manager.validation = () =>{
       if (!this.manager.oneObject.title) {

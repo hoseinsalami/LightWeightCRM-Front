@@ -11,6 +11,7 @@ import {ButtonModule} from "primeng/button";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {CustomMessageService} from "../../../../_services/custom-message.service";
+import {DividerModule} from "primeng/divider";
 
 
 @Component({
@@ -23,7 +24,8 @@ import {CustomMessageService} from "../../../../_services/custom-message.service
     InputTextModule,
     ButtonModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    DividerModule
   ]
 })
 export class EditAccustomComponent extends BaseAccustomDetailComponent<AccustomType>{
@@ -33,7 +35,7 @@ export class EditAccustomComponent extends BaseAccustomDetailComponent<AccustomT
     private accustomService: AccustomService,
     private messageService: MessageService,
     private router: Router,
-    private activeRoute: ActivatedRoute,
+    activeRoute: ActivatedRoute,
     loading: LoadingService
   ) {
     let manager =
@@ -62,7 +64,7 @@ export class EditAccustomComponent extends BaseAccustomDetailComponent<AccustomT
   manager.OnSuccessfulSave.subscribe((i) =>{
       router.navigate(['./'], {relativeTo:this.activeRoute.parent});
     });
-  super(manager, accustomService, loading);
+  super(manager, accustomService, loading, activeRoute);
 
   this.newManager = manager;
 

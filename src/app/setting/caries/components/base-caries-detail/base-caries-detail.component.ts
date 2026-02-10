@@ -11,6 +11,7 @@ import {
 } from "../../../../_enums/path-assignment-policies.enum";
 import {UserTypeBase} from "../../../_types/user.type";
 import {TimeUnitsEnum, TimeUnitsEnum2LabelMapping} from "../../../../_enums/TimeUnits.enum";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   template: ''
@@ -29,9 +30,13 @@ export class BaseCariesDetailComponent<T> {
   adminUsers: UserTypeBase[]
   expertUsers: UserTypeBase[]
 
+  isId?: string;
   constructor(protected manager: BaseSaveManager<T>,
               private cariesService: CariesService,
-              protected loading: LoadingService) {
+              protected loading: LoadingService,
+              protected activeRoute: ActivatedRoute) {
+    this.isId = this.activeRoute.snapshot.params['id'];
+
     this.assignmentPolicy = Utilities.ConvertEnumToKeyPairArray(PathAssignmentPoliciesEnum, PathAssignmentPoliciesEnum2LabelMapping);
     this.TimeUnits = Utilities.ConvertEnumToKeyPairArray(TimeUnitsEnum,TimeUnitsEnum2LabelMapping)
     this.getListOfUserAdmins();

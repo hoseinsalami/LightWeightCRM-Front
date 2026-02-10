@@ -14,7 +14,7 @@ import {AutoCompleteCompleteEvent} from "primeng/autocomplete";
 import {IActiveDate, NgPersianDatepickerComponent} from "ng-persian-datepicker";
 import {ActivatedRoute} from "@angular/router";
 import {DomSanitizer} from "@angular/platform-browser";
-import {MessageService} from "primeng/api";
+import {MenuItem, MessageService} from "primeng/api";
 import {CustomMessageService} from "../../../../_services/custom-message.service";
 import {AccustomType} from "../../../_types/accustom.type";
 import {Location} from "@angular/common";

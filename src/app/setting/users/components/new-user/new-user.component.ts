@@ -15,6 +15,7 @@ import {BaseNewManager} from "../../../../_classes/base-new.manager";
 import {LoadingService} from "../../../../_services/loading.service";
 import {PasswordModule} from "primeng/password";
 import {CommonModule, NgIf} from "@angular/common";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'app-new-user',
@@ -32,7 +33,8 @@ import {CommonModule, NgIf} from "@angular/common";
     DropdownModule,
     PasswordModule,
     CommonModule,
-    NgIf
+    NgIf,
+    DividerModule
   ]
 })
 export class NewUserComponent extends BaseUserDetailComponent<UserTypeCreate>{
@@ -73,7 +75,7 @@ export class NewUserComponent extends BaseUserDetailComponent<UserTypeCreate>{
         return false;
       }
 
-      if (!this.manager.oneObject.userType) {
+      if (this.manager.oneObject.userType == null || this.manager.oneObject.userType == undefined ) {
         this.messageService.add({
           severity: 'error',
           summary: 'خطا',

@@ -8,6 +8,7 @@ import {CariesComponent} from "./caries.component";
 import {NewCariesComponent} from "./components/new-caries/new-caries.component";
 import {EditCariesComponent} from "./components/edit-caries/edit-caries.component";
 import {AuthGuard} from "../../_guard/auth.guard";
+import {ConfigComponent} from "./config/config.component";
 
 const routes: Routes = [
   {
@@ -25,6 +26,12 @@ const routes: Routes = [
   {
     path: 'edit/:id',
     component: EditCariesComponent ,
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+  {
+    path: 'config/:id',
+    component: ConfigComponent ,
     canActivate: [AuthGuard],
     data: {permission: 'everyOne'}
   },

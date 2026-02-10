@@ -56,14 +56,14 @@ export class NewCariesComponent extends BaseCariesDetailComponent<CreatePathType
     private service: CariesService,
     private messageService: MessageService,
     private router: Router,
-    private activeRoute: ActivatedRoute,
+    activeRoute: ActivatedRoute,
     loading: LoadingService,
     fb: FormBuilder
   ) {
     let manager =
       new BaseNewManager<any>(CreatePathType,service, messageService,{}, router, activeRoute, loading);
 
-    super(manager, service, loading);
+    super(manager, service, loading,activeRoute);
 
     manager.validation = () =>{
       if (!this.manager.oneObject.title) {
@@ -118,8 +118,6 @@ export class NewCariesComponent extends BaseCariesDetailComponent<CreatePathType
       })
     }
   }
-
-
 
   changeOrder(){
     this.manager.oneObject.steps.forEach((data , index) => { data.order = index})

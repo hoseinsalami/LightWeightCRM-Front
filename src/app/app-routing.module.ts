@@ -36,10 +36,11 @@ import {AuthGuard} from "./_guard/auth.guard";
                   {
                     path: 'admin', component: SystemAdminComponent,
                     children: [
-                      { path: 'company', loadChildren: () => import('./company/company.module').then(c => c.CompanyModule)},
-                      { path: 'sms', loadChildren: () => import('./service-provider/service-provider.module').then(s => s.ServiceProviderModule)},
-                      { path: 'event', loadChildren: () => import('./event/event.module').then(e => e.EventModule)},
-                      { path: 'permissions', loadChildren: () => import('./permissions/permissions.module').then(p => p.PermissionsModule)}
+                      { path: 'company', loadChildren: () => import('./admin/company/company.module').then(c => c.CompanyModule)},
+                      { path: 'sms', loadChildren: () => import('./admin/service-provider/service-provider.module').then(s => s.ServiceProviderModule)},
+                      { path: 'event', loadChildren: () => import('./admin/event/event.module').then(e => e.EventModule)},
+                      { path: 'permissions', loadChildren: () => import('./admin/permissions/permissions.module').then(p => p.PermissionsModule)},
+                      { path: 'tickets', loadChildren: () => import('./admin/admin-tickets/admin-tickets.module').then(a => a.AdminTicketsModule)},
                     ]
                   },
                     // { path: 'monitor', loadChildren: () => import('./monitor/monitor-routing.module').then(m => m.MonitorRoutingModule)},

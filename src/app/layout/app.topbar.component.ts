@@ -4,7 +4,7 @@ import { LayoutService } from "./service/app.layout.service";
 import {Router, RouterLink} from '@angular/router';
 import {CommonModule, DatePipe, NgClass, NgIf} from '@angular/common';
 import {AuthenticationService} from "../_services/authentication.service";
-import {distinctUntilChanged, take} from "rxjs/operators";
+import {distinctUntilChanged, startWith, take} from "rxjs/operators";
 import {LoginOutputSscrmType, LoginOutputType} from "../_types/login-output.type";
 import {TooltipModule} from "primeng/tooltip";
 import {AvatarModule} from "primeng/avatar";
@@ -22,9 +22,10 @@ import {PathService} from "../path/path.service";
 import {ActivityNoteService} from "../_components/activity-note/activity-note.service";
 import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
-import {debounceTime} from "rxjs";
+import {debounceTime, interval, map, Observable, switchMap} from "rxjs";
 import {SidebarModule} from "primeng/sidebar";
 import {PanelMenuModule} from "primeng/panelmenu";
+import {ServerTimeService} from "../_services/server-time.service";
 
 @Component({
     selector: 'app-topbar',
@@ -133,11 +134,21 @@ import {PanelMenuModule} from "primeng/panelmenu";
             .p-menuitem-text, .p-menuitem-icon{
               color: #111827 !important;
             }
-
           }
+
           .p-panelmenu .p-panelmenu-content .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover{
             background:none !important;
           }
+        }
+
+        .custom-menu-item .p-menuitem-content:hover{
+          background: var(--green-100) !important;
+        }
+        .custom-menu-item .p-menuitem-content .p-menuitem-link {
+          justify-content: center;
+        }
+        .custom-menu-item .p-menuitem-link .p-menuitem-text{
+          color: green !important;
         }
 
 
@@ -158,7 +169,7 @@ import {PanelMenuModule} from "primeng/panelmenu";
       InputTextModule,
       FormsModule,
       SidebarModule,
-      PanelMenuModule
+      PanelMenuModule,
     ],
   providers:[JalaliDatePipe]
 })
@@ -193,7 +204,7 @@ export class AppTopBarComponent implements OnInit{
       //   command: () => {this.clearTableDataInLocalStorage('customers')},
       // },
       {
-        label: 'کاریز ها',
+        label: 'جریان ها',
         icon: 'pi pi-fw pi-bolt',
         routerLink: ['/setting/caries'],
         permission: ['everyOne'],
@@ -253,29 +264,44 @@ export class AppTopBarComponent implements OnInit{
         permission: ['Process'],
         routerLink: ['/setting/process-automation'],
       },
+      {
+        label: 'عامل فعال',
+        icon: 'pi pi-comment',
+        permission: ['everyOne'],
+        routerLink: ['/setting/agent'],
+      },
+      {
+        label: 'ارتباط با پشتیبان',
+        icon: 'pi pi-comment',
+        permission: ['everyOne'],
+        routerLink: ['/setting/tenantTicket'],
+      },
+      {
+        label: 'سند',
+        icon: 'pi pi-comment',
+        permission: ['everyOne'],
+        routerLink: ['/setting/document'],
+      },
+      {
+        label: 'نظرسنجی',
+        icon: 'pi pi-comment',
+        permission: ['everyOne'],
+        routerLink: ['/setting/survey'],
+      },
     ];
 
     reportItems: MenuItem[] = [
     {
       label: 'تیکت ها',
       routerLink: ['/reports/tickets'],
-      command: () => {
-        this.setActiveItem('تیکت ها');
-      }
     },
     {
-      label: 'کاریز ها',
+      label: 'جریان ها',
       routerLink: ['/reports/caries'],
-      command: () => {
-        this.setActiveItem('کاریز ها');
-      }
     },
     {
       label: 'فعالیت ها',
       routerLink: ['/reports/activities'],
-      command: () => {
-        this.setActiveItem('فعالیت ها');
-      }
     },
   ];
 
@@ -288,17 +314,21 @@ export class AppTopBarComponent implements OnInit{
   newTicketCount?:number;
   protected readonly UserTypesEnum = UserTypesEnum
 
-    selectedItem:any;
     @ViewChild('op') overlayPanel!: OverlayPanel;
     @ViewChild('bellBtn') bellButton!: ElementRef;
     latestActivity: any;
+
+    serverTime$: Observable<Date | null> = null;
+    serverTimestamp: number | null = null;
     constructor(public layoutService: LayoutService,
                 private authService:AuthenticationService,
                 private dashboardService: DashboardService,
                 private collectorSignalRService: CollectorSignalRService,
                 private pathService: PathService,
                 private activityNoteService:ActivityNoteService,
-                private router: Router) {
+                private router: Router,
+                private serverTimeService: ServerTimeService) {
+
         authService.token?.pipe(take(1)).subscribe(token => {
             this.user = token
             //this.profileItem[0].label = this.user.fullName
@@ -307,6 +337,26 @@ export class AppTopBarComponent implements OnInit{
     }
 
     ngOnInit() {
+      this.serverTimeService.onServerTimeChange().subscribe(time => {
+        if (!time) return;
+        const ts = new Date(time.replace(' ', 'T')).getTime();
+        if (!isNaN(ts)) {
+          this.serverTimestamp = ts;
+        }
+      });
+
+      // هر ثانیه ساعت آپدیت شود
+      this.serverTime$ = interval(1000).pipe(
+        map(() => {
+          if (this.serverTimestamp === null) return null;
+          // هر بار یک ثانیه اضافه می‌کنیم
+          this.serverTimestamp += 1000;
+          return new Date(this.serverTimestamp);
+        }),
+        startWith(this.serverTimestamp !== null ? new Date(this.serverTimestamp) : null)
+      );
+
+
       this.collectorSignalRService.newReminderDataSubject.subscribe((activity) => {
         if (activity) {
           this.latestActivity = activity;
@@ -346,7 +396,7 @@ export class AppTopBarComponent implements OnInit{
 
       this.pathService.searchSubject
         .pipe(
-          debounceTime(300),          // ۳۰۰ میلی‌ثانیه صبر کن بعد درخواست بزن
+          debounceTime(300),
           distinctUntilChanged()      // فقط وقتی متن تغییر کرد
         )
         .subscribe(query => {
@@ -360,6 +410,16 @@ export class AppTopBarComponent implements OnInit{
       this.SetMenuVisibility(this.profileItem)
 
     }
+
+  get serverTimeForView(): Date | null {
+    const time = this.serverTimeService.getServerTime();
+    if (!time) return null;
+
+    const date = new Date(time.replace(' ', 'T'));
+    return isNaN(date.getTime()) ? null : date;
+  }
+
+
 
 
   getMenuInfo(){
@@ -386,13 +446,17 @@ export class AppTopBarComponent implements OnInit{
             label: item.title,
             routerLinkActiveOptions: { exact: true },
             routerLink: [`/path/${item.id}`],
-            command: () => {
-              this.setActiveItem(item.title);
-              // this.router.navigate([`/path/${item.id}`]);
-              // this.mobileMenuVisible = false
-            }
           });
         })
+        if (this.cariesItem.length == 0 ) {
+          this.cariesItem.push({
+            label: 'ایجاد کاریز',
+            routerLinkActiveOptions: { exact: true },
+            routerLink: [`/setting/caries/new`],
+            styleClass: 'custom-menu-item'
+          });
+        }
+
 
         this.dashboardRes.ticketPaths.forEach(item => {
           const matched = storedTicketPaths.find(t => t.ticketType === item.ticketType);
@@ -402,10 +466,6 @@ export class AppTopBarComponent implements OnInit{
             label: item.title,
             badge: matched ? String(matched.newTicketCount) : '0',
             routerLink: [`/ticket/${item.id}`],
-            command: () => {
-              this.setActiveItem(item.title);
-              // this.router.navigateByUrl(`/ticket/${item.id}`);
-            }
           })
         })
 
@@ -431,48 +491,33 @@ export class AppTopBarComponent implements OnInit{
     switch (route) {
       case 'users':
         localStorage.removeItem('userTable');
-        this.setActiveItem('کاربران')
         break;
       case 'customers':
         localStorage.removeItem('customerTable');
-        this.setActiveItem('مشتریان')
         break;
       case 'caries':
         localStorage.removeItem('cariesTable');
-        this.setActiveItem('کاریز ها')
         break;
       case 'activities':
         localStorage.removeItem('activitiesTable');
-        this.setActiveItem('نوع فعالیت')
         break;
       case 'tag':
         localStorage.removeItem('tagTable');
-        this.setActiveItem('برچسب ها')
         break;
       case 'accustom':
         localStorage.removeItem('accustomTable');
-        this.setActiveItem('شیوه آشنایی')
         break;
         case 'sms-config':
         localStorage.removeItem('smsTable');
-        this.setActiveItem('تنظیمات پیامک')
         break;
       case 'failures':
         localStorage.removeItem('failureTable');
-        this.setActiveItem('دلایل شکست')
         break;
       default : ''
     }
 
   }
 
-  setActiveItem(item:any){
-      this.selectedItem = item
-  }
-
-  isCariesActive(): boolean {
-    return this.cariesItem.some(menuItem => menuItem.label === this.selectedItem);
-  }
 
   icons = [
     { name: 'همه', class: 'pi pi-bars', key: 'all' },
@@ -572,12 +617,11 @@ export class AppTopBarComponent implements OnInit{
   }
   // وقتی کاربر خارج از کارت یا input کلیک کرد، کارت بسته بشه
   @HostListener('document:click', ['$event'])
-  onClickOutside(event: Event) {
+  onClickOutside(event: MouseEvent) {
     const target = event.target as HTMLElement;
-    // اگر روی input یا کارت کلیک نکرده بود
-    const clickedInsideInput  = target.closest('input[pInputText]');
-    const clickedInsideCard = target.closest('.p-card');
-    if (!clickedInsideInput && !clickedInsideCard) {
+    const wrapper = document.querySelector('.search-wrapper');
+
+    if (this.cardVisible && wrapper && !wrapper.contains(target)) {
       this.cardVisible = false;
     }
   }

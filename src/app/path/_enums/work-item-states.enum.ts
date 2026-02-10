@@ -6,6 +6,6 @@ export enum WorkItemStatesEnum{
 
 export const WorkItemStatesEnum2LabelMapping: Record<WorkItemStatesEnum, string> = {
   [WorkItemStatesEnum.New]: 'جدید',
-  [WorkItemStatesEnum.Successful]: 'بسته شد',
-  [WorkItemStatesEnum.Failed]: 'موفق نشد',
+  [WorkItemStatesEnum.Successful]: 'موفق',
+  [WorkItemStatesEnum.Failed]: 'ناموفق',
 }

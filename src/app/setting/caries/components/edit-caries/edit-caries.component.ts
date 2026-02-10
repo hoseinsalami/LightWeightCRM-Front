@@ -60,7 +60,7 @@ export class EditCariesComponent extends BaseCariesDetailComponent<CreatePathTyp
     private service: CariesService,
     private messageService: MessageService,
     private router: Router,
-    private activeRoute: ActivatedRoute,
+    activeRoute: ActivatedRoute,
     loading: LoadingService,
     fb: FormBuilder
   ) {
@@ -76,7 +76,7 @@ export class EditCariesComponent extends BaseCariesDetailComponent<CreatePathTyp
           return temp;
         }, service, messageService, activeRoute , router ,loading);
 
-    super(manager, service, loading);
+    super(manager, service, loading,activeRoute);
     manager.validation = () =>{
       if (!this.manager.oneObject.title) {
         this.messageService.add({

@@ -3,4 +3,28 @@
     right: 9rem !important;
     color: red;
   }
+
+  .p-overlaypanel-content{
+    padding: 0px;
+  }
+
+}
+
+
+.btn-counter {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.value-counter {
+  min-width: 40px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  display: inline-block;
 }

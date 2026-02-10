@@ -1,0 +1,17 @@
+::ng-deep{
+  .p-dropdown-clear-icon{
+    right: 9rem !important;
+    color: red;
+  }
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
