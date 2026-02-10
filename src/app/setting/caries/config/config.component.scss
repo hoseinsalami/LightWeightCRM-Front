@@ -1,0 +1,136 @@
+::ng-deep{
+  .p-tabview-nav-link{
+    color: #737373;
+  }
+
+  .p-highlight .p-tabview-nav-link{
+    background: #ffffff !important;
+    border-color: #3B82F6 !important;
+    color: #3B82F6 !important;
+  }
+
+  .p-accordion-header-link{
+    color: var(--gray-500) !important;
+    span{ font-weight: 700 !important }
+  }
+
+}
+
+.event-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  direction: rtl;
+  background: #dfe6ed;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.event-tabs {
+  width: 240px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background: transparent;
+}
+
+.event-title {
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #525d6f;
+  opacity: .4;
+  transition: opacity .4s ease-in-out;
+  display: block;
+  width: 100%;
+  z-index: 100;
+  user-select: none;
+  text-align: center;
+}
+
+input[type="radio"] {
+  display: none;
+  width: 0;
+}
+
+.label-hover{
+  &:hover{
+    label{
+      opacity: 1;
+    }
+  }
+  input[type="radio"]:checked + label{
+    opacity: 1;
+  }
+}
+
+
+.popup {
+  height: 100%;
+  border-radius: 48px;
+  box-sizing: border-box;
+  background-color: #dfe6ed;
+  overflow: hidden;
+}
+
+.flex-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.tabs {
+  width: 200px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  position: relative;
+}
+
+.event-tab {
+  cursor: pointer;
+  padding: 12px 16px;
+}
+
+.event-tab.selected label {
+  font-weight: bold;
+  opacity: 1;
+}
+
+.event-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.marker {
+  position: absolute;
+  width: 100%;
+  height: 200%;
+  display: flex;
+  flex-direction: column;
+  top: -100%;
+  left: 0;
+  transition: transform .2s ease-in-out;
+}
+
+.marker #top, .marker #bottom {
+  background-color: #ebf0f4;
+  box-shadow: -32px 32px 48px #2e364315;
+}
+
+.marker #top {
+  height: 50%;
+  margin-bottom: auto;
+  border-radius: 0 0 0 32px;
+}
+
+.marker #bottom {
+  height: calc(50% - 72px);
+  border-radius: 32px 0 0 0;
+}
+

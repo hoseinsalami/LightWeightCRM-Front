@@ -5,7 +5,7 @@
   [style]="{direction:'rtl'}"
   [(visible)]="showModalNewActivity"
   [appendTo]="'body'"
-  [header]="modalState  == 'new' ? 'افزودن فعالیت جدید' : modalState  == 'edit' ? 'ویرایش فعالیت' : 'مشاهده جزییات فعالیت'"
+  [header]="modalState  == 'new' ? 'فعالیت جدید' : modalState  == 'edit' ? 'ویرایش فعالیت' : 'مشاهده جزییات فعالیت'"
   [modal]="true"
   [closable]="false">
 
@@ -43,7 +43,7 @@
     <div class="col-12 flex flex-wrap gap-3">
 
       <div class="datePickerContainer relative">
-        <label class="text-right font-bold text-md mb-2" for="startDate">تاریخ</label>
+        <label class="text-right font-bold text-md mb-2">تاریخ</label>
         <ng-persian-datepicker
           *ngIf="modalState !== 'history'; else disabledDatepicker"
           [style]="{'width':'220px'}"
@@ -67,7 +67,7 @@
       </div>
 
       <div class="datePickerContainer relative">
-        <label class="text-right font-bold text-md mb-2" for="startDate">ساعت</label>
+        <label class="text-right font-bold text-md mb-2">ساعت</label>
         <div>
           <p-dropdown
             [styleClass]="'clear-icon'"
@@ -83,7 +83,7 @@
       </div>
 
       <div class="datePickerContainer relative">
-        <label class="text-right font-bold text-md mb-2" for="startDate">دقیقه</label>
+        <label class="text-right font-bold text-md mb-2">دقیقه</label>
         <div>
           <p-dropdown
             [styleClass]="'clear-icon'"
@@ -136,39 +136,23 @@
             </div>
           </ng-container>
 
-
         </label>
+
         <ng-container *ngIf="shouldShowReminderFields()">
-
-
-
           <div *ngFor="let item of reminders; let i = index;let last = last" class="field flex align-items-baseline gap-4">
             <button type="button" [disabled]="isReminderDisabled || modalState === 'history'"
                     [style]="{'cursor': isReminderDisabled ? 'no-drop' : ''}"
                     (click)="deleteReminder(i)"
                     class="p-button p-button-danger p-button-sm border-round-3xl p-2 pi pi-times"></button>
-            <input
-              pInputText
-              type="text"
-              id="reminder"
-              name="reminder"
-              class="p-fieldset"
-              placeholder="مدت زمان"
-              [style]="{'width':'150px'}"
-              [(ngModel)]="item.value"
-              [pKeyFilter]="'int'"
-              [disabled]="isReminderDisabled || modalState === 'history'">
-            <p-dropdown
-              [styleClass]="'clear-icon'"
-              [showClear]="true"
-              [options]="TimeUnits"
-              [(ngModel)]="item.periodTimeUnit"
-              optionLabel="title"
-              optionValue="value"
-              class="mt-2"
-              [style]="{'width':'150px'}"
-              [required]="true"
-              placeholder="دقیقه | ساعت | روز"
+            <input pInputText type="text" id="reminder" name="reminder"
+              class="p-fieldset" placeholder="مدت زمان" [style]="{'width':'150px'}"
+              [(ngModel)]="item.value" [pKeyFilter]="'int'" [disabled]="isReminderDisabled || modalState === 'history'">
+
+            <p-dropdown [styleClass]="'clear-icon'" [showClear]="true"
+              [options]="TimeUnits" [(ngModel)]="item.periodTimeUnit"
+              optionLabel="title" optionValue="value"
+              class="mt-2" [style]="{'width':'150px'}"
+              [required]="true" placeholder="واحد زمانی"
               [disabled]="isReminderDisabled || modalState === 'history'">
             </p-dropdown>
             <button type="button" *ngIf="last && !isReminderDisabled" (click)="addReminder()"

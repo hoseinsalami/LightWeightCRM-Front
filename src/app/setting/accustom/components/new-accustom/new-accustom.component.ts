@@ -10,6 +10,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'app-new-accustom',
@@ -21,7 +22,8 @@ import {FormsModule} from "@angular/forms";
     InputTextModule,
     ButtonModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    DividerModule
   ]
 })
 export class NewAccustomComponent extends BaseAccustomDetailComponent<AccustomType> implements OnInit{
@@ -32,13 +34,13 @@ export class NewAccustomComponent extends BaseAccustomDetailComponent<AccustomTy
         private accustomService: AccustomService,
         private messageService: MessageService,
         private router: Router,
-        private activeRoute: ActivatedRoute,
+        activeRoute: ActivatedRoute,
         loading: LoadingService) {
 
     let manager =
       new BaseNewManager<AccustomType>(AccustomType, accustomService, messageService, {} , router , activeRoute ,loading);
 
-    super(manager, accustomService, loading);
+    super(manager, accustomService, loading, activeRoute);
 
 
     manager.validation = () =>{

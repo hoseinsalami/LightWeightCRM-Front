@@ -24,7 +24,7 @@ export class BaseUserDetailComponent<T>{
       if (res['id']){
         this.isId = true;
       }else {
-        this.isId = false
+        this.isId = false;
       }
     })
     this.getPaths()

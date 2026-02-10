@@ -6,7 +6,7 @@ import {LoadingService} from "../../../../_services/loading.service";
 import {CustomerService} from "../../../_services/customer.service";
 import {BaseEditManager} from "../../../../_classes/base-edit.manager";
 import {CardModule} from "primeng/card";
-import {MessageService, SharedModule} from "primeng/api";
+import {MenuItem, MessageService, SharedModule} from "primeng/api";
 import {InputTextModule} from "primeng/inputtext";
 import {ToggleButtonModule} from "primeng/togglebutton";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -71,6 +71,7 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
 export class EditCustomerComponent extends BaseCustomerDetailComponent{
 
 
+
   constructor(private customerService: CustomerService,
               private workItem: WorkItemService,
               private messageService: MessageService,
@@ -88,6 +89,7 @@ export class EditCustomerComponent extends BaseCustomerDetailComponent{
           if (temp.tags && temp.tags.length) {
             this.selectedTags = temp.tags;
           }
+          console.log(temp)
           return temp
         } , customerService, messageService, activeRoute, router, loading)
 

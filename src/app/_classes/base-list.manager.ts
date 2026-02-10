@@ -6,7 +6,7 @@ interface SService<CustomType> {
   getAll(input: object, methodName: string, otherParam: object): Observable<OutType<CustomType>>
 }
 
-interface OutType<custom> {
+export interface OutType<custom> {
   totalRecords?: number;
   items?: custom[];
 }

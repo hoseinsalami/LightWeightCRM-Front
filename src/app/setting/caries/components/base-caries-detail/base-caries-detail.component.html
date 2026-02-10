@@ -1,34 +1,58 @@
 <div class="p-card p-4 shadow-2 mx-auto" style="width:800px; min-height:80vh">
 
   <div class="grid">
-    <div class="col-12">
-      <div class="mt-3 mr-3 text-left">
-        <button type="button" pButton pRipple
-                class="p-button-success"
-                label="ثبت"
-                (click)="manager.save()">
-        </button>
-        <button type="button" pButton pRipple
-                class="mr-4 p-button-danger"
-                label="انصراف"
-                (click)="manager.cancel()">
-        </button>
+    <div class="col-12 bg-bluegray-50 border-round mb-3">
+      <div class="flex justify-content-between align-items-center">
+        <h6 class="font-bold text-green-500 m-0">{{ isId ? 'ویرایش جریان' : 'جریان جدید'}}</h6>
       </div>
     </div>
+
+<!--    <div class="col-12">-->
+<!--      <p-divider type="solid" [style]="{'border-top':'1px solid #f7f7f7',}"/>-->
+<!--    </div>-->
+
   </div>
 
-  <p-divider type="solid" [style]="{'border-top':'1px solid #d1d1d1',}"/>
+<!--  <p-divider type="solid" [style]="{'border-top':'1px solid #d1d1d1',}"/>-->
+
+  <p-divider align="center" type="dotted">
+    <div class="flex align-items-center gap-1">
+      <b class="px-2 text-sm font-bold">مشخصات</b>
+    </div>
+  </p-divider>
 
   <div class="grid">
     <div class="col-12 md:col-6">
       <div class="form-group">
-        <label class="text-sm">عنوان کاریز</label>
+        <label class="text-sm">عنوان جریان</label>
         <span class="text-red-500 font-bold text- mr-1">*</span>
         <div class="field">
-          <input pInputText id="title" name="title" class="w-full" [(ngModel)]="manager.oneObject.title"/>
+          <input pInputText id="title" name="title"
+                 placeholder="عنوان جریان را وارد نمایید"
+                 class="w-full" [(ngModel)]="manager.oneObject.title"/>
         </div>
       </div>
     </div>
+
+    <div class="col-12 md:col-12">
+      <div class="flex flex-column flex-1">
+        <label class="text-sm">توضیحات</label>
+        <textarea
+          id="description"
+          name="description"
+          rows="5" cols="30"
+          pInputTextarea
+          [autoResize]="false"
+          [(ngModel)]="manager.oneObject.description">
+        </textarea>
+      </div>
+    </div>
+
+    <p-divider class="col-12" align="center" type="dotted">
+      <div class="flex align-items-center gap-1">
+        <b class="px-2 text-sm font-bold">کاربران</b>
+      </div>
+    </p-divider>
 
     <div class="col-12 md:col-6">
       <div class="datePickerContainer relative">
@@ -44,7 +68,7 @@
             [style]="{'width':'100%'}"
             optionLabel="fullName"
             optionValue="id"
-            placeholder="راهبر برای کاریز انتخاب کنید">
+            placeholder="راهبر برای جریان انتخاب کنید">
           </p-dropdown>
         </div>
       </div>
@@ -70,20 +94,6 @@
       </div>
     </div>
 
-    <div class="col-12 md:col-12">
-      <div class="flex flex-column flex-1">
-        <label class="text-sm">توضیحات</label>
-        <textarea
-          id="description"
-          name="description"
-          rows="5"
-          cols="30"
-          pInputTextarea
-          [autoResize]="false"
-          [(ngModel)]="manager.oneObject.description">
-        </textarea>
-      </div>
-    </div>
 
     <div class="col-12">
       <p-orderList
@@ -94,7 +104,7 @@
         (onReorder)="changeOrder()">
 
         <ng-template pTemplate="header">
-          <p class="text-center">گام های کاریز</p>
+          <p class="text-center">گام های جریان</p>
         </ng-template>
 
         <ng-template let-item let-i="index"  let-isLast="last" pTemplate="item">
@@ -107,7 +117,8 @@
                   id="steps"
                   name="steps"
                   [(ngModel)]="item.title"
-                  (keydown)="handleSpace($event)"/>
+                  (keydown)="handleSpace($event)"
+                  placeholder="عنوان گام را وارد نمایید"/>
               </div>
               <div class="form-group flex gap-3">
                 <input
@@ -169,6 +180,21 @@
 <!--        </button>-->
 <!--      </div>-->
 
+    </div>
+
+    <div class="col-12">
+      <div class="text-left mt-3">
+        <button type="button" pButton pRipple
+                class="p-button-success"
+                label="ثبت" icon="pi pi-save mx-2"
+                (click)="manager.save()">
+        </button>
+        <button type="button" pButton pRipple
+                class="mr-4 p-button-danger"
+                label="انصراف" icon="pi pi-sign-out mx-2"
+                (click)="manager.cancel()">
+        </button>
+      </div>
     </div>
 
   </div>

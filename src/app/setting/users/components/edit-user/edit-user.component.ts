@@ -16,6 +16,7 @@ import {LoadingService} from "../../../../_services/loading.service";
 import {BaseEditManager} from "../../../../_classes/base-edit.manager";
 import {PasswordModule} from "primeng/password";
 import {CommonModule, NgIf} from "@angular/common";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'app-edit-user',
@@ -33,7 +34,8 @@ import {CommonModule, NgIf} from "@angular/common";
     DropdownModule,
     PasswordModule,
     CommonModule,
-    NgIf
+    NgIf,
+    DividerModule
   ]
 })
 export class EditUserComponent extends BaseUserDetailComponent<UserTypeUpdate>{

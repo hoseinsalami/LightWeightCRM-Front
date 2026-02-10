@@ -11,6 +11,7 @@ import {CustomMessageService} from "../../../../_services/custom-message.service
 import {ActivatedRoute, Router} from "@angular/router";
 import {LoadingService} from "../../../../_services/loading.service";
 import {FailuresService} from "../../../_services/failures.service";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'app-edit-failures',
@@ -22,7 +23,8 @@ import {FailuresService} from "../../../_services/failures.service";
     InputTextModule,
     ButtonModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    DividerModule
   ]
 })
 export class EditFailuresComponent extends BaseFailuresDetailComponent<FailureTypeList>{
@@ -32,7 +34,7 @@ export class EditFailuresComponent extends BaseFailuresDetailComponent<FailureTy
     private failureService: FailuresService,
     private messageService: MessageService,
     private router: Router,
-    private activeRoute: ActivatedRoute,
+    activeRoute: ActivatedRoute,
     loading: LoadingService
   ) {
 
@@ -62,7 +64,7 @@ export class EditFailuresComponent extends BaseFailuresDetailComponent<FailureTy
         router.navigate(['./'], {relativeTo:this.activeRoute.parent});
       });
 
-    super(manager, failureService ,loading);
+    super(manager, failureService ,loading, activeRoute);
   }
 
 }

@@ -83,7 +83,8 @@ export class CustomerSpecification extends GenericType<CustomerSpecification>{
   customerPhones?: CreateCustomerPhone[];
   accustomMethodId?: number;
   accustomMethod?: AccustomType;
-  messages?: IMessagesType[]
+  messages?: IMessagesType[];
+  customerEvents?: ICustomerEvents[];
   workItems?: WorkItemType[];
   tickets?:TicketBaseType[];
   tags?: TagTypeBase[];
@@ -152,4 +153,48 @@ export interface IMessagesType {
 export interface ICommonType {
   id?: number;
   title?: string;
+  fullName?:string;
+}
+
+export interface ICustomerEvents {
+  id?: number;
+  dateTime?: any;
+  eventTitle?: string;
+  triggerUser?: ICommonType;
+  eventData?: any //ICustomerNewActivity | ICustomerNewSms | ICustomerNewWorkItem | ICustomerWorkItemChangeStatus | ICustomerWorkItemChangeStep;
+}
+
+//export type EventDataType = ICustomerNewActivity | ICustomerNewSms | ICustomerNewWorkItem | ICustomerWorkItemChangeStatus | ICustomerWorkItemChangeStep ;
+
+export interface ICustomerNewActivity {
+  id?:number;
+  title?:string;
+}
+
+export interface ICustomerNewSms {
+  messageId?:number;
+}
+
+export interface ICustomerNewWorkItem {
+  pathId?: number;
+  pathTitle?: string;
+  workItemId?: number;
+  workItemTitle?: string;
+}
+
+export interface ICustomerWorkItemChangeStatus {
+  pathId?:number
+  pathTitle?:string
+  workItemId?: number;
+  workItemTitle?: string;
+  newStatus?:WorkItemStatesEnum
+}
+
+export interface ICustomerWorkItemChangeStep {
+  pathId?: number;
+  pathTitle?: string;
+  workItemId?: number;
+  workItemTitle?: string;
+  stepId?: number;
+  stepTitle?: string;
 }

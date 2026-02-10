@@ -28,20 +28,6 @@
 
             <div class="col-12 md:col-6">
               <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
-                <span class="text-600 text-sm">پست الکترونیکی:</span>
-                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject.email ?? 'نامشخص'}}</span>
-              </div>
-            </div>
-
-            <div class="col-12 md:col-6">
-              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
-                <span class="text-600 text-sm">معرف:</span>
-                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject?.introducer?.name + ' ' +manager.oneObject?.introducer?.family}}</span>
-              </div>
-            </div>
-
-            <div class="col-12 md:col-6">
-              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
                 <span class="text-600 text-sm">شرکت:</span>
                 <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject.companyName}}</span>
               </div>
@@ -51,6 +37,20 @@
               <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
                 <span class="text-600 text-sm">شیوه آشنایی:</span>
                 <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject?.accustomMethod?.title}}</span>
+              </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+                <span class="text-600 text-sm">پست الکترونیکی:</span>
+                <span class="text-900 font-semibold text-sm text-left">{{manager.oneObject.email ?? ''}}</span>
+              </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+              <div class="flex justify-content-between align-items-start border-bottom-1 surface-border pb-3">
+                <span class="text-600 text-sm">معرف:</span>
+                <span class="text-900 font-semibold text-sm text-left" *ngIf="manager.oneObject.introducer">{{manager.oneObject?.introducer?.name + ' ' +manager.oneObject?.introducer?.family}}</span>
               </div>
             </div>
 
@@ -78,15 +78,9 @@
         </div>
 
         <div class="text-left p-2">
-          <button
-            pButton
-            pRipple
-            label=""
+          <button pButton pRipple label=""
             class="p-button-success pi pi-user-edit text-lg"
             (click)="onOpenCustomerModal()"></button>
-          <!--          <i -->
-          <!--            class="pi pi-user-edit p-button p-button-text p-button-rounded p-button-warning p-2"-->
-          <!--            style="font-size: 1.4rem"></i>-->
         </div>
 
       </div>
@@ -138,7 +132,12 @@
       <div class="grid" *ngIf="customerId">
         <div class="col-12">
 
-          <app-activity-note [messages]="manager.oneObject.messages" [customerId]="customerId"></app-activity-note>
+          <app-activity-note
+            [messages]="manager.oneObject.messages"
+            [customerEvents]="manager.oneObject.customerEvents"
+            [customerId]="customerId"
+            [showCustomerEventHistory]="true">
+          </app-activity-note>
 
         </div>
 
@@ -154,6 +153,31 @@
 
 <ng-template  #newCustomer>
   <div class="p-card p-4 shadow-2 m-auto" style="width:800px; min-height:80vh">
+
+    <div class="grid">
+      <div class="col-12">
+        <div class="flex justify-content-between align-items-center">
+          <h5 class="font-bold text-700 m-0">مشتری جدید</h5>
+
+          <div class="">
+            <button type="button" pButton pRipple
+                    class="p-button-success"
+                    label="ثبت"
+                    (click)="manager.save()">
+            </button>
+            <button type="button" pButton pRipple
+                    class="mr-4 p-button-danger"
+                    label="انصراف"
+                    (click)="manager.cancel()">
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
     <div class="grid">
 
       <div class="col-12 md:col-6">
@@ -419,22 +443,6 @@
         </div>
       </p-fieldset>
 
-      <div class="grid">
-        <div class="col-12">
-          <div class="mt-3 mr-3">
-            <button type="button" pButton pRipple
-                    class="p-button-success"
-                    label="ثبت"
-                    (click)="manager.save()">
-            </button>
-            <button type="button" pButton pRipple
-                    class="mr-4 p-button-danger"
-                    label="انصراف"
-                    (click)="manager.cancel()">
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </ng-template>
@@ -713,7 +721,7 @@
   [style]="{direction:'rtl'}"
   [(visible)]="showModalWorkItem"
   [appendTo]="'body'"
-  header="معامله"
+  header="قلم کاری"
   [modal]="true">
 
   <div class="grid">

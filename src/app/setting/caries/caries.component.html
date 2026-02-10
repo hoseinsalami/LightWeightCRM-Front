@@ -37,7 +37,7 @@
 <!--        pSortableColumn="title"-->
         <th>
 <!--          <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
-          کاریز
+          جریان
           <p-sortIcon field="title"></p-sortIcon>
         </th>
 
@@ -59,6 +59,9 @@
           <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2 m-1"
                   pTooltip="ویرایش"
                   [routerLink]="['edit', object.id]" ></button>
+          <button pButton pRipple icon="pi pi-bell" class="p-button-rounded p-button-info p-mr-2 m-1"
+                  pTooltip="تنظیمات فرایند" tooltipPosition="left"
+                  [routerLink]="['config', object.id]" ></button>
         </td>
       </tr>
     </ng-template>

@@ -13,6 +13,7 @@ import {CustomMessageService} from "../../../../_services/custom-message.service
 import {ActivatedRoute, Router} from "@angular/router";
 import {LoadingService} from "../../../../_services/loading.service";
 import {ActivitiesService} from "../../../_services/activities.service";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'app-edit-activities',
@@ -27,7 +28,8 @@ import {ActivitiesService} from "../../../_services/activities.service";
     FormsModule,
     NgClass,
     InputNumberModule,
-    NgIf
+    NgIf,
+    DividerModule
   ]
 })
 export class EditActivitiesComponent extends BaseActivitiesDetailComponent<ActivityType>{
@@ -36,7 +38,7 @@ export class EditActivitiesComponent extends BaseActivitiesDetailComponent<Activ
   constructor(private activityService: ActivitiesService,
               private messageService: MessageService,
               private router: Router,
-              private activeRoute: ActivatedRoute,
+              activeRoute: ActivatedRoute,
               loading: LoadingService) {
     let manager =
       new BaseEditManager<ActivityType,ActivityType>(
@@ -64,7 +66,7 @@ export class EditActivitiesComponent extends BaseActivitiesDetailComponent<Activ
         router.navigate(['./'], {relativeTo:this.activeRoute.parent});
       });
 
-    super(manager, activityService, loading);
+    super(manager, activityService, loading, activeRoute);
 
     this.newManager = manager
     // this.mode = 'Edit';

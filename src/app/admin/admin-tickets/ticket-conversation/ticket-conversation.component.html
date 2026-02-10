@@ -1,0 +1,209 @@
+<div class="mx-auto" style="width:800px;height:75vh;">
+
+  <div class="grid">
+    <div class="col-12">
+      <p-accordion [multiple]="true">
+        <p-accordionTab>
+          <ng-template pTemplate="header">
+            <div class="flex flex-1 align-items-baseline justify-content-between">
+              <p class="m-0">پاسخ</p>
+            </div>
+          </ng-template>
+
+          <div class="grid">
+
+            <div class="col-12 md:col-12">
+              <div class="form-group">
+                <label class="text-sm">پیام</label>
+                <span class="text-red-500 font-bold text- mr-1">*</span>
+                <!--                <div class="field">-->
+                <!--                  <p-editor [style]="{ height: '320px' }" [styleClass]="'rtl-editor'" />-->
+                <!--                </div>-->
+                <div class="field">
+                    <textarea
+                      [(ngModel)]="content"
+                      [style]="{'width':'100%'}" rows="5" id="description" name="description"
+                      pInputTextarea placeholder="توضیحات را وارد نمایید." class="p-fieldset">
+                    </textarea>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-12">
+              <p class="text-900 font-semibold">ضمیمه ها</p>
+              <div class="p-card shadow-none p-0 mx-auto">
+                <app-upload-file #uploadFileComponent [url]="uploadUrl"
+                                 [multi]="true" (photos)="changeMainPhoto($event)" [addLabel]="'پیوست'"></app-upload-file>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="mt-3 text-left">
+                <button class="mx-3 p-button-success" pButton
+                        label="ثبت" (click)="sendMessage()" icon="pi pi-save mx-2">
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </p-accordionTab>
+      </p-accordion>
+    </div>
+
+    <div class="col-12">
+      <div class="flex justify-content-center">
+          <span class="font-light text-white px-5 border-round mt-2 text-sm py-2"
+                style="background: #808080">تاریخچه پیام های ارسالی</span>
+      </div>
+    </div>
+
+    <div class="col-12" *ngFor="let message of conversations.conversations; let i=index">
+      <!-- پیام کاربر -->
+      <div class="p-card shadow-1" *ngIf="message.tenantTitle">
+        <div class="border-none border-bottom-1 border-solid border-gray-300  bg-gray-100 p-2">
+          <span class="text-900 font-semibold text-orange-500 bg-orange-100 p-1 border-round text-sm">{{message.tenantTitle}}</span>
+        </div>
+
+        <p class="mb-1 p-2">{{message.content}}</p>
+        <div class="flex flex-wrap gap-2 pb-2">
+          <p class="flex align-items-center gap-2 cursor-pointer border-round bg-green-300 text-white px-1 m-0"
+             *ngFor="let file of message.attachments" (click)="onDownloadFiles(file)" pTooltip="دانلود فایل" tooltipPosition="top">
+            <i class="pi pi-upload"></i>{{file}}
+          </p>
+        </div>
+
+      </div>
+
+      <!-- پیام ادمین -->
+      <div class="p-card shadow-1" *ngIf="!message.tenantTitle">
+        <div class="text-900 font-semibold border-none border-bottom-1 border-solid border-gray-300  bg-gray-100 p-2">
+          <span class="text-teal-500 bg-teal-100 p-1 border-round text-sm">پشتیبان</span>
+        </div>
+
+        <p class="mb-1 p-2">{{message.content}}</p>
+        <div class="flex flex-wrap gap-2 pb-2">
+          <p class="flex align-items-center gap-2 cursor-pointer border-round bg-green-300 text-white px-1 m-0"
+             *ngFor="let file of message.attachments" (click)="onDownloadFiles(file)" pTooltip="دانلود فایل" tooltipPosition="top">
+            <i class="pi pi-upload"></i>{{file}}
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="col-12">
+      <div class="mt-3 text-left">
+        <button pButton label="انصراف" class="p-button-danger" icon="pi pi-sign-out mx-2"
+                (click)="cancel()"></button>
+      </div>
+    </div>
+
+  </div>
+
+
+<!--  <div class="flex justify-content-center">-->
+<!--          <span class="font-light text-white px-5 border-round mt-2 text-sm py-2"-->
+<!--                style="background: #808080">تاریخچه پیام های ارسالی</span>-->
+<!--  </div>-->
+
+<!--  <div class="flex flex-column align-items-center h-full overflow-y-auto">-->
+<!--    <div-->
+<!--      class="flex flex-column align-items-start gap-1 border-1 border-dashed border-round border-gray-200 py-3 px-2 mt-3 w-full bg-whatsapp relative h-full overflow-y-auto p-card shadow-none">-->
+
+<!--      <div class="chat-container w-full">-->
+<!--        <div class="grid chat-message sent align-items-end"-->
+<!--             *ngFor="let message of conversations.conversations; let i=index">-->
+<!--          &lt;!&ndash; پیام کاربر &ndash;&gt;-->
+<!--          <div class="col-12 flex align-items-center gap-2" *ngIf="message.tenantTitle">-->
+<!--            <span class="pi pi-user p-avatar-icon avatar"></span>-->
+<!--            <div>-->
+<!--              <div class="bubble">-->
+<!--                <p class="text">{{message.content}}</p>-->
+<!--                <p class="flex align-items-center gap-2 cursor-pointer border-round-3xl px-3 border-2 border-solid bg-purple-500 text-white px-1"-->
+<!--                   (click)="onDownloadFiles(file)" pTooltip="دانلود فایل"-->
+<!--                   tooltipPosition="top" *ngFor="let file of message.attachments">-->
+<!--                  <i class="pi pi-upload"></i>{{file}}-->
+<!--                </p>-->
+
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; پیام ادمین &ndash;&gt;-->
+<!--          <div class="col-12 flex align-items-center gap-2 " *ngIf="!message.tenantTitle"-->
+<!--               [style]="{'direction':'ltr'}">-->
+<!--            <span class="pi pi-prime p-avatar-icon avatar bg-green-600"></span>-->
+<!--            <div>-->
+<!--              <div class="bubble" [style]="{'background': '#c6f1f8' , 'border-radius': '15px 15px 15px 0px'}">-->
+<!--                <p class="text">{{message.content}}</p>-->
+<!--                <p class="flex align-items-center gap-2 cursor-pointer border-round-3xl px-3 border-2 border-solid bg-purple-500 text-white px-1"-->
+<!--                   (click)="onDownloadFiles(file)" pTooltip="دانلود فایل"-->
+<!--                   tooltipPosition="top" *ngFor="let file of message.attachments">-->
+<!--                  <i class="pi pi-upload"></i>{{file}}-->
+<!--                </p>-->
+
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--    <div class="form-group absolute w-full flex justify-content-center align-items-end"-->
+<!--         style="bottom:55px">-->
+<!--      <div class="" style="width:500px">-->
+<!--        <input pInputText type="text" [(ngModel)]="content" id="title" name="title" class="p-fieldset w-full" (keydown.enter)="sendMessage()"-->
+<!--               placeholder="پیام خود را وارد نماید">-->
+<!--      </div>-->
+<!--      <button pButton pRipple  label="" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="showModal =true"></button>-->
+<!--    </div>-->
+
+<!--  </div>-->
+
+</div>
+
+
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showModal"
+  [appendTo]="'body'"
+  [header]="'آپلود فایل جدید'"
+  [modal]="true"
+  [closable]="false">
+
+  <div class="grid">
+    <div class="col-12">
+      <app-upload-file #uploadFileComponent [url]="uploadUrl"
+                       [multi]="true" (photos)="changeMainPhoto($event)" [addLabel]="'پیوست'"></app-upload-file>
+    </div>
+
+  </div>
+
+
+  <ng-template pTemplate="footer">
+
+    <button
+      pButton
+      pRipple
+      label="تایید"
+      class="p-button-success button"
+      (click)="onSubmitModal()"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger"
+      (click)="showModal = false"
+    ></button>
+
+  </ng-template>
+
+</p-dialog>

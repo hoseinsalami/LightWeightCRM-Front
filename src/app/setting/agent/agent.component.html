@@ -1,0 +1,107 @@
+<div class="p-card p-4 shadow-2 mx-auto max-w-60rem">
+  <p-toolbar styleClass="p-mb-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple  label="جدید" icon="pi pi-plus"
+              class="p-button-success p-mr-2" routerLink="new"  ></button>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table #dt
+           [rows]="10"
+           [value]="many?many:[]"
+           [paginator]="true"
+           [rowHover]="true"
+           dataKey="id"
+           [showCurrentPageReport]="true"
+           [lazy]="true"
+           (onLazyLoad)="lazyLoadData(construct, dt,$event,'/list')"
+           [totalRecords]="totalRecords? totalRecords : 0"
+           [loading]="tableLoading"
+           [rowsPerPageOptions]="[10,25,50,100,200,500]"
+           currentPageReportTemplate=" از {first}  تا {last} از مجموع {totalRecords} نتیجه"
+           responsiveLayout="scroll"
+           styleClass="p-datatable-responsive-demo p-datatable-sm"
+           stateStorage="local"
+           stateKey="agentTable">
+
+    <ng-template pTemplate="header">
+      <tr>
+
+        <th pSortableColumn="name">
+          <!-- <p-columnFilter matchMode="contains" type="text" field="title" display="menu"></p-columnFilter>-->
+          عنوان
+          <p-sortIcon field="name"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="active">
+          <!-- <p-columnFilter matchMode="contains" type="text" field="defaultDuration" display="menu"></p-columnFilter>-->
+          فعال
+          <p-sortIcon field="active"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="activationPeriod">
+          <!-- <p-columnFilter matchMode="contains" type="text" field="defaultDuration" display="menu"></p-columnFilter>-->
+          دوره فعال سازی
+          <p-sortIcon field="activationPeriod"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="entity">
+          <!-- <p-columnFilter matchMode="contains" type="text" field="defaultDuration" display="menu"></p-columnFilter>-->
+          ماهیت
+          <p-sortIcon field="entity"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="lastRunDateTime">
+          <!-- <p-columnFilter matchMode="contains" type="text" field="defaultDuration" display="menu"></p-columnFilter>-->
+          آخرین اجرا
+          <p-sortIcon field="lastRunDateTime"></p-sortIcon>
+        </th>
+
+        <th></th>
+      </tr>
+
+    </ng-template>
+
+
+    <ng-template pTemplate="body" let-object>
+      <tr>
+
+        <td>
+          <span class="p-column-title">عنوان</span>
+          {{object.name}}
+        </td>
+
+        <td>
+          <span class="p-column-title">فعال</span>
+          <i [class]="object.avtive ? 'pi pi-check text-green-500': 'pi pi-times text-red-500'"></i>
+        </td>
+
+        <td>
+          <span class="p-column-title">دوره فعال سازی</span>
+          {{agentTimeUnits[object.activationPeriod].value}}
+        </td>
+
+        <td>
+          <span class="p-column-title">ماهیت</span>
+          {{object.entity}}
+        </td>
+
+        <td>
+          <span class="p-column-title">آخرین اجرا</span>
+          {{object.lastRunDateTime ?? '-'}}
+        </td>
+
+        <td>
+<!--          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2 m-1"-->
+<!--                  pTooltip="ویرایش"-->
+<!--                  [routerLink]="['edit', object.id]" ></button>-->
+
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2 m-1"
+                  pTooltip="حذف" tooltipPosition="top" (click)="deleteItem(object.id)"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+</div>
+

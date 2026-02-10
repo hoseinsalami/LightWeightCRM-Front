@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {AuthGuard} from "../_guard/auth.guard";
+import {TenantTicketComponent} from "./tenant-ticket/tenant-ticket.component";
 
 const routes: Routes = [
   {
@@ -70,7 +71,32 @@ const routes: Routes = [
     loadChildren: () => import('./process-automation/process-automation.module').then(p => p.ProcessAutomationModule),
     canActivate: [AuthGuard],
     data: {permission: 'Process'}
+  },
+  {
+    path: 'agent',
+    loadChildren: () => import('./agent/agent.module').then(a => a.AgentModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+  {
+    path: 'tenantTicket',
+    loadChildren: () => import('./tenant-ticket/tenant-ticket.module').then(t => t.TenantTicketModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+  {
+    path: 'document',
+    loadChildren: () => import('./document/document.module').then(d => d.DocumentModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+  {
+    path: 'survey',
+    loadChildren: () => import('./survey/survey.module').then(s => s.SurveyModule),
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
   }
+
 ];
 
 @NgModule({

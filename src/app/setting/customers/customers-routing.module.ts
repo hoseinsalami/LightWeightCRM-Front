@@ -5,6 +5,7 @@ import {CustomersComponent} from "./customers.component";
 import {NewCustomerComponent} from "./components/new-customer/new-customer.component";
 import {EditCustomerComponent} from "./components/edit-customer/edit-customer.component";
 import {AuthGuard} from "../../_guard/auth.guard";
+import {CustomerDocumentComponent} from "./customer-document/customer-document.component";
 
 const routes: Routes = [
   {
@@ -22,6 +23,12 @@ const routes: Routes = [
   {
     path: 'edit/:id',
     component: EditCustomerComponent ,
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+  {
+    path: 'document/:id',
+    component: CustomerDocumentComponent ,
     canActivate: [AuthGuard],
     data: {permission: 'everyOne'}
   },

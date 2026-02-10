@@ -102,28 +102,6 @@
           </p-panel>
         </td>
       </tr>
-      <!--      <tr>-->
-
-      <!--        <th pSortableColumn="name">-->
-      <!--&lt;!&ndash;          <p-columnFilter matchMode="contains" type="text" field="name" display="menu"></p-columnFilter>&ndash;&gt;-->
-      <!--          نام-->
-      <!--          <p-sortIcon field="name"></p-sortIcon>-->
-      <!--        </th>-->
-
-      <!--        <th pSortableColumn="family">-->
-      <!--&lt;!&ndash;          <p-columnFilter matchMode="contains" type="text" field="family" display="menu"></p-columnFilter>&ndash;&gt;-->
-      <!--          نام خانوادگی-->
-      <!--          <p-sortIcon field="family"></p-sortIcon>-->
-      <!--        </th>-->
-
-      <!--        <th pSortableColumn="companyName">-->
-      <!--&lt;!&ndash;          <p-columnFilter matchMode="contains" type="text" field="companyName" display="menu"></p-columnFilter>&ndash;&gt;-->
-      <!--          شرکت-->
-      <!--          <p-sortIcon field="companyName"></p-sortIcon>-->
-      <!--        </th>-->
-
-      <!--        <th></th>-->
-      <!--      </tr>-->
 
     </ng-template>
 
@@ -151,13 +129,14 @@
               <div class="flex-shrink-0 border-circle overflow-hidden" style="width:2rem; height:2rem;">
                 <img src="assets/images/avatar-user.png" alt="avatar" class="w-full h-full"/>
               </div>
-              <div class="flex flex-column">
+              <div class="flex align-items-center gap-2">
                 <span class="font-medium text-900">{{ object.name }} {{ object.family }}</span>
+                <span class="text-green-500 text-xs font-bold">(مشتری)</span>
               </div>
             </div>
 
 
-            <span *ngIf="object.isCustomer === false" class="bg-green-100 border-round text-green-500 text-xs px-2 py-1 font-bold">مشتری</span>
+            <span class="pi pi-cog" pTooltip="اسناد" tooltipPosition="top" [routerLink]="['document', object.id]"></span>
           </h2>
           <p class="text-sm text-600 mt-2 ">
             <span class="pi pi pi-building text-base text-gray-400 ml-2"></span>
@@ -214,93 +193,6 @@
         [rowsPerPageOptions]="[20, 40, 60, 80, 100]" />
     </div>
 
-
-    <!--  <div class="grid">-->
-    <!--    <div class="col-12 md:col-3 cursor-pointer" *ngFor="let object of many" [routerLink]="['edit', object.id]">-->
-    <!--      <div class="p-card shadow-1 mt-2 w-full" style="border-radius:.5rem; border:1px solid #d1d5db">-->
-    <!--        <div class="p-card-body" style="padding:18px 10px 3px 10px">-->
-
-    <!--          <div class="flex align-items-center justify-content-between gap-3 text-sm mb-1">-->
-    <!--            <div pTooltip="مشتری" tooltipPosition="top" class="flex gap-2">-->
-    <!--              <i class="text-lg pi pi-user text-green-500"></i>-->
-    <!--              <p class="font-medium text-color-secondary">{{ object.name }} {{ object.family }}</p>-->
-    <!--            </div>-->
-    <!--          </div>-->
-
-    <!--          <div class="flex align-items-center justify-content-between gap-3 text-sm mb-1">-->
-    <!--            <div pTooltip="شرکت" tooltipPosition="bottom" class="flex gap-2">-->
-    <!--              <i class="text-lg pi pi-building text-purple-500"></i>-->
-    <!--              <p class="text-color-secondary text-xs">{{ object.companyName }}</p>-->
-    <!--            </div>-->
-
-    <!--            <div class="flex gap-2" *ngIf="object.customerPhones?.length > 0">-->
-    <!--              <p class="badge m-0 cursor-pointer" (click)="showCustomerPhone($event, object.customerPhones, phonePanel)">-->
-    <!--                <span>{{object.customerPhones.length}}</span>-->
-    <!--                <i class="text-lg pi pi-phone text-green-500"></i>-->
-    <!--              </p>-->
-    <!--              <p class="font-medium text-color-secondary m-0">{{ object.customerPhones[0].phoneNumber  }}</p>-->
-    <!--              <p-overlayPanel [style]="{width:'250px'}" #phonePanel [dismissable]="true">-->
-    <!--                <div class="grid">-->
-    <!--                  <ng-container *ngFor="let item of customerPhones; let last=last">-->
-    <!--                    <div class="col-12 flex justify-content-between">-->
-    <!--                      <label class="text-color-secondary">{{ item.title }}</label>-->
-    <!--                      <label class="text-900">-->
-    <!--                        {{ item.phoneNumber }}-->
-    <!--                        <i class="pi pi-copy text-purple-500 cursor-pointer"-->
-    <!--                           (click)="copyPhone(item.phoneNumber)"></i>-->
-    <!--                      </label>-->
-    <!--                    </div>-->
-    <!--                    <div class="col-12" *ngIf="!last"><p-divider type="solid" [style]="{'border-top':'1px solid #fbf3f3',}"/></div>-->
-    <!--                  </ng-container>-->
-    <!--                </div>-->
-    <!--              </p-overlayPanel>-->
-    <!--            </div>-->
-    <!--          </div>-->
-
-    <!--          <div class="flex align-items-center gap-2" style="min-height:23px">-->
-    <!--            <i *ngIf="object.tags?.length" class="pi pi-tags text-pink-400"></i>-->
-    <!--            <ng-container *ngFor="let tag of object.tags">-->
-    <!--              <p [pTooltip]="tag.title" tooltipPosition="bottom"-->
-    <!--                 class="m-0 px-2 py-1 border-round text-xs text-white border-round-3xl"-->
-    <!--                 [style]="{background: tag.color, width:'15px', height:'15px', border:'1px solid #000'}">-->
-    <!--                &lt;!&ndash;              {{object.tags[0].title}}&ndash;&gt;-->
-    <!--                &lt;!&ndash;              <span *ngIf="object.tags.length > 1"> ... </span>&ndash;&gt;-->
-    <!--              </p>-->
-    <!--            </ng-container>-->
-    <!--          </div>-->
-
-    <!--          <div class="flex gap-2 justify-content-end">-->
-    <!--&lt;!&ndash;              <button&ndash;&gt;-->
-    <!--&lt;!&ndash;                pButton&ndash;&gt;-->
-    <!--&lt;!&ndash;                [text]="true"&ndash;&gt;-->
-    <!--&lt;!&ndash;                icon="pi pi-pencil"&ndash;&gt;-->
-    <!--&lt;!&ndash;                class="p-button-rounded p-button-warning text-sm w-2rem h-2rem"&ndash;&gt;-->
-    <!--&lt;!&ndash;                pTooltip="ویرایش"&ndash;&gt;-->
-    <!--&lt;!&ndash;                [routerLink]="['edit', object.id]"&ndash;&gt;-->
-    <!--&lt;!&ndash;              ></button>&ndash;&gt;-->
-    <!--              <button-->
-    <!--                pButton-->
-    <!--                [text]="true"-->
-    <!--                icon="pi pi-trash"-->
-    <!--                class="p-button-rounded p-button-danger text-sm w-2rem h-2rem"-->
-    <!--                pTooltip="حذف"-->
-    <!--                (click)="deleteItem(object.id)"-->
-    <!--              ></button>-->
-    <!--          </div>-->
-
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
-    <!--    <div class="col-12">-->
-    <!--      <p-paginator-->
-    <!--        (onPageChange)="onPageChange($event)"-->
-    <!--        [first]="lastEvent.first"-->
-    <!--        [rows]="lastEvent.rows"-->
-    <!--        [totalRecords]="totalRecords"-->
-    <!--        [rowsPerPageOptions]="[20, 40, 60, 80, 100]" />-->
-    <!--    </div>-->
-    <!--  </div>-->
-
   </div>
 
   <!--************************** begin SendMessageForCustomer modal *************************************-->
@@ -351,3 +243,5 @@
 
   </p-dialog>
   <!--************************** end SendMessageForCustomer modal *************************************-->
+
+</div>

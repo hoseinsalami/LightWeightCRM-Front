@@ -159,7 +159,7 @@
       <!--          <section class="pipeline-item-cntr">-->
       <div (click)="openModal(step.id)"
            class="border-2 border-dashed border-green-500 bg-transparent text-green-500 text-center cursor-pointer my-2 py-2 px-5 sticky z-100 top-1vh bg-success-btn">
-        ایجاد معامله جدید
+        قلم کاری جدید
       </div>
 
       <article class="relative flex flex-column gap-3">
@@ -315,7 +315,7 @@
   [style]="{direction:'rtl'}"
   [(visible)]="showModal"
   [appendTo]="'body'"
-  header="افزودن معامله جدید"
+  header="افزودن قلم کاری جدید"
   [modal]="true">
 
 <!--  <ng-container *ngIf="selectedWorkItem">-->
@@ -326,7 +326,7 @@
         <div class="flex flex-wrap gap-4">
 
           <div class="form-group flex-1">
-            <label class="text-right text-900 text-md mb-2">عنوان معامله</label>
+            <label class="text-right text-900 text-md mb-2">عنوان قلم کاری</label>
             <div class="mt-2">
               <input
                 [style]="{'width':'100%'}"
@@ -335,7 +335,8 @@
                 id="title"
                 name="title"
                 class="p-fieldset"
-                [(ngModel)]="workItems.title">
+                [(ngModel)]="workItems.title"
+              placeholder="عنوان قلم کاری وارد نمایید">
             </div>
           </div>
 
@@ -358,7 +359,7 @@
 <!--        </div>-->
 
           <div class="form-group flex-1">
-            <label class="text-right text-900 text-md mb-2" for="">جستجو مشتری</label>
+            <label class="text-right text-900 text-md mb-2" for="">مشتری</label>
             <div class="mt-2">
               <p-autoComplete #autoComplete
                 [inputStyle]="{'width':'100%'}"
@@ -377,7 +378,7 @@
                 styleClass="w-full mx-auto"
                 scrollHeight="400px"
                 class="p-autocomplete w-full mx-auto"
-                placeholder="نام خانوادگی | شماره تلفن | شرکت">
+                placeholder="براساس نام خانوادگی | شماره تلفن | شرکت">
 
                 <ng-template let-filteredCustomers pTemplate="item">
                   <div class="grid align-items-end justify-content-between" style="direction: rtl">
@@ -788,13 +789,13 @@
   [style]="{direction:'rtl', height:'500px'}"
   [(visible)]="showModalDetailCaries"
   [appendTo]="'body'"
-  [header]="'ویرایش کاریز' "
+  [header]="'ویرایش جریان' "
   [modal]="true">
 
   <div class="grid">
     <div class="col-12 md:col-4">
       <div class="flex flex-column flex-1">
-        <label for="title">عنوان کاریز</label>
+        <label for="title">عنوان جریان</label>
         <input
           pInputText
           id="title"
@@ -817,7 +818,7 @@
             appendTo="body"
             optionLabel="fullName"
             optionValue="id"
-            placeholder="راهبر برای کاریز انتخاب کنید">
+            placeholder="راهبر برای جریان انتخاب کنید">
           </p-dropdown>
         </div>
       </div>

@@ -11,6 +11,7 @@ import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'app-new-tag',
@@ -22,6 +23,7 @@ import {InputTextModule} from "primeng/inputtext";
     FormsModule,
     ButtonModule,
     InputTextModule,
+    DividerModule
   ]
 })
 export class NewTagComponent extends BaseTagDetailComponent<TagTypeBase> {
@@ -31,7 +33,7 @@ export class NewTagComponent extends BaseTagDetailComponent<TagTypeBase> {
     private tagService: TagService,
     private messageService: MessageService,
     private router: Router,
-    private activeRoute: ActivatedRoute,
+    activeRoute: ActivatedRoute,
     loading: LoadingService
   ) {
     let manager =
@@ -49,11 +51,15 @@ export class NewTagComponent extends BaseTagDetailComponent<TagTypeBase> {
       return true;
     }
 
+    manager.BeforeSave.subscribe(i =>{
+      if (!i.color) i.color = '#000'
+    })
+
     manager.OnSuccessfulSave.subscribe((i) =>{
         router.navigate(['./'], {relativeTo:activeRoute.parent});
       });
 
-    super(manager,tagService,loading);
+    super(manager,tagService,loading, activeRoute);
 
   }
 

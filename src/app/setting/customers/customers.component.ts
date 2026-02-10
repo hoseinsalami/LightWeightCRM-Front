@@ -235,7 +235,7 @@ export class CustomersComponent extends BaseListComponent<CustomerSpecification>
 
     const x = event.pageX - this.activeContainer.offsetLeft;
     const walk = (x - this.startX) * 1;
-    if (Math.abs(walk) > 5) { // یک آستانه کوچک برای جلوگیری از فعال شدن هنگام کلیک جزئی
+    if (Math.abs(walk) > 5) {
       this.dragMoved = true;
     }
 
@@ -255,11 +255,9 @@ export class CustomersComponent extends BaseListComponent<CustomerSpecification>
 
   openDetails(id:any) {
     if (this.dragMoved) {
-      this.dragMoved = false; // ریست کردن پرچم
-      return; // کاربر قصد اسکرول داشته، ناوبری نکن
+      this.dragMoved = false;
+      return;
     }
-
-    // یعنی کلیک واقعی بوده → ناوبری کن
     this.router.navigate(['setting/customers/edit', id]);
 
   }

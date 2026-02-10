@@ -29,6 +29,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
   @Input() maxImageSize?:number = 1000000;
   @Input() fileType?:number = 0;
   @Input() initialAttachments = []
+  @Input() url?: string = this.urlUpload()
   @Output() photos: EventEmitter<any> = new EventEmitter<any>();
   uploadedFiles: any[] = [];
   imagePreviews: string[] = [];
@@ -46,7 +47,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
     }
   }
 
-  url(): string {
+  urlUpload(): string {
     return environment.apiUrl + 'media/upload';
   }
 

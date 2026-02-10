@@ -42,7 +42,7 @@ export class ActivitiesComponent extends BaseListComponent<ActivityType>{
     super(activityService, confirmationService, messageService);
   }
 
-  construct(input: any){
+  construct(input: ActivityType){
     return new ActivityType(input)
   }
 

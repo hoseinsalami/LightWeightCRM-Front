@@ -1,0 +1,632 @@
+<div class="flex m-auto" style="width:800px; min-height:80vh"> <!-- height:730px -->
+  <div class="p-card p-4 shadow-2 mx-auto w-full max-w-60rem">
+    <div class="grid">
+      <div class="col-12">
+        <p-button label="ثبت فرایند" severity="success" (click)="onSubmit()" />
+
+        <p-tabView>
+          <p-tabPanel header="تنظیمات">
+
+            <div class="grid">
+              <div class="col-12">
+                <p-fieldset [style]="{padding:'0px'}">
+                  <ng-template pTemplate="header">
+                    <p>مشخصات</p>
+                  </ng-template>
+
+                  <div class="border-2 border-dashed surface-border border-round surface-ground px-3 py-2">
+                    <div class="grid">
+                      <div class="col-6">
+                        <div class="form-group">
+                          <label class="text-sm" for="title">عنوان</label>
+                          <div class="field">
+                            <input
+                              pInputText
+                              type="text"
+                              id="name"
+                              name="name"
+                              class="p-fieldset"
+                              [style]="{'width': '100%'}"
+                              [(ngModel)]="oneObject.name">
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="form-group flex-1">
+                          <label class="text-sm">ماهیت</label>
+                          <div class="field">
+                            <p-dropdown [style]="{'width':'100%'}"
+                                        name="userType"
+                                        class="w-full"
+                                        placeholder ="ماهیت را انتخاب کنید"
+                                        scrollHeight="250px"
+                                        display="chip"
+                                        optionLabel="title"
+                                        optionValue="entity"
+                                        [options]="entityOptions"
+                                        [(ngModel)]="oneObject.entity"
+                                        (onChange)="onChangeEntity($event)">
+                            </p-dropdown>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="form-group flex-1">
+                          <label class="text-sm">دوره فعال ساز</label>
+                          <div class="field">
+                            <p-dropdown [style]="{'width':'100%'}"
+                                        name="activationPeriod"
+                                        class="w-full"
+                                        placeholder ="دوره فعال ساز را انتخاب کنید"
+                                        scrollHeight="250px"
+                                        display="chip"
+                                        optionLabel="title"
+                                        optionValue="value"
+                                        [options]="agentEnumOptions"
+                                        [(ngModel)]="oneObject.activationPeriod">
+                            </p-dropdown>
+                          </div>
+                        </div>
+                      </div>
+
+<!--                      <div class="col-6">-->
+<!--                        <div class="form-group">-->
+<!--                          <label class="text-sm" for="title">فعال</label>-->
+<!--                          <div class="field">-->
+<!--                            <p-inputSwitch [(ngModel)]="oneObject.active" />-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                      </div>-->
+
+                      <div class="col-12">
+                        <div class="form-group">
+                          <label class="text-sm">توضیحات</label>
+                          <div class="field">
+                          <textarea
+                            [style]="{'width':'100%'}"
+                            rows="5"
+                            id="description"
+                            name="description"
+                            pInputTextarea
+                            class="p-fieldset"
+                            [(ngModel)]="oneObject.description">
+                          </textarea>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </p-fieldset>
+              </div>
+
+              <div class="col-12">
+                <p-fieldset [style]="{padding:'0px'}">
+                  <ng-template pTemplate="header">
+                    <p>فعال کننده</p>
+                  </ng-template>
+
+                  <div>
+                    <div class="flex justify-content-between align-items-center gap-3">
+                      <div class="form-group flex-1">
+                        <label class="text-sm">فیلتر</label>
+                        <div class="field">
+                          <p-dropdown [style]="{'width':'100%'}"
+                                      name="userType"
+                                      class="w-full"
+                                      placeholder ="فیلتر را انتخاب کنید"
+                                      scrollHeight="250px"
+                                      display="chip"
+                                      optionLabel="title"
+                                      optionValue="filterParameter.filter"
+                                      [disabled]="!oneObject.entity"
+                                      [(ngModel)]="oneObject.filter"
+                                      [options]="filterOptions">
+                          </p-dropdown>
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                </p-fieldset>
+              </div>
+
+            </div>
+
+          </p-tabPanel>
+
+          <p-tabPanel header="واکنش ها">
+
+            <div class="overflow-y-auto pl-3" style="height:65vh">
+
+              <div class="mb-5"  >
+
+                <p-accordion [multiple]="true">
+                  <p-accordionTab  *ngFor="let block of actionBlocks; let i = index; let last=last">
+                    <ng-template pTemplate="header">
+                      <div class="flex flex-1 align-items-baseline justify-content-between">
+                        <p class="m-0">واکنش {{ i + 1 }}</p>
+                        <div class="flex gap-2">
+                          <button *ngIf="last" pButton icon="pi pi-plus" class="p-button-success p-2" (click)="addActionBlock(block); $event.stopPropagation()"></button>
+                          <button *ngIf="actionBlocks.length > 1"
+                                  pButton icon="pi pi-trash"
+                                  class="p-button-danger p-2"
+                                  (click)="removeActionBlock(i); $event.stopPropagation()"></button>
+                        </div>
+                      </div>
+                    </ng-template>
+
+                    <div class="flex justify-content-between align-items-center gap-3">
+                      <div class="flex gap-2">
+                        <div>
+                          <label class="text-sm">نوع اکشن</label>
+                          <div class="field">
+                            <p-dropdown [style]="{'width':'180px'}"
+                                        name="userType"
+                                        class="w-full"
+                                        placeholder ="اکشن انتخاب کنید"
+                                        scrollHeight="250px"
+                                        display="chip"
+                                        optionLabel="label"
+                                        optionValue="action"
+                                        appendTo="body"
+                                        [(ngModel)]="block.name"
+                                        [options]="actionTypeOptions"
+                                        (onChange)="onActionInput($event, i)">
+                            </p-dropdown>
+                          </div>
+                        </div>
+
+<!--                        <div>-->
+<!--                          <label class="text-sm">تاخیر زمانی</label>-->
+<!--                          <div class="field">-->
+<!--                            <p-dropdown-->
+<!--                              [style]="{'width':'190px'}"-->
+<!--                              [options]="actionOptions"-->
+<!--                              [(ngModel)]="actionRadio[i]"-->
+<!--                              optionLabel="label"-->
+<!--                              placeholder="انتخاب کنید"-->
+<!--                              (onChange)="onActionRadioValue($event.value, i)">-->
+<!--                            </p-dropdown>-->
+<!--                          </div>-->
+<!--                        </div>-->
+
+                      </div>
+                    </div>
+
+                    <div class="border-2 border-dashed surface-border border-round surface-ground px-3 py-2">
+                      <div class="grid">
+                        <ng-container *ngFor="let f of filterActionsInput[i];let fi = index; let lastField = last;">
+
+                          <ng-container [ngSwitch]="f.type">
+                            <div *ngSwitchCase="'string'" class="col-12">
+                              <div class="flex align-items-center gap-2 mb-2">
+                                <label class="text-sm">{{f.label}}</label>
+                                <button pButton type="button" label="انتخاب مقدار" icon="pi pi-calendar"
+                                        class="p-button-success p-button-outlined p-button-sm p-2"
+                                        (click)="getEntityData(f,'tree',i, fi)"></button>
+                              </div>
+                              <div class="field mb-0 mt-1">
+                                <div class="tags p-2 my-2" *ngIf="treeValuesMap.get(i + '_' + fi)?.length">
+                                  <span class="p-2 text-white border-round ml-2 cursor-pointer bg-teal-400" style="unicode-bidi:plaintext"
+                                        *ngFor="let val of treeValuesMap.get(i + '_' + fi)"
+                                        (click)="insertAtCursor(val,i + '_' + fi)">{{val.label}}</span>
+                                </div>
+                                <textarea *ngIf="block.actionParameters?.[fi]"
+                                          #textareaRefs
+                                          [attr.data-key]="i + '_' + fi"
+                                          [style]="{'width':'100%'}"
+                                          rows="5"
+                                          id="description"
+                                          name="description"
+                                          pInputTextarea
+                                          class="p-fieldset"
+                                          [(ngModel)]="block.actionParameters[fi].valueFormat"></textarea>
+                              </div>
+                            </div>
+
+                            <div *ngSwitchCase="'number'" class="col-12">
+                              <label class="text-sm">{{f.label}}</label>
+                              <div class="field mb-0 mt-1">
+                                <p-inputNumber
+                                  [(ngModel)]="block.actionParameters[fi].valueFormat"
+                                  [style]="{'width': '100%'}"
+                                  [mode]="'decimal'"
+                                  [useGrouping]="false"
+                                  class="w-full"></p-inputNumber>
+                              </div>
+                            </div>
+
+                            <div *ngSwitchCase="'boolean'" class="col-12">
+                              <div class="flex flex-wrap align-items-center gap-3">
+                                <p-inputSwitch #switch
+                                               [(ngModel)]="booleanMap[i + '_' + fi]"
+                                               (onChange)="onBooleanChange(i, fi)" />
+                                <label class="text-sm">{{f.label}}</label>
+                                <div class="flex align-items-center">
+                                  <button pButton
+                                          label="انتخاب مقدار"
+                                          class="p-button-success p-button-outlined"
+                                          icon="pi pi-tag mx-2"
+                                          (click)="getEntityData(f, 'tree', i, fi)"></button>
+                                </div>
+                              </div>
+                              <input class="text-sm w-full mt-2" pInputText type="text" placeholder="مقدار" [value]="displayBooleanMap.get(i + '_' + fi) || ''" readonly />
+                            </div>
+
+                            <div *ngSwitchCase="'datetime'" class="col-12">
+                              <label class="text-sm" for="finishDate">{{f.label}}:</label>
+                              <div class="flex flex-wrap align-items.center gap-1">
+                                <div class="flex align-items-center">
+                                  <button
+                                    pButton
+                                    type="button"
+                                    label="انتخاب تاریخ"
+                                    icon="pi pi-calendar"
+                                    class="p-button-outlined p-button-sm p-2"
+                                    (click)="openDateModal(i, fi, block)"
+                                  ></button>
+                                </div>
+
+                                <div class="flex align-items-center">
+                                  <button pButton
+                                          label="انتخاب مقدار"
+                                          class="p-button-success p-button-outlined p-2"
+                                          icon="pi pi-tag mx-2"
+                                          (click)="getEntityData(f, 'tree', i, fi)"></button>
+                                </div>
+
+                                <div class="flex align-items-center gap-1">
+                                  <!-- دکمه اصلی -->
+<!--                                  <div>-->
+<!--                                    <label class="text-sm">تاخیر زمانی</label>-->
+<!--                                    <div class="field">-->
+<!--                                      <p-dropdown-->
+<!--                                        [style]="{'width':'120px'}"-->
+<!--                                        [options]="actionOptions"-->
+<!--                                        [ngModel]="getActionTime(i + '_' + fi)"-->
+<!--                                        (ngModelChange)="setActionTime(i + '_' + fi, $event)"-->
+<!--                                        optionLabel="label"-->
+<!--                                        placeholder="تاخیر زمانی انتخاب کنید"-->
+<!--                                        (onChange)="onActionTimeChange($event.value, i, fi)">-->
+<!--                                      </p-dropdown>-->
+<!--                                    </div>-->
+<!--                                  </div>-->
+
+<!--                                  <div class="flex align-items-center gap-1"-->
+<!--                                       *ngIf="actionTimeType[i + '_' + fi] === 'timer'">-->
+<!--                                    &lt;!&ndash; <button pButton class="p-button-info p-button-outlined p-button-sm p-2" (click)="setTimerValue(i,fi)">زمان رویداد</button>&ndash;&gt;-->
+<!--                                    &lt;!&ndash; بخش شمارنده &ndash;&gt;-->
+<!--                                    <div class="flex align-items-center gap-1">-->
+<!--                                      <button class="btn-counter" (click)="decrement(i, fi)">-</button>-->
+<!--                                      <span class="value-counter">{{ timerState.get(i + '_' + fi)?.count || 1 }}</span>-->
+<!--                                      <button class="btn-counter"  (click)="increment(i,fi)">+</button>-->
+<!--                                    </div>-->
+
+<!--                                    &lt;!&ndash; بخش انتخاب واحد &ndash;&gt;-->
+<!--                                    <div class="flex align-items-center gap-1">-->
+<!--                                      <button class="btn-counter"  (click)="prevUnit(i,fi)"> < </button>-->
+<!--                                      <span class="value-counter">{{ units[(timerState.get(i + '_' + fi)?.unitIndex) || 0] }}</span>-->
+<!--                                      <button class="btn-counter"  (click)="nextUnit(i,fi)"> > </button>-->
+<!--                                    </div>-->
+<!--                                  </div>-->
+
+
+                                </div>
+
+                              </div>
+                              <input class="text-sm w-full mt-2" pInputText type="text" placeholder="مقدار" [value]="displayDateMap.get(i + '_' + fi)?.value || ''" readonly />
+                            </div>
+
+                            <div *ngSwitchCase="'object'" class="col-12">
+                              <div class="form-group">
+                                <label class="text-sm">{{f.label}}</label>
+                                <div class="field mb-0 mt-1">
+                                  <p-dropdown *ngIf="block.actionParameters?.[fi]"
+                                              [style]="{'width': '100%'}"
+                                              optionLabel="label"
+                                              [(ngModel)]="block.actionParameters[fi].filter"
+                                              [options]="mapFilterParameterOptions(f.filterParameter, block, fi)"
+                                              (onChange)="onSelectFilterParameter($event, 'action',block, fi)"
+                                              appendTo="body"
+                                              placeholder="انتخاب کنید"
+                                              class="ml-2">
+                                  </p-dropdown>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div *ngSwitchCase="'array'" class="col-12">
+                              <div class="form-group">
+                                <label class="text-sm">{{f.label}}</label>
+                                <div class="field mb-0 mt-1">
+                                  <p-dropdown *ngIf="block.actionParameters?.[fi]"
+                                              [style]="{'width': '100%'}"
+                                              optionLabel="label"
+                                              [(ngModel)]="block.actionParameters[fi].filter"
+                                              [options]="mapFilterParameterOptions(f.filterParameter, block, fi)"
+                                              (onChange)="onSelectFilterParameter($event, 'action',block, fi)"
+                                              appendTo="body"
+                                              placeholder="انتخاب کنید"
+                                              class="ml-2">
+                                  </p-dropdown>
+                                </div>
+                              </div>
+                            </div>
+
+                          </ng-container>
+
+
+                          <div class="w-full" *ngIf="!lastField">
+                            <p-divider />
+                          </div>
+
+                        </ng-container>
+
+                      </div>
+                    </div>
+
+                  </p-accordionTab>
+                </p-accordion>
+
+
+              </div>
+
+            </div>
+
+
+          </p-tabPanel>
+
+        </p-tabView>
+
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<!--************************** begin ActionFilter modal *************************************-->
+<p-dialog
+  *ngFor="let modal of showActionFilterModal"
+  [styleClass]="'modal-small'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="modal.visible"
+  [appendTo]="'body'"
+  header="اکشن"
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12 flex justify-content-between flex-wrap" *ngFor="let param of modal.parameters; let pi = index">
+      <div class="form-group flex-1">
+        <p-radioButton
+          name="paramRadio"
+          inputId="radioParameter"
+          value="value"
+          label="مقدار فیلتر"
+          class="gap-2"
+          [(ngModel)]="modal.selectedParamRadio"
+          (onClick)="onRadioSelect('value',modal)">
+        </p-radioButton>
+        <div class="form-group mt-3">
+          <label class="text-sm" for="name">{{ param.label }}</label>
+          <div class="field mt-2">
+            <input
+              pInputText
+              type="text"
+              id="name"
+              name="name"
+              placeholder="مقدار را وارد نمایید"
+              class="p-fieldset"
+              [style]="{'width':'250px'}"
+              [disabled]="modal.selectedParamRadio !== 'value'"
+              [(ngModel)]="param.value">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group flex-1 flex flex-column justify-content-around">
+        <p-radioButton
+          name="paramRadio"
+          inputId="radioParameter"
+          value="parameter"
+          label="مقدار پارامتر"
+          class="gap-2"
+          [(ngModel)]="modal.selectedParamRadio"
+          (onClick)="onRadioSelect('parameter',modal)">
+        </p-radioButton>
+        <div class="form-group mt-3">
+          <button
+            [disabled]="modal.selectedParamRadio !== 'parameter'"
+            pButton
+            pRipple
+            class="p-button-success pi pi-tags"
+            (click)="getEntityData(param)"></button>
+          <div *ngIf="param.treeSelection">
+            <small class="text-green-600">
+              مسیر انتخابی: {{ param.treeSelection.path }}
+              <span *ngIf="param.treeSelection.field">.{{ param.treeSelection.field }}</span>
+            </small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="ثبت"
+      class="p-button-success p-mr-2"
+      (click)="saveModalAction(modal.id)"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="closeActionModal(modal.id)"
+    ></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end ActionFilter modal *************************************-->
+
+<!--************************** begin TreeNode modal *************************************-->
+<p-dialog
+  *ngFor="let modal of treeNodeModals"
+  [styleClass]="'modal-small'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="modal.visible"
+  [appendTo]="'body'"
+  header="انتخاب مقدار"
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12">
+
+      <div class="flex flex-column border-2 border-dashed surface-border border-round surface-ground px-3 py-2">
+        <ul class="pl-2 list-roman">
+          <ng-container *ngFor="let node of modal.entityData">
+            <ng-container
+              [ngTemplateOutlet]="EntityTreeNodeTemplate"
+              [ngTemplateOutletContext]="{ node: node }">
+            </ng-container>
+          </ng-container>
+        </ul>
+
+        <ng-template #EntityTreeNodeTemplate let-node="node" let-parent="parent">
+          <li class="mb-2">
+            <div class="flex align-items-center gap-2">
+              <!-- دکمه باز/بسته -->
+              <button *ngIf="!node.isLeaf" (click)="toggleExpand(node)" class="toggle-btn p-button-text">
+                <i class="pi" [ngClass]="node.expanded ? 'pi-angle-down' : 'pi-angle-right'"></i>
+              </button>
+
+              <!-- انتخاب فیلد نهایی -->
+              <p-radioButton
+                *ngIf="node.isLeaf"
+                name="selectedField{{modal.id}}"
+                [(ngModel)]="modal.selectedNodeFullPath"
+                [value]="node.fullPath"
+                [inputId]="node.fullPath"
+                [disabled]="parent?.values?.length && !parent.selectedValue"
+                (onClick)="clickRadioButton(node, modal)">
+              </p-radioButton>
+
+              <span>{{ node.label }}</span>
+
+              <p-dropdown
+                *ngIf="!node.isLeaf && node.values?.length"
+                [(ngModel)]="node.selectedValue"
+                [options]="node.values"
+                optionLabel="label"
+                optionValue="value"
+                [showClear]="true"
+                placeholder="انتخاب کنید"
+                (onChange)="onSelectFilterParameter($event, 'tree')">
+                <!--                (onChange)="onArraySelect($event.value, node)">-->
+              </p-dropdown>
+
+            </div>
+
+            <!-- نمایش بچه‌ها -->
+            <ul *ngIf="node.expanded" class="ml-5 mt-2">
+              <ng-container *ngFor="let child of node.children">
+                <ng-container
+                  [ngTemplateOutlet]="EntityTreeNodeTemplate"
+                  [ngTemplateOutletContext]="{ node: child, parent: node }">
+                </ng-container>
+              </ng-container>
+            </ul>
+          </li>
+        </ng-template>
+      </div>
+
+
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="ثبت"
+      class="p-button-success p-mr-2"
+      (click)="saveTreeNodeModal(modal)"
+    ></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="closeEntityModal(modal.id)"
+    ></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end TreeNode modal *************************************-->
+
+<!--************************** begin DateModal modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-small'"
+  [style]="{direction:'rtl', height:'480px'}"
+  [(visible)]="showDateModal"
+  [appendTo]="'body'"
+  header="انتخاب تاریخ"
+  [modal]="true">
+
+  <div class="grid" *ngIf="selectedDateContext">
+    <div class="col-12">
+      <div class="datePickerContainer relative" >
+        <label class="text-sm" for="finishDate">تاریخ</label>
+        <div class="flex mt-1">
+          <ng-persian-datepicker
+            class="w-full"
+            [dateInitValue]="false"
+            (dateOnInit)="initialFinishDatePicker($event, actionBlocks[selectedDateContext.blockIndex], selectedDateContext.fieldIndex)"
+            (dateOnSelect)="selectFinishDate($event, actionBlocks[selectedDateContext.blockIndex], selectedDateContext.fieldIndex)"
+            [dateGregorianFormat]="'YYYY-MM-DD' "
+            [dateFormat]="'YYYY-MM-DD '">
+            <input [formControl]="finishDateTimeControl[selectedDateContext.blockIndex][selectedDateContext.fieldIndex]"
+                   name="date{{ selectedDateContext.blockIndex }}_{{ selectedDateContext.fieldIndex }}"  class="text-sm w-full" pInputText type="text" autocomplete="off"/>
+          </ng-persian-datepicker>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="ثبت"
+      class="p-button-success p-mr-2"
+      (click)="onApplyDatePickerModal()"></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="showDateModal = false"
+    ></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end DateModal modal *************************************-->
+
+
+

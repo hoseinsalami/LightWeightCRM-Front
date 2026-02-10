@@ -30,6 +30,7 @@ import {AuthenticationService} from "../../_services/authentication.service";
 import moment from "jalali-moment";
 import {ActivityNoteService} from "../activity-note/activity-note.service";
 import {MultiSelectModule} from "primeng/multiselect";
+import {ServerTimeService} from "../../_services/server-time.service";
 
 @Component({
   selector: 'app-new-activity-modal',
@@ -75,7 +76,7 @@ export class NewActivityModalComponent implements OnInit{
   startDate!: string;
   startDateTimeControl = new FormControl();
 
-  hourTime = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','21','23',];
+  hourTime = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23',];
   minuteTime = ['00','05','10','15','20','25','30','35','40','45','50','55'];
   selectedHourTime: string = undefined;
   selectedMinuteTime: string;
@@ -109,7 +110,8 @@ export class NewActivityModalComponent implements OnInit{
               private loading: LoadingService,
               private authService:AuthenticationService,
               private activeNoteervice: ActivityNoteService,
-              private jalaliPipe: JalaliDatePipe) {
+              private jalaliPipe: JalaliDatePipe,
+              private serverTimeService: ServerTimeService) {
     this.TimeUnits = Utilities.ConvertEnumToKeyPairArray(TimeUnitsEnum,TimeUnitsEnum2LabelMapping);
     authService.token?.pipe(take(1)).subscribe(token => {
       this.user = token
@@ -165,7 +167,7 @@ export class NewActivityModalComponent implements OnInit{
   initialStartDatePicker(event: any) {
     this.startDate = event.gregorian;
   }
-    selectStartDate(event: any) {
+  selectStartDate(event: any) {
     this.startDate = event.gregorian
   }
 
@@ -182,7 +184,30 @@ export class NewActivityModalComponent implements OnInit{
   isReminderDisabled:boolean;
   // محاسبه تاریخ و زمان فعلی جلوتر از تاریخ و زمان انتخاب شده
   shouldShowReminderFields(): boolean {
-    if (!this.startDate || !this.selectedHourTime || !this.selectedMinuteTime) {
+    if (this.startDate == null || this.selectedHourTime == null || this.selectedMinuteTime == null) {
+      return false;
+    }
+
+    let serverTime = this.serverTimeService.getServerTime();
+    if (!serverTime) {
+      this.isReminderDisabled = true;
+      return false;
+    }
+
+    serverTime = serverTime.substring(0, 19);
+    const match = serverTime.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
+    if (!match) {
+      console.error('Invalid server date format:', serverTime);
+      this.isReminderDisabled = true;
+      return false;
+    }
+
+    const [, year, month, day, hour, minute, second] = match.map(Number);
+    const serverDate = new Date(year, month - 1, day, hour, minute, second);
+
+    if (isNaN(serverDate.getTime())) {
+      console.error('Invalid server date after parsing:', serverDate);
+      this.isReminderDisabled = true;
       return false;
     }
 
@@ -191,15 +216,21 @@ export class NewActivityModalComponent implements OnInit{
     selectedDate.setMinutes(+this.selectedMinuteTime);
     selectedDate.setSeconds(0);
 
-    const now = new Date();
-    this.isReminderDisabled = selectedDate.getTime() <= now.getTime();
+
+    this.isReminderDisabled = selectedDate.getTime() <= serverDate.getTime();
+
+    // const now = new Date();
+    // this.isReminderDisabled = selectedDate.getTime() <= now.getTime();
 
     // اگر قبلاً حذفشون کرده بودی، دیگه نکن
     // if (!this.isReminderDisabled && this.reminders.length === 0) {
     //   this.reminders = [new TimePeriod()];
     // }
 
-    return true; // همیشه نمایش بده
+    // return true; // همیشه نمایش بده
+
+    // اگر انتخاب جلوتر از سرور هست، اجازه نمایش بده
+    return !this.isReminderDisabled;
 
   }
 

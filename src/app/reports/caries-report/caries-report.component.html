@@ -383,7 +383,7 @@
             <!-- path -->
             <div class="col-12 md:col-12">
               <div class="form-group">
-                <label class="text-right font-bold text-md mb-2">کاریز</label>
+                <label>جریان</label>
                 <div class="field">
                   <p-treeSelect
                     class="w-full"
@@ -396,12 +396,12 @@
                     display="chip"
                     [metaKeySelection]="false"
                     selectionMode="checkbox"
-                    placeholder="کاریز را انتخاب نمایید">
+                    placeholder="جریان را انتخاب نمایید">
                     <ng-template let-customer pTemplate="value">
                       @if (oneObject.filters.stepIds?.length > 0) {
                       {{ oneObject.filters.stepIds.length }} قلم
                       } @else {
-                      کاریز را انتخاب نمایید
+                      جریان را انتخاب نمایید
                       }
                     </ng-template>
                   </p-treeSelect>
@@ -412,7 +412,7 @@
             <!-- expert -->
             <div class="col-12 md:col-12">
               <div class="form-group field">
-                <label class="text-right font-bold text-md m-0" for="">کارشناس</label>
+                <label>کارشناس</label>
                 <div class="field">
                   <p-multiSelect [style]="{'width':'100%'}"
                                  name="userType"
@@ -433,7 +433,7 @@
             <!-- customers -->
             <div class="col-12 md:col-12">
               <div class="form-group field">
-                <label class="text-right font-bold text-md m-0" for="">مشتری</label>
+                <label>مشتری</label>
                 <div class="field">
 
                   <p-autoComplete
@@ -493,7 +493,7 @@
             <!-- userType -->
             <div class="col-12 md:col-12">
               <div class="form-group field">
-                <label class="text-right font-bold text-md m-0" for="">راهبر</label>
+                <label>راهبر</label>
                 <div class="field">
                   <p-multiSelect [style]="{'width':'100%'}"
                                  name="userType"
@@ -514,7 +514,7 @@
             <!-- status -->
             <div class="col-12 md:col-12">
               <div class="form-group field">
-                <label class="text-right font-bold text-md m-0" for="">وضعیت</label>
+                <label>وضعیت</label>
                 <div class="field">
                   <p-multiSelect [style]="{'width':'100%'}"
                                  name="userType"
@@ -535,7 +535,7 @@
             <!-- reasonFailure -->
             <div class="col-12 md:col-12">
               <div class="form-group field">
-                <label class="text-right font-bold text-md m-0" for="">دلیل شکست</label>
+                <label>دلیل شکست</label>
                 <div class="field">
                   <p-multiSelect [style]="{'width':'100%'}"
                                  name="userType"
@@ -562,7 +562,7 @@
 
                 <div class="flex flex-column gap-4">
                   <div class="datePickerContainer relative z-5">
-                    <label class="text-right font-bold text-md mb-2">از تاریخ</label>
+                    <label>از تاریخ</label>
                     <ng-persian-datepicker
                       (dateOnSelect)="selectCreatedFromDatePicker($event)"
                       (dateOnInit)="initialCreatedFromDatePicker($event)"
@@ -572,7 +572,7 @@
                     </ng-persian-datepicker>
                   </div>
                   <div class="datePickerContainer relative z-4">
-                    <label class="text-right font-bold text-md mb-2">تا تاریخ</label>
+                    <label>تا تاریخ</label>
                     <div class="flex gap-2">
                       <ng-persian-datepicker
                         class="w-full"
@@ -598,7 +598,7 @@
 
                 <div class="flex flex-column gap-4">
                   <div class="datePickerContainer relative z-3">
-                    <label class="text-right font-bold text-md mb-2">از تاریخ</label>
+                    <label>از تاریخ</label>
                     <ng-persian-datepicker
                       (dateOnSelect)="selectFinishedFromDatePicker($event)"
                       (dateOnInit)="initialFinishedFromDatePicker($event)"
@@ -608,7 +608,7 @@
                     </ng-persian-datepicker>
                   </div>
                   <div class="datePickerContainer relative z-2">
-                    <label class="text-right font-bold text-md mb-2">تا تاریخ</label>
+                    <label>تا تاریخ</label>
                     <div class="flex gap-2">
                       <ng-persian-datepicker
                         class="w-full"
@@ -637,7 +637,7 @@
           <div class="grid">
             <div class="col-12">
               <div class="datePickerContainer relative">
-                <label class="text-right font-bold text-md mb-2">مبنای اصلی</label>
+                <label>مبنای اصلی</label>
                 <div>
                   <p-dropdown
                     [styleClass]="'clear-icon'"
@@ -658,7 +658,7 @@
 
             <div class="col-12">
               <div class="datePickerContainer relative">
-                <label class="text-right font-bold text-md mb-2">مبنای فرعی</label>
+                <label>مبنای فرعی</label>
                 <div>
                   <p-dropdown
                     [styleClass]="'clear-icon'"
@@ -679,7 +679,7 @@
 
             <div class="col-12">
               <div class="datePickerContainer relative">
-                <label class="text-right font-bold text-md mb-2">خروجی گزارش</label>
+                <label>خروجی گزارش</label>
                 <div>
                   <p-dropdown
                     [styleClass]="'clear-icon'"
@@ -729,7 +729,7 @@
           </div>
 
           <span class="mx-auto">
-            گزارش کاریز ها
+            گزارش جریان ها
           </span>
 
         </div>

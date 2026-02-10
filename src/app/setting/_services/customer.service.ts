@@ -8,6 +8,13 @@ import {ActivityWorkItemType, IStructureData} from "../../work-item/_types/activ
 import {AccustomType} from "../_types/accustom.type";
 import {TagTypeBase} from "../_types/tag.type";
 import {SendMessageType} from "../../path/_types/send-message.type";
+import {
+  DocumentModelType,
+  ICreatDocumentInstance,
+  IDetailDocInstance,
+  IUpdateDocInstance
+} from "../_types/document.type";
+import {OutType} from "../../_classes/base-list.manager";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +22,7 @@ import {SendMessageType} from "../../path/_types/send-message.type";
 export class CustomerService extends BaseCrudService{
 
   override baseUrl = environment.apiUrl + 'CRM/customer'
+  baseUrlDoc = environment.apiUrl + 'CRM/DocumentInstance'
   constructor(private http: FatapHttpClientService) {
     super(http , '')
   }
@@ -63,5 +71,35 @@ export class CustomerService extends BaseCrudService{
   onSearchCustomer(input:string):Observable<CustomerSpecification[]>{
     return this.http.get<CustomerSpecification[]>(this.baseUrl + '/SearchCustomer/'+ input)
   }
+
+  getDocumentList():Observable<DocumentModelType[]>{
+    return this.http.get(this.baseUrlDoc + '/documents')
+  }
+
+  getDocumentInstancesByCustomer(docId:number, customerId:number, from:number, rows:number):Observable<OutType<IDetailDocInstance>>{
+    return this.http.get(this.baseUrlDoc + `/list/${docId}/${customerId}?from=${from}&rows=${rows}`)
+  }
+
+  getAllDocumentInstancesByCustomer(docId:number, customerId:number):Observable<OutType<IDetailDocInstance>>{
+    return this.http.get(this.baseUrlDoc + `/list/${docId}/${customerId}`)
+  }
+
+  postCreateDocumentInstance(input:ICreatDocumentInstance){
+    return this.http.post(this.baseUrlDoc, input)
+  }
+
+  getDetailDocumentInstance(id:number):Observable<IDetailDocInstance>{
+    return this.http.get(this.baseUrlDoc + `/Detail/${id}`)
+  }
+
+  putUpdateDocumentInstance(input:IUpdateDocInstance){
+    return this.http.put(this.baseUrlDoc, input)
+  }
+
+  deleteDocumentInstance(documentInstanceId:number){
+    return this.http.delete(this.baseUrlDoc + `/${documentInstanceId}`)
+  }
+
+
 
 }

@@ -11,6 +11,7 @@ import {FormsModule} from "@angular/forms";
 import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
 import {MessageService} from "primeng/api";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'app-edit-tag',
@@ -22,6 +23,7 @@ import {MessageService} from "primeng/api";
     FormsModule,
     ButtonModule,
     InputTextModule,
+    DividerModule
   ]
 })
 export class EditTagComponent extends BaseTagDetailComponent<TagTypeBase>{
@@ -31,7 +33,7 @@ export class EditTagComponent extends BaseTagDetailComponent<TagTypeBase>{
     private tagService: TagService,
     private messageService: MessageService,
     private router: Router,
-    private activeRoute: ActivatedRoute,
+    activeRoute: ActivatedRoute,
     loading: LoadingService
   ) {
     let manager =
@@ -58,7 +60,7 @@ export class EditTagComponent extends BaseTagDetailComponent<TagTypeBase>{
         router.navigate(['./'], {relativeTo:this.activeRoute.parent});
       });
 
-    super(manager, tagService, loading);
+    super(manager, tagService, loading, activeRoute);
   }
 
 }

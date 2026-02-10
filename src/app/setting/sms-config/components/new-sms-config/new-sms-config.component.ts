@@ -37,14 +37,14 @@ export class NewSmsConfigComponent extends BaseSmsConfigDetailComponent<SmsProvi
     private smsService: SmsConfigService,
     private messageService: MessageService,
     private router: Router,
-    private activeRoute: ActivatedRoute,
+    activeRoute: ActivatedRoute,
     loading: LoadingService,
     private authService: AuthenticationService
   ) {
     let manager =
       new BaseNewManager<SmsProviderType>(SmsProviderType, smsService, messageService, {}, router, activeRoute, loading);
 
-    super(manager, smsService, loading);
+    super(manager, smsService, loading, activeRoute);
 
     manager.validation = () =>{
       if (!this.manager.oneObject.smsProviderId) {

@@ -1,6 +1,6 @@
 <!--url="{{uploadUrl}}"-->
 <!--accept="image/*"-->
-<p-fileUpload name="uploadFiles" [disabled]="isDisabled" [url]="url()" (onUpload)="onUpload($event)" (onSelect)="onSelect($event)" *ngIf="uploadType!=='simple'"
+<p-fileUpload name="uploadFiles" [disabled]="isDisabled" [url]="url" (onUpload)="onUpload($event)" (onSelect)="onSelect($event)" *ngIf="uploadType!=='simple'"
               chooseLabel="{{addLabel}}" cancelLabel="لغو" uploadLabel="بارگذاری" [auto]="true"
               [multiple]="multi" [maxFileSize]="10485760" styleClass="w-98">
   <ng-template pTemplate="content">
