@@ -133,6 +133,7 @@
         <div class="white-space-nowrap overflow-hidden text-overflow-ellipsis">{{ step?.title }}</div>
         <i class="pi pi-pencil edit" (click)="openModalEditCaries(step)"></i>
         <i class="pi pi-plus new" (click)="openModalNewCaries(step)"></i>
+        <i class="pi pi-bolt edit text-base" (click)="navigateToConfig(step)"></i>
         <span class="arrow-prg-L"></span>
         <span class="arrow-prg-R"></span>
       </header>
@@ -698,7 +699,7 @@
 
 <!--************************** begin caries-step modal *************************************-->
 <p-dialog
-  [styleClass]="'modal-medium'"
+  [styleClass]="'modal-xs'"
   [style]="{direction:'rtl'}"
   [(visible)]="showModalCariesStep"
   [appendTo]="'body'"
@@ -706,57 +707,104 @@
   [modal]="true">
 
   <div class="grid">
-    <div class="col-12">
 
-      <div *ngFor="let item of orderList">
-        <div class="flex align-items-end mb-3 gap-3">
-          <div class="flex flex-column flex-1">
-            <label class="text-right">عنوان</label>
-            <input
-              pInputText
-              id="steps"
-              name="steps"
-              [(ngModel)]="item.title"
-              (keydown)="handleSpace($event)"/>
-          </div>
-          <div class="flex flex-column flex-1">
-            <label class="text-right">حداکثر زمان پیش از راکد شدن</label>
-            <input
-              pInputText
-              type="text"
-              id="reminder"
-              name="reminder"
-              class="p-fieldset"
-              placeholder="مدت زمان"
-              [style]="{'width':'100%'}"
-              [(ngModel)]="item.deadlineValue"
-              [pKeyFilter]="'int'">
-          </div>
-
-          <div class="form-group flex gap-3">
-            <p-dropdown
-              (click)="$event.stopPropagation()"
-              (mousedown)="$event.stopPropagation()"
-              (pointerdown)="$event.stopPropagation()"
-              (touchstart)="$event.stopPropagation()"
-              [styleClass]="'clear-icon'"
-              [showClear]="true"
-              [options]="TimeUnits"
-              [(ngModel)]="item.periodTimeUnit"
-              optionLabel="title"
-              optionValue="value"
-              class="mt-2"
-              [style]="{'width':'150px'}"
-              [required]="true"
-              [appendTo]="'body'"
-              placeholder="زمان">
-            </p-dropdown>
-          </div>
-
-        </div>
+    <div class="col-12 md:col-12">
+      <div class="flex flex-column flex-1">
+        <label class="text-right">عنوان</label>
+        <input
+          pInputText
+          id="steps"
+          name="steps"
+          [(ngModel)]="orderList.title"
+          (keydown)="handleSpace($event)"/>
       </div>
-
     </div>
+
+    <div class="col-12 md:col-6">
+      <div class="flex flex-column flex-1">
+        <label class="text-right">حد زمانی رسوب</label>
+        <input
+          pInputText
+          type="text"
+          id="reminder"
+          name="reminder"
+          class="p-fieldset"
+          placeholder="مدت زمان"
+          [style]="{'width':'100%'}"
+          [(ngModel)]="orderList.deadlineValue"
+          [pKeyFilter]="'int'">
+      </div>
+    </div>
+
+    <div class="col-12 md:col-6">
+      <div class="flex-1">
+        <label class="text-right">واحد زمانی</label>
+        <p-dropdown
+          (click)="$event.stopPropagation()"
+          (mousedown)="$event.stopPropagation()"
+          (pointerdown)="$event.stopPropagation()"
+          (touchstart)="$event.stopPropagation()"
+          [styleClass]="'clear-icon'"
+          [showClear]="true"
+          [options]="TimeUnits"
+          [(ngModel)]="orderList.periodTimeUnit"
+          optionLabel="title"
+          optionValue="value"
+          class="mt-2"
+          [style]="{'width':'100%'}"
+          [required]="true"
+          [appendTo]="'body'"
+          placeholder="واحد زمانی را انتخاب نمایید">
+        </p-dropdown>
+      </div>
+    </div>
+
+
+<!--    <div class="col-12">-->
+<!--        <div class="flex align-items-end mb-3 gap-3" *ngFor="let item of orderList">-->
+<!--          <div class="flex flex-column flex-1">-->
+<!--            <label class="text-right">عنوان</label>-->
+<!--            <input-->
+<!--              pInputText-->
+<!--              id="steps"-->
+<!--              name="steps"-->
+<!--              [(ngModel)]="item.title"-->
+<!--              (keydown)="handleSpace($event)"/>-->
+<!--          </div>-->
+<!--          <div class="flex flex-column flex-1">-->
+<!--            <label class="text-right">حداکثر زمان پیش از راکد شدن</label>-->
+<!--            <input-->
+<!--              pInputText-->
+<!--              type="text"-->
+<!--              id="reminder"-->
+<!--              name="reminder"-->
+<!--              class="p-fieldset"-->
+<!--              placeholder="مدت زمان"-->
+<!--              [style]="{'width':'100%'}"-->
+<!--              [(ngModel)]="item.deadlineValue"-->
+<!--              [pKeyFilter]="'int'">-->
+<!--          </div>-->
+<!--          <div class="form-group flex gap-3 flex-1">-->
+<!--            <p-dropdown-->
+<!--              (click)="$event.stopPropagation()"-->
+<!--              (mousedown)="$event.stopPropagation()"-->
+<!--              (pointerdown)="$event.stopPropagation()"-->
+<!--              (touchstart)="$event.stopPropagation()"-->
+<!--              [styleClass]="'clear-icon'"-->
+<!--              [showClear]="true"-->
+<!--              [options]="TimeUnits"-->
+<!--              [(ngModel)]="item.periodTimeUnit"-->
+<!--              optionLabel="title"-->
+<!--              optionValue="value"-->
+<!--              class="mt-2"-->
+<!--              [style]="{'width':'150px'}"-->
+<!--              [required]="true"-->
+<!--              [appendTo]="'body'"-->
+<!--              placeholder="زمان">-->
+<!--            </p-dropdown>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--    </div>-->
   </div>
 
   <ng-template pTemplate="footer">
@@ -806,7 +854,7 @@
 
     <div class="col-12 md:col-4">
       <div class="datePickerContainer relative">
-        <label class="text-right font-bold text-md mb-2">راهبر</label>
+        <label class="">راهبر</label>
         <div>
           <p-dropdown
             [styleClass]="'clear-icon'"
@@ -824,9 +872,9 @@
       </div>
     </div>
 
-    <div class="col-12">
+    <div class="col-12 md:col-4">
       <div class="form-group">
-        <label class="text-right font-bold text-md mb-2">کارشناس</label>
+        <label class="">کارشناس</label>
         <div class="field">
           <p-multiSelect [style]="{'width':'100%'}"
                          name="userType"

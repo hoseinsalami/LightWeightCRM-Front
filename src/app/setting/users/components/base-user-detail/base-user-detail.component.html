@@ -7,10 +7,6 @@
       </div>
     </div>
 
-<!--    <div class="col-12">-->
-<!--      <p-divider type="solid" [style]="{'border-top':'1px solid #f7f7f7',}"/>-->
-<!--    </div>-->
-
   </div>
 
   <div class="grid">
@@ -89,18 +85,17 @@
         <label class="text-sm">نوع کاربر</label>
         <span class="text-red-500 font-bold text- mr-1">*</span>
         <div class="field">
-          <p-dropdown [style]="{'width':'100%'}"
-                      name="userType"
-                      class="w-full"
-                      placeholder ="انتخاب نقش کاربر..."
-                      scrollHeight="250px"
-                      display="chip"
-                      optionLabel="title"
-                      optionValue="value"
-                      [(ngModel)]="manager.oneObject.userType"
-                      [options]="userType">
-
-          </p-dropdown>
+          <p-multiSelect [style]="{'width':'100%'}"
+                         name="userType"
+                         class="w-full"
+                         placeholder ="کارشناس را انتخاب نمایید"
+                         scrollHeight="250px"
+                         display="chip"
+                         optionLabel="title"
+                         optionValue="value"
+                         [(ngModel)]="manager.oneObject.userType"
+                         [options]="userType">
+          </p-multiSelect>
         </div>
       </div>
     </div>

@@ -140,6 +140,32 @@ $extra-extra-large: 1400px;
   }
 }
 
+.modal-xs {
+  @media screen and (max-width: $small) {
+    width: 100% !important;
+  }
+
+  @media screen and (min-width: $small) and (max-width: $medium) {
+    width: 80% !important;
+  }
+
+  @media screen and (min-width: $medium) and (max-width: $large) {
+    width: 60% !important;
+  }
+
+  @media screen and (min-width: $large) and (max-width: $extra-large) {
+    width: 50% !important;
+  }
+
+  @media screen and (min-width: $extra-large) and (max-width: $extra-extra-large) {
+    width: 400px !important;
+  }
+
+  @media screen and (min-width: $extra-extra-large) {
+    width: 400px !important;
+  }
+}
+
 .modal-small {
   @media screen and (max-width: $small) {
     width: 100% !important;

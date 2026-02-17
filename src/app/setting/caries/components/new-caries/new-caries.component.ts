@@ -22,6 +22,7 @@ import {DividerModule} from "primeng/divider";
 import {MultiSelectModule} from "primeng/multiselect";
 import {KeyFilterModule} from "primeng/keyfilter";
 import {TooltipModule} from "primeng/tooltip";
+import {TabViewModule} from "primeng/tabview";
 
 @Component({
   selector: 'app-new-caries',
@@ -46,7 +47,8 @@ import {TooltipModule} from "primeng/tooltip";
     DividerModule,
     MultiSelectModule,
     KeyFilterModule,
-    TooltipModule
+    TooltipModule,
+    TabViewModule
   ],
   standalone: true
 })
@@ -107,16 +109,22 @@ export class NewCariesComponent extends BaseCariesDetailComponent<CreatePathType
   }
 
   override onAddNewStep() {
-    this.manager.oneObject.steps = this.manager.oneObject.steps ? [...this.manager.oneObject.steps, new CreateStepType({}) ] : [new CreateStepType({})]
+    // this.manager.oneObject.steps = this.manager.oneObject.steps ? [...this.manager.oneObject.steps, new CreateStepType({}) ] : [new CreateStepType({})]
+    this.manager.oneObject.steps = this.manager.oneObject.steps ? [new CreateStepType({}), ...this.manager.oneObject.steps] : [new CreateStepType({})];
     this.changeOrder()
   }
 
   onDeleteStep(input:CreateStepType ){
-    if (this.manager.oneObject.steps){
-      this.manager.oneObject.steps = this.manager.oneObject.steps.filter(item =>{
-        return item != input
-      })
+    const steps = this.manager.oneObject.steps;
+    if (!steps || steps.length <= 1){
+      return
     }
+    this.manager.oneObject.steps = steps.filter(item => item !== input);
+    // if (this.manager.oneObject.steps){
+    //   this.manager.oneObject.steps = this.manager.oneObject.steps.filter(item =>{
+    //     return item != input
+    //   })
+    // }
   }
 
   changeOrder(){

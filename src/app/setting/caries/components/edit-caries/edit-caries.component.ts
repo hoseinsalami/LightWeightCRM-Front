@@ -25,6 +25,7 @@ import {DividerModule} from "primeng/divider";
 import {MultiSelectModule} from "primeng/multiselect";
 import {KeyFilterModule} from "primeng/keyfilter";
 import {TooltipModule} from "primeng/tooltip";
+import {TabViewModule} from "primeng/tabview";
 
 @Component({
   selector: 'app-edit-caries',
@@ -50,7 +51,8 @@ import {TooltipModule} from "primeng/tooltip";
     DividerModule,
     MultiSelectModule,
     KeyFilterModule,
-    TooltipModule
+    TooltipModule,
+    TabViewModule
   ],
 })
 export class EditCariesComponent extends BaseCariesDetailComponent<CreatePathType> implements OnInit {
@@ -126,7 +128,7 @@ export class EditCariesComponent extends BaseCariesDetailComponent<CreatePathTyp
   }
 
   override onAddNewStep() {
-    this.manager.oneObject.steps = this.manager.oneObject.steps ? [...this.manager.oneObject.steps, new CreateStepType({}) ] : [new CreateStepType({})]
+    this.manager.oneObject.steps = this.manager.oneObject.steps ? [new CreateStepType({}), ...this.manager.oneObject.steps] : [new CreateStepType({})];
     this.changeOrder()
   }
 

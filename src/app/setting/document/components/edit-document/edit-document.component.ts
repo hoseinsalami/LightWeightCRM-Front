@@ -24,6 +24,8 @@ import {NgPersianDatepickerModule} from "ng-persian-datepicker";
 import moment from "jalali-moment";
 import {JalaliDatePipe} from "../../../../_pipes/jalali.date.pipe";
 import {TooltipModule} from "primeng/tooltip";
+import {DialogModule} from "primeng/dialog";
+import {InputTextareaModule} from "primeng/inputtextarea";
 
 @Component({
   selector: 'app-edit-document',
@@ -49,7 +51,9 @@ import {TooltipModule} from "primeng/tooltip";
     KeyFilterModule,
     NgPersianDatepickerModule,
     JalaliDatePipe,
-    TooltipModule
+    TooltipModule,
+    DialogModule,
+    InputTextareaModule
   ],
   providers:[JalaliDatePipe]
 })
@@ -58,7 +62,7 @@ export class EditDocumentComponent extends BaseDocumentDetailComponent{
   jalaliPipe =  inject(JalaliDatePipe)
   constructor(
     private documentService: DocumentService,
-    private messageService: MessageService,
+    messageService: MessageService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     loading: LoadingService,
@@ -67,26 +71,24 @@ export class EditDocumentComponent extends BaseDocumentDetailComponent{
       DocumentModelType,
       (input) =>{
         let temp = new DocumentModelType(input);
-        temp.properties?.forEach(prop =>{
+        temp.properties?.forEach((prop,index) =>{
           prop.descriptor = prop.descriptor ? JSON.parse(prop?.descriptor) : null;
-          if(prop.propertyType === this.propertyTypeEnum.SingleSelect || prop.propertyType === this.propertyTypeEnum.MultiSelect){
+          if(prop.propertyType === this.propertyTypeEnum.MultiSelect){
             prop.value = prop.defaultValue ? JSON.parse(prop?.defaultValue) : null;
           } else {
             prop.value = prop.defaultValue ?? null;
           }
 
           if (prop.descriptor && Array.isArray(prop.descriptor)){
-            prop.descriptor.forEach((item, index) => {
-             this.parameters.push({title: item})
-            })
+            // this.parameters[index] = prop.descriptor.map(item => ({ title: item }));
+            // this.parameter = prop.descriptor.map(item => ({ title: item }));
+            this.parameter = prop.descriptor
           }
 
           if (prop.propertyType === this.propertyTypeEnum.Date){
             if (prop.defaultValue){
               this.startDateTimeControl.patchValue(moment(prop?.defaultValue).locale('fa').format('YYYY-MM-DD').toString());
             }
-
-            // const formatted = this.jalaliPipe.transform(prop?.defaultValue);
           }
 
         })
@@ -94,13 +96,17 @@ export class EditDocumentComponent extends BaseDocumentDetailComponent{
         return temp;
       },documentService, messageService,activeRoute, router, loading)
 
-    super(documentService,manager,loading);
+    super(documentService,manager,messageService,loading);
 
 
     manager.BeforeSave.subscribe(item =>{
-      item.properties.forEach(prop =>{
-        if(prop.propertyType === this.propertyTypeEnum.SingleSelect || prop.propertyType === this.propertyTypeEnum.MultiSelect){
-          prop.descriptor = JSON.stringify(this.parameters?.map(p => { return p.title}))
+      item.properties.forEach((prop,index:number) =>{
+        if(prop.propertyType === this.propertyTypeEnum.SingleSelect ){
+          prop.descriptor = JSON.stringify(prop.descriptor)
+          // prop.defaultValue = JSON.stringify(prop.defaultValue)
+        }
+        if(prop.propertyType === this.propertyTypeEnum.MultiSelect){
+          prop.descriptor = JSON.stringify(prop.descriptor)
           prop.defaultValue = JSON.stringify(prop.value)
         }
 
@@ -113,6 +119,8 @@ export class EditDocumentComponent extends BaseDocumentDetailComponent{
         if (prop.propertyType === this.propertyTypeEnum.Date)
           prop.defaultValue = this.startDate ? this.startDate?.trim()?.concat('T' + '00:00:00') : prop.defaultValue
 
+
+        delete prop.value
       })
 
     })

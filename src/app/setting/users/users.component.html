@@ -41,17 +41,17 @@
           <p-sortIcon field="fullName"></p-sortIcon>
         </th>
 
-        <th pSortableColumn="mobile">
-<!--          <p-columnFilter matchMode="contains" type="text" field="mobile" display="menu"></p-columnFilter>-->
-          شماره همراه
-          <p-sortIcon field="mobile"></p-sortIcon>
-        </th>
+<!--        <th pSortableColumn="mobile">-->
+<!--&lt;!&ndash;          <p-columnFilter matchMode="contains" type="text" field="mobile" display="menu"></p-columnFilter>&ndash;&gt;-->
+<!--          شماره همراه-->
+<!--          <p-sortIcon field="mobile"></p-sortIcon>-->
+<!--        </th>-->
 
-        <th pSortableColumn="userName">
-<!--          <p-columnFilter matchMode="contains" type="text" field="userName" display="menu"></p-columnFilter>-->
-          نام کاربری
-          <p-sortIcon field="userName"></p-sortIcon>
-        </th>
+<!--        <th pSortableColumn="userName">-->
+<!--&lt;!&ndash;          <p-columnFilter matchMode="contains" type="text" field="userName" display="menu"></p-columnFilter>&ndash;&gt;-->
+<!--          نام کاربری-->
+<!--          <p-sortIcon field="userName"></p-sortIcon>-->
+<!--        </th>-->
 
         <th pSortableColumn="userType">
 <!--          <p-columnFilter matchMode="contains" type="text" field="userType" display="menu"></p-columnFilter>-->
@@ -79,24 +79,24 @@
           {{object.fullName}}
         </td>
 
-        <td>
-          <span class="p-column-title">شماره همراه</span>
-          {{object.mobile}}
-        </td>
+<!--        <td>-->
+<!--          <span class="p-column-title">شماره همراه</span>-->
+<!--          {{object.mobile}}-->
+<!--        </td>-->
 
-        <td>
-          <span class="p-column-title">نام کاربر</span>
-          {{object.userName}}
-        </td>
+<!--        <td>-->
+<!--          <span class="p-column-title">نام کاربر</span>-->
+<!--          {{object.userName}}-->
+<!--        </td>-->
 
         <td>
           <span class="p-column-title">نوع کاربر</span>
-          {{userType[object.userType].title}}
+          {{getUserTypeTitles(object.userType)}}
         </td>
 
         <td>
           <span class="p-column-title">فعال</span>
-          {{object.active ?'فعال': 'غیرفعال'}}
+          <i [class]="object.active ? 'pi pi-check text-green-500' : 'pi pi-times text-red-500'"></i>
         </td>
 
         <td>

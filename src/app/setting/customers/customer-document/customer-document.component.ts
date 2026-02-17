@@ -7,7 +7,7 @@ import {ButtonModule} from "primeng/button";
 import {MenuItem} from "primeng/api";
 import {LoadingService} from "../../../_services/loading.service";
 import {CustomerService} from "../../_services/customer.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, RouterLink} from "@angular/router";
 import {OutType} from "../../../_classes/base-list.manager";
 import {
   CreatePropertyDTO,
@@ -50,7 +50,8 @@ import {DropdownChangeEvent} from "primeng/dropdown/dropdown.interface";
     MultiSelectModule,
     KeyFilterModule,
     JalaliDatePipe,
-    PaginatorModule
+    PaginatorModule,
+    RouterLink
 
   ],
   providers:[JalaliDatePipe]
@@ -105,16 +106,24 @@ export class CustomerDocumentComponent implements OnInit{
           this.documents.forEach(item =>{
             item.properties?.forEach(prop =>{
                 prop.descriptor = prop.descriptor ? JSON.parse(prop?.descriptor) : null;
-                if(prop.propertyType === this.propertyTypeEnum.SingleSelect || prop.propertyType === this.propertyTypeEnum.MultiSelect){
+
+                if(prop.propertyType === this.propertyTypeEnum.MultiSelect){
                   prop.value = prop.defaultValue ? JSON.parse(prop?.defaultValue) : null;
                 } else {
                   prop.value = prop.defaultValue ?? null;
                 }
+
+
+
                 if (prop.descriptor && Array.isArray(prop.descriptor)){
                   prop.descriptor.forEach((item, index) => {this.parameters.push({title: item})})
                 }
                 if (prop.propertyType === this.propertyTypeEnum.Date){
-                  if (prop.defaultValue){this.startDateTimeControl.patchValue(moment(prop?.defaultValue).locale('fa').format('YYYY-MM-DD').toString());}
+                  if (prop.defaultValue){
+                    this.startDateTimeControl.patchValue(moment(prop?.defaultValue).locale('fa').format('YYYY-MM-DD').toString());
+                  } else {
+                    this.startDateTimeControl.patchValue(null);
+                  }
                 }
               })
           })
@@ -122,6 +131,7 @@ export class CustomerDocumentComponent implements OnInit{
 
           this.getDocumentInstanceByCustomer();
         }
+        console.log(this.documents)
 
       },
       error: (err) =>{
@@ -147,12 +157,33 @@ export class CustomerDocumentComponent implements OnInit{
 
         this.many.items.forEach(item=>{
             item.propertiesValue?.forEach(prop => {
-              prop.property.descriptor = prop.property.descriptor ? JSON.parse(prop.property.descriptor) : null;
+              // prop.property.descriptor = prop.property.descriptor ? JSON.parse(prop.property.descriptor) : null;
+              const descriptor = prop.property.descriptor ? JSON.parse(prop.property.descriptor) : null;
+              prop.property.descriptor = descriptor;
 
-              if (prop.property.propertyType === this.propertyTypeEnum.SingleSelect || prop.property.propertyType === this.propertyTypeEnum.MultiSelect) {
+              if (prop.property.propertyType === this.propertyTypeEnum.SingleSelect) {
                 const val = prop.value ? JSON.parse(prop.value) : null;
-                prop.value = Array.isArray(val) ? val.join('، ') : val;
+                if (val && descriptor) {
+                  const descriptorIds = descriptor.map((d: any) => d.id);
+                  prop.value = descriptorIds.includes(val.id) ? { id: val.id, value: val.value } : null;
+                } else {
+                  prop.value = null;
+                }
               }
+
+              if (prop.property.propertyType === this.propertyTypeEnum.MultiSelect) {
+                const val = prop.value ? JSON.parse(prop.value) : null;
+                if (val && descriptor) {
+                  const descriptorIds = descriptor.map((d: any) => d.id);
+                  prop.value = Array.isArray(val) ? val.filter((x: any) => descriptorIds.includes(x.id)) : [];
+                } else {
+                  prop.value = null;
+                }
+              }
+              // if (prop.property.propertyType === this.propertyTypeEnum.SingleSelect || prop.property.propertyType === this.propertyTypeEnum.MultiSelect) {
+              //   // prop.value = Array.isArray(val) ? val.join('، ') : val;
+              //   prop.value = val;
+              // }
 
             });
         })
@@ -313,21 +344,35 @@ export class CustomerDocumentComponent implements OnInit{
 
       switch (prop.propertyType) {
         case this.propertyTypeEnum.MultiSelect:
-          obj.value = JSON.stringify(prop.value);
+          // obj.value = prop.value.length > 0 ? JSON.stringify(prop.value) : null;
+          if (prop.value && prop.value.length > 0){
+            const options = this.getParameters(prop);
+            const selectedFullObjects = options.filter(opt => prop.value.includes(opt.id));
+            obj.value = JSON.stringify(selectedFullObjects)
+          }else {
+            obj.value = null
+          }
           break;
 
         case this.propertyTypeEnum.SingleSelect:
-          obj.value = JSON.stringify(prop.defaultValue);
+          // obj.value = prop.defaultValue ? JSON.stringify(prop.defaultValue) : null;
+          if (prop.defaultValue) {
+            const options = this.getParameters(prop);
+            const selectedFullObject = options.find(opt => opt.id === prop.defaultValue);
+            obj.value = selectedFullObject ? JSON.stringify(selectedFullObject) : null;
+          } else {
+            obj.value = null;
+          }
           break;
 
         case this.propertyTypeEnum.ShortString:
         case this.propertyTypeEnum.LongString:
         case this.propertyTypeEnum.Number:
-          obj.value = prop.defaultValue;
+          obj.value = prop.defaultValue ?? null;
           break;
 
         case this.propertyTypeEnum.Document:
-          obj.value = String(prop.value);
+          obj.value = prop.value ? String(prop.value) : null;
           break;
 
         case this.propertyTypeEnum.Date:
@@ -349,7 +394,7 @@ export class CustomerDocumentComponent implements OnInit{
         documentInstanceId: +this.currentDocumentInstanceId,
         propertiesValue
       };
-
+      // console.log(input)
       this.updateDocument(input);
     } else {
       const input: ICreatDocumentInstance = {
@@ -358,6 +403,7 @@ export class CustomerDocumentComponent implements OnInit{
         propertiesValue
       };
 
+      // console.log(input)
       this.createDocument(input);
     }
   }
@@ -398,7 +444,6 @@ export class CustomerDocumentComponent implements OnInit{
     this.customerService.getDetailDocumentInstance(id).subscribe({
       next:(out) =>{
         this.loading.hide();
-
         this.currentDocumentInstanceId = out.id
         // this.docDetail = out
 
@@ -411,7 +456,7 @@ export class CustomerDocumentComponent implements OnInit{
           doc.properties || [],
           out.propertiesValue
         );
-
+        console.log(this.currentDocument)
         // نمایش مقدار داکیومنت در زمان ویرایش
         const docProp = this.currentDocument.find(x => x.propertyType === this.propertyTypeEnum.Document);
         if (docProp){
@@ -420,25 +465,6 @@ export class CustomerDocumentComponent implements OnInit{
 
         this.showDialog = true
         this.isEditMode = true
-        // this.docDetail.propertiesValue.forEach(item =>{
-        //   if(item.property.propertyType === this.propertyTypeEnum.LongString ||
-        //     item.property.propertyType === this.propertyTypeEnum.ShortString ||
-        //     item.property.propertyType === this.propertyTypeEnum.Number){
-        //     item.property.defaultValue = item.value ?? null;
-        //   }
-        //
-        //   if(item.property.propertyType === this.propertyTypeEnum.SingleSelect ){
-        //       item.property.defaultValue = item.value ? JSON.parse(item.value) : null;
-        //     }
-        //     if(item.property.propertyType === this.propertyTypeEnum.MultiSelect){
-        //       item.property.value = item.value ? JSON.parse(item.value) : null;
-        //     }
-        //
-        //     if (item.property.propertyType === this.propertyTypeEnum.Date){
-        //       if (item.value){this.startDateTimeControl.patchValue(moment(item.value).locale('fa').format('YYYY-MM-DD').toString());}
-        //     }
-        //
-        // })
 
       },
       error:(err)=>{
@@ -497,12 +523,26 @@ export class CustomerDocumentComponent implements OnInit{
     this.docTitle = doc.title
     this.getDocumentInstanceByCustomer()
   }
+
   instanceCustomer:{title:string; value:any}[] = []
   test:any
   onShowDialog(doc:DocumentModelType){
     this.isEditMode = false;
     this.currentDocumentInstanceId = null;
-    this.currentDocument = doc.properties?.map(p => new CreatePropertyDTO(p)) || [];
+    this.currentDocument = doc.properties?.map(p => {
+      const prop = new CreatePropertyDTO(p);
+
+      if (prop.propertyType === this.propertyTypeEnum.Date) {
+        if (prop.defaultValue){
+          this.startDateTimeControl.patchValue(moment(prop.defaultValue).locale('fa').format('YYYY-MM-DD').toString());
+        } else {
+          this.startDateTimeControl.patchValue(null);
+        }
+      }
+
+      return prop;
+    }) || [];
+
     const docProp = this.currentDocument.find(x => x.propertyType === this.propertyTypeEnum.Document);
     if (docProp){
       this.getAllDocumentInstanceByCustomer(+docProp.descriptor)
@@ -554,6 +594,20 @@ export class CustomerDocumentComponent implements OnInit{
   }
 
 
+  getParameters(prop:CreatePropertyDTO){
+    if (!prop?.descriptor) return [];
+    let parsed = prop.descriptor;
+
+    // اگر descriptor هنوز string باشد
+    if (typeof parsed === 'string') {
+      parsed = JSON.parse(parsed);
+    }
+
+    if (!Array.isArray(parsed)) return [];
+    return parsed;
+  }
+
+
   buildCurrentDocument(baseProperties: CreatePropertyDTO[], values: any[]): CreatePropertyDTO[] {
 
     return baseProperties.map(prop => {
@@ -574,11 +628,25 @@ export class CustomerDocumentComponent implements OnInit{
           break;
 
         case this.propertyTypeEnum.SingleSelect:
-          clonedProp.defaultValue = val ? JSON.parse(val) : null;
+          // const parsed = JSON.parse(val);
+          // clonedProp.defaultValue = parsed.id;
+          const parsedValue = JSON.parse(val);
+          const descriptor = JSON.parse(found.property.descriptor);
+          const descriptorIds = descriptor.map((d: any) => String(d.id));
+
+          clonedProp.defaultValue = descriptorIds.includes(parsedValue.id) ? parsedValue.id : null;
           break;
 
         case this.propertyTypeEnum.MultiSelect:
-          clonedProp.value = val ? JSON.parse(val) : null;
+          // clonedProp.value = val ? JSON.parse(val) : null;
+          if (val){
+            const parsedValue = JSON.parse(val);
+            const descriptor = JSON.parse(found.property.descriptor)
+            const descriptorIds = descriptor.map((d: any) => d.id);
+
+            clonedProp.value = parsedValue.map((x: any) => x.id).filter((id: string) => descriptorIds.includes(id));
+            // clonedProp.value = parsed.map((x: any) => x.id);
+          } else { clonedProp.value = null }
           break;
 
         case this.propertyTypeEnum.Date:
@@ -599,10 +667,14 @@ export class CustomerDocumentComponent implements OnInit{
     });
   }
 
-
-  dp(event: DropdownChangeEvent) {
-    console.log(this.currentDocument)
-
+  changeDefaultValue(event: any, item:CreatePropertyDTO) {
+    // itemValue for MultiSelect   AND   value for singeSelect
+    if (event.itemValue){
+      item.value = [...event.itemValue];
+    } else {
+      item.defaultValue = event.value;
+    }
+    console.log(item, event)
   }
 
 }

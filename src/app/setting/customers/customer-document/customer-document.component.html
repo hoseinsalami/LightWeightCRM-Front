@@ -36,9 +36,14 @@
                     </div>
 
                     <div class="flex align-items-center gap-2"
-                         *ngIf="(prop.property.propertyType === propertyTypeEnum.MultiSelect || prop.property.propertyType === propertyTypeEnum.SingleSelect )&& prop.property.showInList">
+                         *ngIf="prop.property.propertyType === propertyTypeEnum.SingleSelect && prop.property.showInList">
                       <span>{{prop.property.title}}</span>
-                      <span class="text-sm text-900 font-semibold">{{prop.value }}</span>
+                      <span class="text-sm text-900 font-semibold">{{ prop.value.value }}</span>
+                    </div>
+                  <div class="flex align-items-center gap-2"
+                         *ngIf="prop.property.propertyType === propertyTypeEnum.MultiSelect && prop.property.showInList">
+                      <span>{{prop.property.title}}</span>
+                      <span class="text-sm text-900 font-semibold" *ngFor="let val of prop.value; let last=last">{{ val.value }}<span *ngIf="!last">، </span></span>
                     </div>
 
                     <div class="flex align-items-center gap-2"
@@ -54,7 +59,7 @@
 
                   <div class="flex align-items-center gap-2" *ngIf="prop.property.propertyType === propertyTypeEnum.Document && prop.property.showInList">
                     <span>{{prop.property.title}}</span>
-                    <span class="text-sm text-900 font-semibold">{{prop.value }}</span>
+                    <span class="text-sm text-900 font-semibold cursor-pointer">{{prop.value }}</span>
                   </div>
 
                 </ng-container>
@@ -130,21 +135,21 @@
                         placeholder ="انتخاب ویژگی"
                         scrollHeight="250px"
                         display="chip"
-                        optionLabel="title"
-                        optionValue="title"
+                        optionLabel="value"
+                        optionValue="id"
                         appendTo="body"
                         [showClear]="true"
                         [(ngModel)]="prop.defaultValue"
-                        [options]="parameters"></p-dropdown>
+                        [options]="getParameters(prop)"></p-dropdown>
           </div>
 
           <div class="field" *ngIf="prop.propertyType == propertyTypeEnum.MultiSelect && hasTitleInParameters">
             <p-multiSelect
               [styleClass]="'clear-icon'"
-              [options]="parameters"
+              [options]="getParameters(prop)"
               [(ngModel)]="prop.value"
-              optionLabel="title"
-              optionValue="title"
+              optionLabel="value"
+              optionValue="id"
               class="mt-2"
               display="chip"
               appendTo="body"
@@ -193,101 +198,11 @@
     </ng-container>
   </div>
 
-<!--  <div class="grid" *ngIf="showDialogState === 'edit'">-->
-<!--    <ng-container>-->
-<!--      <div class="col-12 md:col-6"*ngFor="let item of docDetail.propertiesValue; let i = index; let first = first">-->
-
-<!--        <div class="form-group" >-->
-<!--          <label class="text-sm">{{item.property.title}}</label>-->
-
-<!--          <div class="field" *ngIf="item.property.propertyType == propertyTypeEnum.Number">-->
-<!--            <input-->
-<!--              pInputText-->
-<!--              type="text"-->
-<!--              id="defaultValue"-->
-<!--              name="defaultValue"-->
-<!--              class="p-fieldset w-full"-->
-<!--              placeholder="مقدار پیشفرض وارد نمایید"-->
-<!--              [(ngModel)]="item.property.defaultValue"-->
-<!--              [pKeyFilter]="'int'">-->
-<!--          </div>-->
-
-<!--          <div class="field" *ngIf="item.property.propertyType == propertyTypeEnum.SingleSelect && hasTitleInParameters">-->
-<!--            <p-dropdown [style]="{'width':'100%'}"-->
-<!--                        name="propertyType"-->
-<!--                        class="w-full"-->
-<!--                        placeholder ="انتخاب ویژگی"-->
-<!--                        scrollHeight="250px"-->
-<!--                        display="chip"-->
-<!--                        optionLabel="title"-->
-<!--                        optionValue="title"-->
-<!--                        appendTo="body"-->
-<!--                        [showClear]="true"-->
-<!--                        [(ngModel)]="item.property.defaultValue"-->
-<!--                        [options]="parameters"></p-dropdown>-->
-<!--          </div>-->
-
-<!--          <div class="field" *ngIf="item.property.propertyType == propertyTypeEnum.MultiSelect && hasTitleInParameters">-->
-<!--            <p-multiSelect-->
-<!--              [styleClass]="'clear-icon'"-->
-<!--              [options]="parameters"-->
-<!--              [(ngModel)]="item.property.value"-->
-<!--              optionLabel="title"-->
-<!--              optionValue="title"-->
-<!--              class="mt-2"-->
-<!--              display="chip"-->
-<!--              appendTo="body"-->
-<!--              [maxSelectedLabels]="20"-->
-<!--              [style]="{'width':'100%'}"-->
-<!--              placeholder="انتخاب ویژگی">-->
-<!--            </p-multiSelect>-->
-<!--          </div>-->
-
-<!--          <div class="field" *ngIf="item.property.propertyType == propertyTypeEnum.ShortString || item.property.propertyType == propertyTypeEnum.LongString">-->
-<!--            <input-->
-<!--              pInputText-->
-<!--              type="text"-->
-<!--              id="SLDefaultValue"-->
-<!--              name="SLDefaultValue"-->
-<!--              class="p-fieldset w-full"-->
-<!--              placeholder="مقدار پیشفرض وارد نمایید"-->
-<!--              [(ngModel)]="item.property.defaultValue ">-->
-<!--          </div>-->
-
-<!--          <div class="field relative" *ngIf="item.property.propertyType == propertyTypeEnum.Date">-->
-<!--            <ng-persian-datepicker-->
-<!--              [dateInitValue]="false"-->
-<!--              [style]="{'width':'220px'}"-->
-<!--              (dateOnSelect)="selectStartDate($event)"-->
-<!--              (dateOnInit)="initialStartDatePicker($event)"-->
-<!--              [dateGregorianFormat]="'YYYY-MM-DD '"-->
-<!--              [dateFormat]="'YYYY-MM-DD '">-->
-<!--              <input [formControl]="startDateTimeControl" id="startDate" name="startDate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>-->
-<!--            </ng-persian-datepicker>-->
-<!--          </div>-->
-
-<!--        </div>-->
-<!--      </div>-->
-<!--    </ng-container>-->
-<!--  </div>-->
-
-
   <ng-template pTemplate="footer">
 
     <button pButton pRipple label="تایید"
       class="p-button-success button p-mr-2"
       (click)="onSave()"></button>
-
-<!--    <button *ngIf="showDialogState === 'new'"-->
-<!--      pButton pRipple label="تایید"-->
-<!--      class="p-button-success button p-mr-2"-->
-<!--      (click)="onSubmit()"></button>-->
-
-<!--    <button *ngIf="showDialogState === 'edit'"-->
-<!--            pButton pRipple label="تایید"-->
-<!--            class="p-button-success button p-mr-2"-->
-<!--            (click)="onUpdateSubmit()"-->
-<!--    ></button>-->
 
     <button
       pButton

@@ -145,7 +145,8 @@ export class PathComponent implements OnInit, AfterViewInit{
   showModalCariesStep:boolean = false
   showModalDetailCaries:boolean = false
   TimeUnits?: any;
-  orderList?: CreateStepType[] = [];
+  // orderList?: CreateStepType[] = [];
+  orderList?: CreateStepType = new CreateStepType({});
   listOfCaries:DashboardTypeBase;
   detailCaries?:CreatePathType = new CreatePathType({});
 
@@ -483,6 +484,10 @@ export class PathComponent implements OnInit, AfterViewInit{
     this.router.navigate(['dashboard/workItem/', id])
   }
 
+  navigateToConfig(item){
+    this.router.navigate(['setting/caries/config', this.pathId, item.id])
+  }
+
   openModal(id:number) {
     this.showModal = true;
     this.selectedWorkItem = id
@@ -659,17 +664,19 @@ export class PathComponent implements OnInit, AfterViewInit{
     this.showModalCariesStep = true
     this.modeCaries = "new"
     this.orderStep = event.order
-    this.orderList = [new CreateStepType({})]
+    // this.orderList = [new CreateStepType({})]
+    this.orderList = new CreateStepType({})
   }
 
   openModalEditCaries(event:any){
-    this.showModalCariesStep = true
-    this.modeCaries = "edit"
     this.loading.show()
     this.service.getInfoStep(event.id).subscribe({
       next: (out) =>{
         this.loading.hide();
-        this.orderList = [out]
+        // this.orderList = [out]
+        this.orderList = out
+        this.showModalCariesStep = true;
+        this.modeCaries = "edit"
       },
       error: err => {
         this.loading.hide();
@@ -681,9 +688,11 @@ export class PathComponent implements OnInit, AfterViewInit{
     console.log(this.orderList)
     const input ={
       pathId: this.pathId,
-      title: this.orderList[0].title,
+      // title: this.orderList[0].title,
+      title: this.orderList.title,
       order: this.orderStep,
-      deadlineValue: this.orderList[0].deadlineValue
+      // deadlineValue: this.orderList[0].deadlineValue
+      deadlineValue: this.orderList.deadlineValue
     }
     this.loading.show()
     this.service.addStep(input).subscribe({
@@ -701,7 +710,7 @@ export class PathComponent implements OnInit, AfterViewInit{
 
   onEditStep(){
     this.loading.show();
-    this.service.editStep(this.orderList[0]).subscribe({
+    this.service.editStep(this.orderList).subscribe({
       next: (out) =>{
         this.loading.hide();
         this.showModalCariesStep = false;

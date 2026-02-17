@@ -105,4 +105,17 @@ export class UsersComponent extends BaseListComponent<UserTypeList>{
     this.userId = userId
   }
 
+  getUserTypeTitles(types: number[] | null | undefined): string {
+    if (!types || types.length === 0) {
+      return 'نامشخص';
+    }
+
+    const result = types
+      .map(type => this.userType.find(u => u.value === type)?.title)
+      .filter(Boolean)
+      .join(' , ');
+
+    return result || 'نامشخص';
+  }
+
 }

@@ -22,6 +22,8 @@ import {FieldsetModule} from "primeng/fieldset";
 import {KeyFilterModule} from "primeng/keyfilter";
 import {NgPersianDatepickerModule} from "ng-persian-datepicker";
 import {TooltipModule} from "primeng/tooltip";
+import {DialogModule} from "primeng/dialog";
+import {InputTextareaModule} from "primeng/inputtextarea";
 
 @Component({
   selector: 'app-new-document',
@@ -46,28 +48,41 @@ import {TooltipModule} from "primeng/tooltip";
     FieldsetModule,
     KeyFilterModule,
     NgPersianDatepickerModule,
-    TooltipModule
+    TooltipModule,
+    DialogModule,
+    InputTextareaModule
   ]
 })
 export class NewDocumentComponent extends BaseDocumentDetailComponent{
 
   constructor(
     private documentService: DocumentService,
-    private messageService: MessageService,
+    messageService: MessageService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     loading: LoadingService,
   ) {
     let manager = new BaseNewManager<DocumentModelType>(DocumentModelType, documentService, messageService,{}, router, activeRoute, loading);
-    super(documentService,manager, loading);
+    super(documentService,manager,messageService, loading);
 
-    manager.oneObject.properties = [new CreatePropertyDTO({})]
+    // manager.oneObject.properties = [new CreatePropertyDTO({})]
 
     manager.BeforeSave.subscribe(item =>{
-      item.properties.forEach(prop =>{
-        if(prop.propertyType === this.propertyTypeEnum.SingleSelect || prop.propertyType === this.propertyTypeEnum.MultiSelect){
-          prop.descriptor = JSON.stringify(this.parameters?.map(p => p.title))
+      item.properties.forEach((prop,index) =>{
+        if(prop.propertyType === this.propertyTypeEnum.SingleSelect){
+          // const rowParameters = this.parameters[index] || [];
+          // const rowParameters = this.parameter || [];
+          // prop.descriptor = JSON.stringify(rowParameters?.map(p => p.title))
+          prop.descriptor = JSON.stringify(prop.descriptor)
           prop.defaultValue = JSON.stringify(prop.defaultValue)
+        }
+
+        if( prop.propertyType === this.propertyTypeEnum.MultiSelect){
+          // const rowParameters = this.parameters[index] || [];
+          // const rowParameters = this.parameter || [];
+          // prop.descriptor = JSON.stringify(rowParameters?.map(p => p.title))
+          prop.descriptor = JSON.stringify(prop.descriptor)
+          prop.defaultValue = JSON.stringify(prop.value)
         }
 
         if (prop.propertyType === this.propertyTypeEnum.Date)
@@ -76,6 +91,8 @@ export class NewDocumentComponent extends BaseDocumentDetailComponent{
         if (prop.propertyType === this.propertyTypeEnum.Document)
           prop.descriptor = String(prop.descriptor)
 
+
+        delete prop.value
       })
     })
 

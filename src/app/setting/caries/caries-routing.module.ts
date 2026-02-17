@@ -30,7 +30,7 @@ const routes: Routes = [
     data: {permission: 'everyOne'}
   },
   {
-    path: 'config/:id',
+    path: 'config/:pathId/:stepId',
     component: ConfigComponent ,
     canActivate: [AuthGuard],
     data: {permission: 'everyOne'}

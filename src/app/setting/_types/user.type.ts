@@ -6,7 +6,7 @@ export class UserTypeBase extends GenericType<UserTypeBase>{
   fullName?: string;
   mobile?: string;
   userName?: string;
-  userType?:UserTypesEnum;
+  userType?:UserTypesEnum[];
   active?: boolean;
 }
 
