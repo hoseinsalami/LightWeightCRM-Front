@@ -34,7 +34,9 @@ export interface IStepUI extends ISteps {
 
 
 export interface IStepEvent{
-  id?: number;
+  id?:number
+  actionId?: number;
+  eventId?: number;
   name?: string;
   title?: string;
 }
@@ -45,6 +47,7 @@ export interface IStepEventUI extends IStepEvent {
 }
 export interface IStepEventAction {
   id?: number;
+  eventId?: number;
   type: number;
   data: any;
 }
@@ -74,4 +77,11 @@ export enum StepEventActionType {
   ChangeStep = 1,
   CreateWorkItem = 2,
   SendSurveyActionRequest
+}
+
+export const StepEventActionTypeEnum2LabelMapping : Record<StepEventActionType,string> ={
+  [StepEventActionType.SendSms]: 'ارسال پیام',
+  [StepEventActionType.ChangeStep]: 'تغییر گام',
+  [StepEventActionType.CreateWorkItem]: 'ایجاد معامله در کاریز',
+  [StepEventActionType.SendSurveyActionRequest]: 'ارسال لینک نظرسنجی به مشتری',
 }

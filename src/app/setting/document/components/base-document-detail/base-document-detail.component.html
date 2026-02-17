@@ -6,11 +6,6 @@
         <h6 class="font-bold text-green-500 m-0">سند</h6>
       </div>
     </div>
-
-    <!--    <div class="col-12">-->
-    <!--      <p-divider type="solid" [style]="{'border-top':'1px solid #f7f7f7',}"/>-->
-    <!--    </div>-->
-
   </div>
 
   <div class="grid">
@@ -50,244 +45,288 @@
       </div>
     </div>
 
-    <div class="col-12" >
-      <p-fieldset [style]="{padding:'0px'}">
-        <ng-template pTemplate="header">
-          <div class="flex align-items-center gap-2">
-            <span>ویژگی ها</span>
-          </div>
-        </ng-template>
+    <p-divider styleClass="px-5 py-2" class="w-full divider m-0" align="center" type="dashed">
+      <div class="flex align-items-center gap-2">
+        <span class="text-sm font-semibold ">ویژگی</span>
+        <button pButton pRipple class="p-button-success border-round-3xl p-2 pi pi-plus" (click)="openDialog('new')"></button>
+      </div>
+    </p-divider>
 
-        <div class="p-card shadow-none border-1 border-gray-200  grid mt-3" *ngFor="let prop of manager.oneObject.properties; let i = index; let first = first">
-          <div class="col-12 flex justify-content-end gap-3">
-            <i class="pi pi-trash bg-red-100 text-red-500 cursor-pointer p-2 border-round" (click)="removeProperties(i)" pTooltip="حذف"
-                  tooltipPosition="top"></i>
-            <i class="pi pi-plus bg-green-100 text-green-500 cursor-pointer p-2 border-round" (click)="addNewProperties()" *ngIf="first" pTooltip="جدید"
-                  tooltipPosition="top"></i>
-          </div>
+    <div class="col-12" *ngIf="manager.oneObject.properties && manager.oneObject.properties.length > 0">
+      <div class="flex align-items-center justify-content-around border-1 border-round p-2 mb-2 cursor-pointer"
+           [class]="item.propertyType === propertyTypeEnum.Number ? 'hover:bg-blue-100 border-blue-100' :
+                   item.propertyType === propertyTypeEnum.ShortString ? 'hover:bg-green-100 border-green-100' :
+                   item.propertyType === propertyTypeEnum.LongString ? 'hover:bg-teal-100 border-teal-100' :
+                   item.propertyType === propertyTypeEnum.SingleSelect ? 'hover:bg-purple-100 border-purple-100' :
+                   item.propertyType === propertyTypeEnum.MultiSelect ? 'hover:bg-pink-100 border-pink-100' :
+                   item.propertyType === propertyTypeEnum.Bool ? 'hover:bg-orange-100 border-orange-100' :
+                   item.propertyType === propertyTypeEnum.Date ? 'hover:bg-red-100 border-red-100' :
+                   item.propertyType === propertyTypeEnum.Document ? 'hover:bg-yellow-100 border-yellow-100': ''"
+           *ngFor="let item of manager.oneObject.properties; let index = index"
+            (click)="openDialog('edit',index)">
+        <p class="m-0 flex align-items-center justify-content-center flex-1 relative">
+          {{item.title}}
+          <i class="absolute right-0 pi pi-trash text-red-500" pTooltip="حذف" tooltipPosition="top"
+              (click)="removeProperties(index)"></i>
+        </p>
+        <p class="m-0 text-center flex-1 relative" >
+          <span [pTooltip]="PropertyTypeEnum2LabelMapping[item.propertyType]" tooltipPosition="top"
+            [class]="item.propertyType === propertyTypeEnum.Number ? 'pi pi-hashtag text-blue-500' :
+                   item.propertyType === propertyTypeEnum.ShortString ? 'pi pi-align-right text-green-500' :
+                   item.propertyType === propertyTypeEnum.LongString ? 'pi pi-align-center text-teal-500' :
+                   item.propertyType === propertyTypeEnum.SingleSelect ? 'pi pi-file text-purple-500' :
+                   item.propertyType === propertyTypeEnum.MultiSelect ? 'pi pi-list text-pink-500' :
+                   item.propertyType === propertyTypeEnum.Bool ? 'pi pi-check-square text-orange-500' :
+                   item.propertyType === propertyTypeEnum.Date ? 'pi pi-calendar text-red-500' :
+                   item.propertyType === propertyTypeEnum.Document ? 'pi pi-file text-yellow-500': ''"></span>
 
-          <div class="col-12 md:col-6">
-            <div class="form-group">
-              <label class="text-sm">عنوان</label>
-              <span class="text-red-500 font-bold text- mr-1">*</span>
-              <div class="field">
-                <input
-                  pInputText
-                  type="text"
-                  id="title"
-                  name="title"
-                  class="p-fieldset w-full"
-                  placeholder="عنوان ویژگی وارد نمایید"
-                  [(ngModel)]="prop.title">
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 md:col-6">
-            <div class="form-group">
-              <label class="text-sm">کلید ویژگی</label>
-              <span class="text-red-500 font-bold text- mr-1">*</span>
-              <div class="field">
-                <input pInputText type="text"
-                  (keypress)="allowOnlyEnglish($event, 'nameProperty' + i)"
-                  [id]="'nameProperty' + i" [name]="'nameProperty' + i"
-                  class="p-fieldset w-full"
-                  placeholder="کلید ویژگی وارد نمایید"
-                  [(ngModel)]="prop.name">
-                <small class="p-error font-bold" *ngIf="isEnglishError['nameProperty' + i]">
-                  فقط حروف انگلیسی مجاز می‌باشد
-                </small>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 md:col-6">
-            <div class="form-group">
-              <label class="text-sm">نوع ویژگی</label>
-              <span class="text-red-500 font-bold text- mr-1">*</span>
-              <div class="field">
-                <p-dropdown [style]="{'width':'100%'}"
-                            name="propertyType"
-                            class="w-full"
-                            placeholder ="انتخاب ویژگی"
-                            scrollHeight="250px"
-                            display="chip"
-                            optionLabel="title"
-                            optionValue="value"
-                            [(ngModel)]="prop.propertyType"
-                            [options]="propertyOptions"
-                            (onChange)="onChangeProperty($event)"></p-dropdown>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 md:col-6">
-            <div class="form-group" *ngIf="prop.propertyType == propertyTypeEnum.Number">
-              <label class="text-sm">مقدار پیشفرض</label>
-              <div class="field" >
-                <input
-                  pInputText
-                  type="text"
-                  id="defaultValue "
-                  name="defaultValue "
-                  class="p-fieldset w-full"
-                  placeholder="مقدار پیشفرض وارد نمایید"
-                  [(ngModel)]="prop.defaultValue "
-                  [pKeyFilter]="'int'">
-              </div>
-            </div>
-
-            <div class="form-group" *ngIf="prop.propertyType == propertyTypeEnum.SingleSelect && hasTitleInParameters">
-              <label class="text-sm">مقدار پیشفرض</label>
-              <div class="field">
-                <p-dropdown [style]="{'width':'100%'}"
-                            name="propertyType"
-                            class="w-full"
-                            placeholder ="انتخاب ویژگی"
-                            scrollHeight="250px"
-                            display="chip"
-                            optionLabel="title"
-                            optionValue="title"
-                            [showClear]="true"
-                            [(ngModel)]="prop.defaultValue"
-                            [options]="parameters"></p-dropdown>
-              </div>
-            </div>
-
-            <div class="form-group" *ngIf="prop.propertyType == propertyTypeEnum.MultiSelect && hasTitleInParameters">
-              <label class="text-sm">مقدار پیشفرض</label>
-              <div class="field">
-                <p-multiSelect
-                  [styleClass]="'clear-icon'"
-                  [options]="parameters"
-                  [(ngModel)]="prop.value"
-                  optionLabel="title"
-                  optionValue="title"
-                  class="mt-2"
-                  display="chip"
-                  [maxSelectedLabels]="20"
-                  [style]="{'width':'100%'}"
-                  placeholder="انتخاب ویژگی">
-                </p-multiSelect>
-              </div>
-            </div>
-
-            <div class="form-group" *ngIf="prop.propertyType == propertyTypeEnum.ShortString || prop.propertyType == propertyTypeEnum.LongString">
-              <label class="text-sm">مقدار پیشفرض</label>
-              <div class="field">
-                <input
-                  pInputText
-                  type="text"
-                  id="SLDefaultValue"
-                  name="SLDefaultValue"
-                  class="p-fieldset w-full"
-                  placeholder="مقدار پیشفرض وارد نمایید"
-                  [(ngModel)]="prop.defaultValue ">
-              </div>
-            </div>
-
-            <div class="form-group" *ngIf="prop.propertyType == propertyTypeEnum.Date">
-              <label class="text-sm">مقدار پیشفرض</label>
-              <div class="field relative">
-                <ng-persian-datepicker
-                  [dateInitValue]="false"
-                  [style]="{'width':'220px'}"
-                  (dateOnSelect)="selectStartDate($event)"
-                  (dateOnInit)="initialStartDatePicker($event)"
-                  [dateGregorianFormat]="'YYYY-MM-DD '"
-                  [dateFormat]="'YYYY-MM-DD '">
-                  <input [formControl]="startDateTimeControl" id="startDate" name="startDate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>
-                </ng-persian-datepicker>
-              </div>
-            </div>
-
-            <div class="form-group" *ngIf="prop.propertyType == propertyTypeEnum.Bool">
-              <label class="text-sm">مقدار پیشفرض</label>
-              <div class="field">
-                <p-inputSwitch [(ngModel)]="prop.defaultValue"/>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12" *ngIf="prop.propertyType == propertyTypeEnum.SingleSelect || prop.propertyType == propertyTypeEnum.MultiSelect">
-            <div class="form-group" >
-              <label class="text-sm" >گزینه ها</label>
-              <span class="text-red-500 font-bold text- mr-1">*</span>
-
-              <div class="field flex align-items-end gap-3 pt-0" *ngFor="let parameter of parameters; let i = index; let isLast = last">
-                <div class="field m-0 flex flex-column">
-                  <input
-                    [style]="{'width':'200px'}"
-                    [(ngModel)]="parameter.title"
-                    pInputText
-                    type="text"
-                    [id]="'descriptor-'+i"
-                    [name]="'descriptor-'+i"
-                    placeholder="نام گزینه را وارد نمایید."
-                    class="p-fieldset">
-                </div>
-
-                <div class="field m-0 flex gap-2">
-                  <button [disabled]="i == 0" pButton type="button" style="width:25px; height:25px"
-                          class="p-button-danger p-0 border-round-3xl pi pi-minus text-sm" (click)="removeParamenter(i)"></button>
-                  <button pButton type="button" style="width:25px; height:25px"
-                          class="p-button-success p-0 border-round-3xl pi pi-plus flex justify-content-center"
-                          (click)="addNewParameter()"></button>
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12" *ngIf="prop.propertyType == propertyTypeEnum.Document">
-            <div class="form-group" >
-              <label class="text-sm" >گزینه ها</label>
-              <span class="text-red-500 font-bold text- mr-1">*</span>
-              <p-dropdown [style]="{'width':'100%'}"
-                          name="propertyType"
-                          class="w-full"
-                          placeholder ="انتخاب ویژگی"
-                          scrollHeight="250px"
-                          display="chip"
-                          optionLabel="title"
-                          optionValue="id"
-                          [(ngModel)]="prop.descriptor"
-                          [options]="docData"></p-dropdown>
-            </div>
-          </div>
+          <i pTooltip="نمایش در لیست" tooltipPosition="top"
+            class="absolute left-0 text-green-700" [class]="item.showInList ? 'pi pi-eye': ''"></i>
+          <i pTooltip="اجباری" tooltipPosition="top" style="left:25px"
+             class="absolute text-red-500" [class]="item.isMandatory ? 'pi pi-exclamation-circle': ''"></i>
+        </p>
+      </div>
 
 
-          <div class="col-12 md:col-4">
-            <div class="form-group ">
-              <label class="block mb-2 text-900">اجباری</label>
-              <div class="field">
-                <p-inputSwitch [(ngModel)]="prop.isMandatory"/>
-              </div>
-            </div>
-          </div>
+<!--      <p-fieldset [style]="{padding:'0px'}">-->
+<!--        <ng-template pTemplate="header">-->
+<!--          <div class="flex align-items-center gap-2">-->
+<!--            <span>ویژگی ها</span>-->
+<!--          </div>-->
+<!--        </ng-template>-->
 
-          <div class="col-12 md:col-4">
-            <div class="form-group ">
-              <label class="block mb-2 text-900">نمایش در لیست</label>
-              <div class="field">
-                <p-inputSwitch [(ngModel)]="prop.showInList"/>
-              </div>
-            </div>
-          </div>
+<!--        <div class="p-card shadow-none border-1 border-gray-200  grid mt-3" *ngFor="let prop of manager.oneObject.properties; let i = index; let first = first">-->
+<!--          <div class="col-12 flex justify-content-end gap-3">-->
+<!--            <i class="pi pi-trash bg-red-100 text-red-500 cursor-pointer p-2 border-round" (click)="removeProperties(i)" pTooltip="حذف"-->
+<!--                  tooltipPosition="top"></i>-->
+<!--            <i class="pi pi-plus bg-green-100 text-green-500 cursor-pointer p-2 border-round" (click)="addNewProperties()" *ngIf="first" pTooltip="جدید"-->
+<!--                  tooltipPosition="top"></i>-->
+<!--          </div>-->
 
-          <div class="col-12 md:col-4">
-            <div class="form-group ">
-              <label class="block mb-2 text-900">کپشن</label>
-              <div class="field">
-                <p-inputSwitch [(ngModel)]="prop.isCaption" (onChange)="onCaptionChange(i)"/>
-              </div>
-            </div>
-          </div>
+<!--          <div class="col-12 md:col-6">-->
+<!--            <div class="form-group">-->
+<!--              <label class="text-sm">عنوان</label>-->
+<!--              <span class="text-red-500 font-bold text- mr-1">*</span>-->
+<!--              <div class="field">-->
+<!--                <input-->
+<!--                  pInputText-->
+<!--                  type="text"-->
+<!--                  id="title"-->
+<!--                  name="title"-->
+<!--                  class="p-fieldset w-full"-->
+<!--                  placeholder="عنوان ویژگی وارد نمایید"-->
+<!--                  [(ngModel)]="prop.title">-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
 
-        </div>
+<!--          <div class="col-12 md:col-6">-->
+<!--            <div class="form-group">-->
+<!--              <label class="text-sm">کلید ویژگی</label>-->
+<!--              <span class="text-red-500 font-bold text- mr-1">*</span>-->
+<!--              <div class="field">-->
+<!--                <input pInputText type="text"-->
+<!--                  (keypress)="allowOnlyEnglish($event, 'nameProperty' + i)"-->
+<!--                  [id]="'nameProperty' + i" [name]="'nameProperty' + i"-->
+<!--                  class="p-fieldset w-full"-->
+<!--                  placeholder="کلید ویژگی وارد نمایید"-->
+<!--                  [(ngModel)]="prop.name">-->
+<!--                <small class="p-error font-bold" *ngIf="isEnglishError['nameProperty' + i]">-->
+<!--                  فقط حروف انگلیسی مجاز می‌باشد-->
+<!--                </small>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="col-12 md:col-6">-->
+<!--            <div class="form-group">-->
+<!--              <label class="text-sm">نوع ویژگی</label>-->
+<!--              <span class="text-red-500 font-bold text- mr-1">*</span>-->
+<!--              <div class="field">-->
+<!--                <p-dropdown [style]="{'width':'100%'}"-->
+<!--                            name="propertyType"-->
+<!--                            class="w-full"-->
+<!--                            placeholder ="انتخاب ویژگی"-->
+<!--                            scrollHeight="250px"-->
+<!--                            display="chip"-->
+<!--                            optionLabel="title"-->
+<!--                            optionValue="value"-->
+<!--                            [(ngModel)]="prop.propertyType"-->
+<!--                            [options]="propertyOptions"-->
+<!--                            (onChange)="onChangeProperty($event, i)"></p-dropdown>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="col-12 md:col-6">-->
+<!--            <div class="form-group" *ngIf="prop.propertyType == propertyTypeEnum.Number">-->
+<!--              <label class="text-sm">مقدار پیشفرض</label>-->
+<!--              <div class="field" >-->
+<!--                <input-->
+<!--                  pInputText-->
+<!--                  type="text"-->
+<!--                  id="defaultValue "-->
+<!--                  name="defaultValue "-->
+<!--                  class="p-fieldset w-full"-->
+<!--                  placeholder="مقدار پیشفرض وارد نمایید"-->
+<!--                  [(ngModel)]="prop.defaultValue "-->
+<!--                  [pKeyFilter]="'int'">-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            <div class="form-group" *ngIf="prop.propertyType == propertyTypeEnum.SingleSelect && hasTitleInParameters(i)">-->
+<!--              <label class="text-sm">مقدار پیشفرض</label>-->
+<!--              <div class="field">-->
+<!--                <p-dropdown [style]="{'width':'100%'}"-->
+<!--                            name="propertyType"-->
+<!--                            class="w-full"-->
+<!--                            placeholder ="انتخاب ویژگی"-->
+<!--                            scrollHeight="250px"-->
+<!--                            display="chip"-->
+<!--                            optionLabel="title"-->
+<!--                            optionValue="title"-->
+<!--                            [showClear]="true"-->
+<!--                            [(ngModel)]="prop.defaultValue"-->
+<!--                            [options]="parameters[i]"></p-dropdown>-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            <div class="form-group" *ngIf="prop.propertyType == propertyTypeEnum.MultiSelect && hasTitleInParameters(i)">-->
+<!--              <label class="text-sm">مقدار پیشفرض</label>-->
+<!--              <div class="field">-->
+<!--                <p-multiSelect-->
+<!--                  [styleClass]="'clear-icon'"-->
+<!--                  [options]="parameters[i]"-->
+<!--                  [(ngModel)]="prop.value"-->
+<!--                  optionLabel="title"-->
+<!--                  optionValue="title"-->
+<!--                  class="mt-2"-->
+<!--                  display="chip"-->
+<!--                  [maxSelectedLabels]="20"-->
+<!--                  [style]="{'width':'100%'}"-->
+<!--                  placeholder="انتخاب ویژگی">-->
+<!--                </p-multiSelect>-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            <div class="form-group" *ngIf="prop.propertyType == propertyTypeEnum.ShortString || prop.propertyType == propertyTypeEnum.LongString">-->
+<!--              <label class="text-sm">مقدار پیشفرض</label>-->
+<!--              <div class="field">-->
+<!--                <input-->
+<!--                  pInputText-->
+<!--                  type="text"-->
+<!--                  id="SLDefaultValue"-->
+<!--                  name="SLDefaultValue"-->
+<!--                  class="p-fieldset w-full"-->
+<!--                  placeholder="مقدار پیشفرض وارد نمایید"-->
+<!--                  [(ngModel)]="prop.defaultValue ">-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            <div class="form-group" *ngIf="prop.propertyType == propertyTypeEnum.Date">-->
+<!--              <label class="text-sm">مقدار پیشفرض</label>-->
+<!--              <div class="field relative">-->
+<!--                <ng-persian-datepicker-->
+<!--                  [dateInitValue]="false"-->
+<!--                  [style]="{'width':'220px'}"-->
+<!--                  (dateOnSelect)="selectStartDate($event)"-->
+<!--                  (dateOnInit)="initialStartDatePicker($event)"-->
+<!--                  [dateGregorianFormat]="'YYYY-MM-DD '"-->
+<!--                  [dateFormat]="'YYYY-MM-DD '">-->
+<!--                  <input [formControl]="startDateTimeControl" id="startDate" name="startDate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>-->
+<!--                </ng-persian-datepicker>-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            <div class="form-group" *ngIf="prop.propertyType == propertyTypeEnum.Bool">-->
+<!--              <label class="text-sm">مقدار پیشفرض</label>-->
+<!--              <div class="field">-->
+<!--                <p-inputSwitch [(ngModel)]="prop.defaultValue"/>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="col-12" *ngIf="prop.propertyType == propertyTypeEnum.SingleSelect || prop.propertyType == propertyTypeEnum.MultiSelect">-->
+<!--            <div class="form-group" >-->
+<!--              <label class="text-sm" >گزینه ها</label>-->
+<!--              <span class="text-red-500 font-bold text- mr-1">*</span>-->
+
+<!--              <div class="field flex align-items-end gap-3 pt-0" *ngFor="let parameter of parameters[i]; let j = index; let isLast = last">-->
+<!--                <div class="field m-0 flex flex-column">-->
+<!--                  <input-->
+<!--                    [style]="{'width':'200px'}"-->
+<!--                    [(ngModel)]="parameter.title"-->
+<!--                    pInputText-->
+<!--                    type="text"-->
+<!--                    [id]="'descriptor-'+i"-->
+<!--                    [name]="'descriptor-'+i"-->
+<!--                    placeholder="نام گزینه را وارد نمایید."-->
+<!--                    class="p-fieldset">-->
+<!--                </div>-->
+
+<!--                <div class="field m-0 flex gap-2">-->
+<!--                  <button [disabled]="j == 0" pButton type="button" style="width:25px; height:25px"-->
+<!--                          class="p-button-danger p-0 border-round-3xl pi pi-minus text-sm" (click)="removeParameter(i,j)"></button>-->
+<!--                  <button *ngIf="isLast" pButton type="button" style="width:25px; height:25px"-->
+<!--                          class="p-button-success p-0 border-round-3xl pi pi-plus flex justify-content-center"-->
+<!--                          (click)="addNewParameter(i)"></button>-->
+<!--                </div>-->
+
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="col-12" *ngIf="prop.propertyType == propertyTypeEnum.Document">-->
+<!--            <div class="form-group" >-->
+<!--              <label class="text-sm" >گزینه ها</label>-->
+<!--              <span class="text-red-500 font-bold text- mr-1">*</span>-->
+<!--              <p-dropdown [style]="{'width':'100%'}"-->
+<!--                          name="propertyType"-->
+<!--                          class="w-full"-->
+<!--                          placeholder ="انتخاب ویژگی"-->
+<!--                          scrollHeight="250px"-->
+<!--                          display="chip"-->
+<!--                          optionLabel="title"-->
+<!--                          optionValue="id"-->
+<!--                          [(ngModel)]="prop.descriptor"-->
+<!--                          [options]="docData"></p-dropdown>-->
+<!--            </div>-->
+<!--          </div>-->
 
 
-      </p-fieldset>
+<!--          <div class="col-12 md:col-4">-->
+<!--            <div class="form-group ">-->
+<!--              <label class="block mb-2 text-900">اجباری</label>-->
+<!--              <div class="field">-->
+<!--                <p-inputSwitch [(ngModel)]="prop.isMandatory"/>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="col-12 md:col-4">-->
+<!--            <div class="form-group ">-->
+<!--              <label class="block mb-2 text-900">نمایش در لیست</label>-->
+<!--              <div class="field">-->
+<!--                <p-inputSwitch [(ngModel)]="prop.showInList"/>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="col-12 md:col-4">-->
+<!--            <div class="form-group ">-->
+<!--              <label class="block mb-2 text-900">کپشن</label>-->
+<!--              <div class="field">-->
+<!--                <p-inputSwitch [(ngModel)]="prop.isCaption" (onChange)="onCaptionChange(i)"/>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--        </div>-->
+
+
+<!--      </p-fieldset>-->
+
+
     </div>
 
 
@@ -314,4 +353,298 @@
 
   </div>
 </div>
+
+<!--************************** begin document modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showDialog"
+  [appendTo]="'body'"
+  header="ویژگی"
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12">
+
+      <div class="p-card shadow-none border-1 border-gray-200  grid mt-3">
+        <div class="col-12 md:col-6">
+          <div class="form-group">
+            <label class="text-sm">عنوان</label>
+            <span class="text-red-500 font-bold text- mr-1">*</span>
+            <div class="field">
+              <input
+                pInputText
+                type="text"
+                id="title"
+                name="title"
+                class="p-fieldset w-full"
+                placeholder="عنوان ویژگی وارد نمایید"
+                [(ngModel)]="tempProperties.title">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="form-group">
+            <label class="text-sm">کلید ویژگی</label>
+            <span class="text-red-500 font-bold text- mr-1">*</span>
+            <div class="field">
+              <input pInputText type="text"
+                     (keypress)="allowOnlyEnglish($event, 'nameProperty' )"
+                     [id]="'nameProperty'" [name]="'nameProperty'"
+                     class="p-fieldset w-full"
+                     placeholder="کلید ویژگی وارد نمایید"
+                     [(ngModel)]="tempProperties.name">
+              <small class="p-error font-bold" *ngIf="isEnglishError['nameProperty']">
+                فقط حروف انگلیسی مجاز می‌باشد
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="form-group">
+            <label class="text-sm">نوع ویژگی</label>
+            <span class="text-red-500 font-bold text- mr-1">*</span>
+            <div class="field">
+              <p-dropdown [style]="{'width':'100%'}"
+                          name="propertyType"
+                          class="w-full"
+                          placeholder ="انتخاب ویژگی"
+                          scrollHeight="250px"
+                          display="chip"
+                          optionLabel="title"
+                          optionValue="value"
+                          appendTo="body"
+                          [(ngModel)]="tempProperties.propertyType"
+                          [options]="propertyOptions"
+                          (onChange)="onChangeProperty($event,tempProperties)">
+                <ng-template let-item pTemplate="item">
+                  <div class="flex justify-content-end gap-2">
+                    <span>{{item.title}}</span>
+                    <i [class]="item.value === propertyTypeEnum.Number ? 'pi pi-hashtag text-blue-500' :
+                       item.value === propertyTypeEnum.ShortString ? 'pi pi-align-right text-green-500' :
+                       item.value === propertyTypeEnum.LongString ? 'pi pi-align-center text-teal-500' :
+                       item.value === propertyTypeEnum.SingleSelect ? 'pi pi-file text-purple-500' :
+                       item.value === propertyTypeEnum.MultiSelect ? 'pi pi-list text-pink-500' :
+                       item.value === propertyTypeEnum.Bool ? 'pi pi-check-square text-orange-500' :
+                       item.value === propertyTypeEnum.Date ? 'pi pi-calendar text-red-500' :
+                       item.value === propertyTypeEnum.Document ? 'pi pi-file text-yellow-500': ''"></i>
+                  </div>
+
+                </ng-template>
+              </p-dropdown>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="form-group" *ngIf="tempProperties.propertyType == propertyTypeEnum.Number">
+            <label class="text-sm">مقدار پیشفرض</label>
+            <div class="field" >
+              <input
+                pInputText
+                type="text"
+                id="defaultValue "
+                name="defaultValue "
+                class="p-fieldset w-full"
+                placeholder="مقدار پیشفرض وارد نمایید"
+                [(ngModel)]="tempProperties.defaultValue "
+                [pKeyFilter]="'int'">
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="tempProperties.propertyType == propertyTypeEnum.SingleSelect && hasTitleInParameters()">
+            <label class="text-sm">مقدار پیشفرض</label>
+            <div class="field">
+              <!-- [(ngModel)]="tempProperties.defaultValue"-->
+              <!-- (onChange)="changeDefaultValue($event,tempProperties)"-->
+              <p-dropdown [style]="{'width':'100%'}"
+                          name="propertyType"
+                          class="w-full"
+                          placeholder ="انتخاب ویژگی"
+                          scrollHeight="250px"
+                          display="chip"
+                          optionLabel="value"
+                          optionValue="id"
+                          appendTo="body"
+                          [showClear]="true"
+                          [options]="parameter"
+                          [(ngModel)]="tempProperties.defaultValue"></p-dropdown>
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="tempProperties.propertyType == propertyTypeEnum.MultiSelect && hasTitleInParameters()">
+            <label class="text-sm">مقدار پیشفرض</label>
+            <div class="field">
+            <!-- [(ngModel)]="tempProperties.value"-->
+              <p-multiSelect
+                [styleClass]="'clear-icon'"
+                [options]="parameter"
+                optionLabel="value"
+                optionValue="id"
+                class="mt-2"
+                display="chip"
+                appendTo="body"
+                [maxSelectedLabels]="20"
+                [style]="{'width':'100%'}"
+                placeholder="انتخاب ویژگی"
+                [(ngModel)]="tempProperties.value">
+              </p-multiSelect>
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="tempProperties.propertyType == propertyTypeEnum.ShortString">
+            <label class="text-sm">مقدار پیشفرض</label>
+            <div class="field">
+              <input
+                pInputText
+                type="text"
+                id="SLDefaultValue"
+                name="SLDefaultValue"
+                class="p-fieldset w-full"
+                placeholder="مقدار پیشفرض وارد نمایید"
+                [(ngModel)]="tempProperties.defaultValue ">
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="tempProperties.propertyType == propertyTypeEnum.Date">
+            <label class="text-sm">مقدار پیشفرض</label>
+            <div class="field relative">
+              <ng-persian-datepicker
+                [dateInitValue]="false"
+                [style]="{'width':'220px'}"
+                (dateOnSelect)="selectStartDate($event)"
+                (dateOnInit)="initialStartDatePicker($event)"
+                [dateGregorianFormat]="'YYYY-MM-DD '"
+                [dateFormat]="'YYYY-MM-DD '">
+                <input [formControl]="startDateTimeControl" id="startDate" name="startDate" class="font-bold w-full" pInputText type="text" autocomplete="off"/>
+              </ng-persian-datepicker>
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="tempProperties.propertyType == propertyTypeEnum.Bool">
+            <label class="text-sm">مقدار پیشفرض</label>
+            <div class="field">
+              <p-inputSwitch [(ngModel)]="tempProperties.defaultValue"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12" *ngIf="tempProperties.propertyType == propertyTypeEnum.LongString">
+          <div class="form-group" >
+            <label class="text-sm">مقدار پیشفرض</label>
+            <div class="field">
+              <textarea
+                [(ngModel)]="tempProperties.defaultValue"
+                [style]="{'width':'100%'}"
+                rows="5"
+                id="description"
+                name="description"
+                pInputTextarea
+                placeholder="توضیحات را وارد نمایید."
+                class="p-fieldset">
+              </textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12" *ngIf="tempProperties.propertyType == propertyTypeEnum.SingleSelect || tempProperties.propertyType == propertyTypeEnum.MultiSelect">
+          <div class="form-group" >
+            <label class="text-sm" >گزینه ها</label>
+            <span class="text-red-500 font-bold text- mr-1">*</span>
+
+            <div class="field flex align-items-end gap-3 pt-0" *ngFor="let param of parameter; let j = index; let isLast = last">
+              <div class="field m-0 flex flex-column">
+                <input
+                  [style]="{'width':'200px'}"
+                  [(ngModel)]="param.value"
+                  (ngModelChange)="onParameterChange(j)"
+                  pInputText
+                  type="text"
+                  [id]="'descriptor' + j"
+                  [name]="'descriptor' + j"
+                  placeholder="نام گزینه را وارد نمایید."
+                  class="p-fieldset">
+              </div>
+
+              <div class="field m-0 flex gap-2">
+                <button pButton type="button" style="width:25px; height:25px"
+                        class="p-button-danger p-0 border-round-3xl pi pi-minus text-sm" (click)="removeParameter(param.id)"></button>
+                <button *ngIf="isLast" pButton type="button" style="width:25px; height:25px"
+                        class="p-button-success p-0 border-round-3xl pi pi-plus flex justify-content-center"
+                        (click)="addNewParameter()"></button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12" *ngIf="tempProperties.propertyType == propertyTypeEnum.Document">
+          <div class="form-group" >
+            <label class="text-sm" >گزینه ها</label>
+            <span class="text-red-500 font-bold text- mr-1">*</span>
+            <p-dropdown [style]="{'width':'100%'}"
+                        name="propertyType"
+                        class="w-full"
+                        placeholder ="انتخاب ویژگی"
+                        scrollHeight="250px"
+                        display="chip"
+                        optionLabel="title"
+                        optionValue="id"
+                        appendTo="body"
+                        [(ngModel)]="tempProperties.descriptor"
+                        [options]="docData"></p-dropdown>
+          </div>
+        </div>
+
+
+        <div class="col-12 md:col-4">
+          <div class="form-group ">
+            <label class="block mb-2 text-900">اجباری</label>
+            <div class="field">
+              <p-inputSwitch [(ngModel)]="tempProperties.isMandatory"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-4" *ngIf="tempProperties.propertyType != propertyTypeEnum.Document ">
+          <div class="form-group ">
+            <label class="block mb-2 text-900">نمایش در لیست</label>
+            <div class="field">
+              <p-inputSwitch [(ngModel)]="tempProperties.showInList"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-4">
+          <div class="form-group ">
+            <label class="block mb-2 text-900">کپشن</label>
+            <div class="field">
+              <p-inputSwitch [(ngModel)]="tempProperties.isCaption" (onChange)="onCaptionChange()"/>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button pButton pRipple label="ثبت"
+      class="p-button-success p-mr-2"
+      (click)="submit()"></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="showDialog = false"></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end document modal *************************************-->
+
 

@@ -21,7 +21,7 @@ import {
   IStepEvent,
   IStepEventAction,
   IStepEventUI,
-  ISteps, CreateActionDTO, IStepUI, StepEventActionType, IPlaceHolders
+  ISteps, CreateActionDTO, IStepUI, StepEventActionType, IPlaceHolders, StepEventActionTypeEnum2LabelMapping
 } from "../../_types/step-event.type";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AccordionModule} from "primeng/accordion";
@@ -33,6 +33,9 @@ import {FieldsetModule} from "primeng/fieldset";
 import {InputTextModule} from "primeng/inputtext";
 import {forkJoin} from "rxjs";
 import {ConfirmationService} from "primeng/api";
+import {TableModule} from "primeng/table";
+import {DialogModule} from "primeng/dialog";
+import {TooltipModule} from "primeng/tooltip";
 
 
 @Component({
@@ -50,18 +53,24 @@ import {ConfirmationService} from "primeng/api";
     InputTextareaModule,
     InputTextModule,
     ButtonModule,
-    FieldsetModule
+    FieldsetModule,
+    TableModule,
+    DialogModule,
+    TooltipModule
   ]
 })
 export class ConfigComponent implements OnInit, AfterViewInit, AfterViewChecked{
 
   pathId: string;
   stepId: number;
+  showDialog:boolean = false
 
   placeHolders: IPlaceHolders[] = []
   steps:IStepUI[] = [];
   events:IStepEventUI[] = [];
+  selectedEvent:any = null;
   StepEventActionType = StepEventActionType
+  StepEventActionTypeEnum2LabelMapping = StepEventActionTypeEnum2LabelMapping
   options=[
     { title:'ارسال پیام', value: 0 },
     { title:'تغییر گام', value: 1 },
@@ -82,11 +91,14 @@ export class ConfigComponent implements OnInit, AfterViewInit, AfterViewChecked{
     private activeRoute: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) {
-    this.pathId = this.activeRoute.snapshot.params['id'];
+    this.pathId = this.activeRoute.snapshot.params['pathId'];
+    this.stepId = this.activeRoute.snapshot.params['stepId'];
   }
 
   ngOnInit() {
-    this.loadStepsAndEvents(this.pathId);
+    // this.loadStepsAndEvents(this.pathId);
+    this.getListOfSteps(this.pathId)
+    this.getListOfEvents()
     this.getListOfPlaceHolders();
   }
 
@@ -124,79 +136,78 @@ export class ConfigComponent implements OnInit, AfterViewInit, AfterViewChecked{
     return `${tab.nativeElement.offsetTop}px`;
   }
 
-  getListOfSteps(stepId:string){
-    // this.loading.show();
-    return this.service.getSteps(stepId)
-    //   .subscribe({
-    //   next: (out) => {
-    //     this.loading.hide();
-    //     this.steps = out;
-    //   },
-    //   error: (err) => {
-    //     this.loading.hide();
-    //   }
-    // })
+  getListOfSteps(pathId:string){
+    this.loading.show();
+    this.service.getSteps(pathId).subscribe({
+      next: (out) => {
+        this.loading.hide();
+        this.steps = out;
+      },
+      error: (err) => {
+        this.loading.hide();
+      }
+    })
   }
 
   getListOfEvents(){
-    // this.loading.show()
-    return this.service.getEvents()
-    //   .subscribe({
-    //   next: (out)=>{
-    //     this.loading.hide();
-    //     this.events = out
-    //
-    //     this.events = out.map(e => ({
-    //       ...e,
-    //       actions: [],
-    //     }));
-    //
-    //     this.selectedEvent = this.events[0];
-    //     console.log(this.steps)
-    //   },
-    //   error: (err) => {
-    //     this.loading.hide();
-    //   }
-    // })
-  }
-
-  loadStepsAndEvents(stepId: string) {
-    this.loading.show();
-
-    forkJoin({
-      steps: this.getListOfSteps(stepId),
-      events: this.getListOfEvents()
-    }).subscribe({
-      next: ({ steps, events }) => {
+    this.loading.show()
+     this.service.getEvents().subscribe({
+      next: (out)=>{
         this.loading.hide();
+        this.events = out
 
-        // 👇 ترکیب steps و events
-        this.steps = steps.map(step => ({
-          ...step,
-          events: events.map(e => ({
-            ...e,
-            actions: []
-          })),
-          selectedEventIndex: 0
+        this.events = out.map(e => ({
+          ...e,
+          actions: [],
         }));
         console.log(this.steps)
 
-        // اکشن های اولین event
-        this.getDataActions(this.steps[0],this.steps[0].events[0].name, 0)
-        // this.steps.forEach((step, stepIndex) => {
-        //   if (step.events.length > 0) {
-        //     const firstEvent = step.events[0];
-        //     this.getDataActions(step, firstEvent.name, 0); // index = 0 برای اولین event
-        //   }
-        // });
-
+        this.getDataActionsStep();
       },
-      error: err => {
+      error: (err) => {
         this.loading.hide();
-        console.error(err);
       }
-    });
+    })
   }
+
+  // loadStepsAndEvents(stepId: string) {
+  //   this.loading.show();
+  //
+  //   forkJoin({
+  //     steps: this.getListOfSteps(stepId),
+  //     events: this.getListOfEvents()
+  //   }).subscribe({
+  //     next: ({ steps, events }) => {
+  //       this.loading.hide();
+  //       this.events = events
+  //
+  //       // 👇 ترکیب steps و events
+  //       this.steps = steps.map(step => ({
+  //         ...step,
+  //         events: events.map(e => ({
+  //           ...e,
+  //           actions: []
+  //         })),
+  //         selectedEventIndex: 0
+  //       }));
+  //       console.log(this.steps)
+  //
+  //       // اکشن های اولین event
+  //       this.getDataActions(this.steps[0],this.steps[0].events[0].name, 0)
+  //       // this.steps.forEach((step, stepIndex) => {
+  //       //   if (step.events.length > 0) {
+  //       //     const firstEvent = step.events[0];
+  //       //     this.getDataActions(step, firstEvent.name, 0); // index = 0 برای اولین event
+  //       //   }
+  //       // });
+  //
+  //     },
+  //     error: err => {
+  //       this.loading.hide();
+  //       console.error(err);
+  //     }
+  //   });
+  // }
 
   getListOfPlaceHolders(){
     this.loading.show();
@@ -226,9 +237,15 @@ export class ConfigComponent implements OnInit, AfterViewInit, AfterViewChecked{
       case 2: // ایجاد معامله
         data = { title:null, description: null, stepId:null, pathId: +this.pathId } as CreateWorkItemActionInputDTO;
         break;
+
+        case 3: // ارسال لینک نظرسنجی به مشتری
+        data = { description: null, stepId:null } as CreateWorkItemActionInputDTO;
+        break;
     }
 
     eventItem.data = data
+    eventItem.type = actionType;
+    console.log(this.selectedEvent)
 
     // const existingIndex = eventItem.actions.findIndex(a => a.type === actionType);
     //
@@ -248,24 +265,79 @@ export class ConfigComponent implements OnInit, AfterViewInit, AfterViewChecked{
 
 
   getDataActions(step:IStepUI, eventName:string,eventIndex:number){
+  //   this.loading.show();
+  //   const ACTION_TYPE_MAP = {
+  //     'SendSmsToCustomerActionRequest': 0,
+  //     'ChangeWorkItemStepActionRequest': 1,
+  //     'CreateWorkItemActionRequest': 2,
+  //   };
+  //   this.service.getStepEventActions(step.id, eventName).subscribe({
+  //     next: (out) => {
+  //       this.loading.hide();
+  //       step.events[eventIndex].id = out.id
+  //       step.events[eventIndex].actions = out?.actions?.map(a =>({
+  //         id: a.id,
+  //         type: ACTION_TYPE_MAP[a.name],
+  //         data: {
+  //           ...a.input || {},
+  //           message: a.input?.message ? this.convertMessageToUI(a.input.message) : a.input.message
+  //         }
+  //       }))
+  //     },
+  //     error: (err) =>{
+  //       this.loading.hide();
+  //     }
+  //   })
+  }
+
+  getDataActionsStep(){
     this.loading.show();
     const ACTION_TYPE_MAP = {
       'SendSmsToCustomerActionRequest': 0,
       'ChangeWorkItemStepActionRequest': 1,
       'CreateWorkItemActionRequest': 2,
     };
-    this.service.getStepEventActions(step.id, eventName).subscribe({
+    this.service.getStepEventActions(this.stepId).subscribe({
       next: (out) => {
         this.loading.hide();
-        step.events[eventIndex].id = out.id
-        step.events[eventIndex].actions = out?.actions?.map(a =>({
-          id: a.id,
-          type: ACTION_TYPE_MAP[a.name],
-          data: {
-            ...a.input || {},
-            message: a.input?.message ? this.convertMessageToUI(a.input.message) : a.input.message
-          }
-        }))
+        this.events.forEach(e => e.actions = []);
+
+        out.forEach(item =>{
+          const matchingEvents = this.events.filter(e => e.name === item.eventName);
+          if (matchingEvents.length === 0) return;
+
+          const newActions = item.actions?.map(a => ({
+            id: a.id,
+            eventId: item.id,
+            type: ACTION_TYPE_MAP[a.name],
+            data: {
+              ...a.input,
+              message: a.input?.message ? this.convertMessageToUI(a.input.message) : a.input?.message
+            }
+          })) || [];
+
+          matchingEvents.forEach(e => {
+            // e.id = item.id;
+            e.actions.push(...newActions);
+          });
+
+        })
+
+        console.log(this.events)
+
+      },
+      error: (err) =>{
+        this.loading.hide();
+      }
+    })
+  }
+
+  removeAction(id:number){
+    this.loading.show();
+    this.service.deleteAction(id).subscribe({
+      next:(out) =>{
+        this.loading.hide();
+        this.getDataActionsStep()
       },
       error: (err) =>{
         this.loading.hide();
@@ -325,6 +397,47 @@ export class ConfigComponent implements OnInit, AfterViewInit, AfterViewChecked{
 
     })
 
+  }
+
+  saveCurrentEventDirect(event: IStepEventUI){
+    console.log(event)
+    console.log(this.selectedEvent)
+    const ACTION_TYPE_MAP = {
+      0: 'SendSmsToCustomerActionRequest',
+      1: 'ChangeWorkItemStepActionRequest',
+      2: 'CreateWorkItemActionRequest',
+    };
+    const dto = new CreateStepEventDTO({});
+    dto.stepId = this.stepId;
+    dto.eventName = event.name;
+    dto.id = event.actions[0].eventId ?? null;
+    dto.actions = event.actions.map(action =>
+      new CreateActionDTO({
+        id: action.id,
+        name: ACTION_TYPE_MAP[action.type],
+        input: JSON.stringify({
+          ...action.data,
+          message: action.data.message ? this.convertMessageToBackend(action.data.message) : null
+        })
+      })
+    );
+
+    console.log('SAVE EVENT DTO:', dto);
+
+    const isUpdate = event.actions.some(a => !!a.id);
+    let service = isUpdate ? this.service.updateStepEvent(dto) : this.service.createStepEvent(dto)
+
+    this.loading.show();
+    service.subscribe({
+      next: (out) =>{
+        this.loading.hide();
+        this.showDialog = false;
+        this.getDataActionsStep();
+      },
+      error: (err)=>{
+        this.loading.hide();
+      }
+    })
   }
 
   saveCurrentEvent(step: IStepUI) {
@@ -421,4 +534,31 @@ export class ConfigComponent implements OnInit, AfterViewInit, AfterViewChecked{
   cancel() {
     this.router.navigate(['./'], { relativeTo: this.activeRoute.parent })
   }
+
+
+  openEventModal(event:any, state:'new'|'edit' , action?: IStepEvent,) {
+    this.showDialog = true;
+    if (state === 'new') {
+
+      // ساخت مدل خالی برای مودال
+      this.selectedEvent = {
+        id: null,
+        name: event.name,
+        actions: []
+      };
+
+      this.addActionCard(this.selectedEvent);
+
+    } else {
+
+      // clone برای جلوگیری از تغییر مستقیم
+      this.selectedEvent = {
+        ...event,
+        actions: [structuredClone(action)]
+      };
+
+    }
+  }
+
+
 }

@@ -25,7 +25,7 @@ export class CreatePropertyDTO extends GenericType<CreatePropertyDTO>{
   defaultValue?: string;
   showInList?: boolean;
   isCaption?: boolean;
-  value?: string;
+  value?: any//string;
 
   constructor(model?: Partial<CreatePropertyDTO>) {
     super(model);
@@ -79,7 +79,7 @@ export interface IDetailDocInstance{
 
 export interface IPropertiesValueDoc{
   property?: CreatePropertyDTO;
-  value?: string
+  value?: any
 }
 
 // آپدیت جزییات سند
