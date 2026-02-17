@@ -100,7 +100,6 @@ import {FieldsetModule} from "primeng/fieldset";
 export class PathComponent implements OnInit, AfterViewInit{
 
   @ViewChild('datePicker') datePicker:NgPersianDatepickerComponent;
-  @ViewChild('scrollableElement')  scrollableElement!: ElementRef;
   @ViewChild('customerNameInput') customerNameInput!: ElementRef<HTMLInputElement>;
 
   paginationData: { [stepId: string]: { from: number; rows: number; isLoading:boolean, hasMore:boolean } } = {};
@@ -227,7 +226,7 @@ export class PathComponent implements OnInit, AfterViewInit{
 
         this.paginationData[step.id] = {
           from: 0,
-          rows: 20,
+          rows: 10,
           isLoading: false,
           hasMore: true
         };
@@ -299,7 +298,7 @@ export class PathComponent implements OnInit, AfterViewInit{
     if (!step) return;
 
     if (!this.paginationData[stepId]) {
-      this.paginationData[stepId] = { from: 0, rows: 20, isLoading: false, hasMore: true };
+      this.paginationData[stepId] = { from: 0, rows: 10, isLoading: false, hasMore: true };
     }
 
 
@@ -360,18 +359,37 @@ export class PathComponent implements OnInit, AfterViewInit{
 
   }
 
-  onStepScroll(event: any) {
-    const el = event.target;
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
 
-    // وقتی به انتهای اسکرول رسید
-    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100) {
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const documentHeight = document.documentElement.scrollHeight;
+
+    if (scrollPosition >= documentHeight - 150) {
+      console.log('Reached bottom of page');
+
       for (const step of this.steps) {
         const pagination = this.paginationData[step.id];
+
         if (!pagination?.isLoading && pagination?.hasMore) {
           this.loadMoreWorkItems(step.id);
         }
       }
     }
+  }
+
+  onStepScroll(event: any) {
+    // const el = event.target;
+    //
+    // // وقتی به انتهای اسکرول رسید
+    // if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100) {
+    //   for (const step of this.steps) {
+    //     const pagination = this.paginationData[step.id];
+    //     if (!pagination?.isLoading && pagination?.hasMore) {
+    //       this.loadMoreWorkItems(step.id);
+    //     }
+    //   }
+    // }
   }
 
   onRegister(){
@@ -537,7 +555,7 @@ export class PathComponent implements OnInit, AfterViewInit{
             this.loading.hide();
             this.paginationData[input.stepId] = {
               from: 0,
-              rows: 20,
+              rows: 10,
               isLoading: false,
               hasMore: true
             };

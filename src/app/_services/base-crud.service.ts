@@ -5,7 +5,7 @@ import {EntityListType} from "../_types/entityList.type";
 import {FatapHttpClientService} from "./fatap-http-client.service";
 import {ServerResponseType} from "../_types/server-response.type";
 import {GenericType} from "../_types/genericType.type";
-import {IHaveConstructorInterface} from "../_interfaces/I-have-constructor.interface";
+import {CreateResult, IHaveConstructorInterface} from "../_interfaces/I-have-constructor.interface";
 
 
 export  class BaseCrudService {
@@ -21,11 +21,17 @@ export  class BaseCrudService {
 
     public create<T>(TClass: IHaveConstructorInterface<T> = null,//constructor :(input: Partial<T>) => T = null,
                      //resource: Partial<T> & { toJson: () => T }): Observable<T> {
-                     resource: GenericType<T>): Observable<T> {
+                     resource: GenericType<T>): Observable<CreateResult<T>> {
         return this.httpClient
             //.extendedPost<T>(`${this.baseUrl + this.apiUrl}`, resource.toJson())
             .post<T>(`${this.baseUrl + this.apiUrl}`, resource.toJson())
-            .pipe(map((result) => TClass != null ? new TClass(result) : result));
+            .pipe(map(result =>{
+              const model = TClass !== null ? new TClass(result) : result;
+              return { raw : result, model: model }
+              // raw: خروجی وب سرویس
+              // model: خروجی مدل
+            }))
+            // .pipe(map((result) => TClass != null ? new TClass(result) : result));
     }
 
     public getItems<T>(constructor :(input: Partial<T>) => T,

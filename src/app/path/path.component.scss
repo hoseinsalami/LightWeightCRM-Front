@@ -57,9 +57,9 @@
     height: max-content;
     margin-top: 10px;
     min-height: calc(100% - 70px);
-    overflow-y: hidden;
-    overflow-x: scroll;
-    overflow: hidden;
+    overflow: auto;
+    //overflow-y: hidden;
+    //overflow: hidden;
   }
 
   .pipeline-header{

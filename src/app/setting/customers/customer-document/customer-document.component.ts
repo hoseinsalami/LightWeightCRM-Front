@@ -7,7 +7,7 @@ import {ButtonModule} from "primeng/button";
 import {MenuItem} from "primeng/api";
 import {LoadingService} from "../../../_services/loading.service";
 import {CustomerService} from "../../_services/customer.service";
-import {ActivatedRoute, RouterLink} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {OutType} from "../../../_classes/base-list.manager";
 import {
   CreatePropertyDTO,
@@ -28,6 +28,7 @@ import {KeyFilterModule} from "primeng/keyfilter";
 import {JalaliDatePipe} from "../../../_pipes/jalali.date.pipe";
 import {PaginatorModule, PaginatorState} from "primeng/paginator";
 import {DropdownChangeEvent} from "primeng/dropdown/dropdown.interface";
+import {CustomerSpecification} from "../../../path/_types/create-work-item.type";
 
 @Component({
   selector: 'app-customer-document',
@@ -66,6 +67,7 @@ export class CustomerDocumentComponent implements OnInit{
   isEditMode = false;
   currentDocumentInstanceId: number | null = null;
   docTitle?: string = ''
+  document: any;
 
 
   pagination = { from:0, rows:20 }
@@ -83,10 +85,13 @@ export class CustomerDocumentComponent implements OnInit{
   constructor(
     private customerService: CustomerService,
     private loading: LoadingService,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private router: Router,
   ) {
     this.customerId = this.activeRoute.snapshot.params['id'];
-    console.log(this.customerId)
+    const nav = this.router.getCurrentNavigation()
+    this.document = nav.extras.state['document']
+    console.log(this.customerId , this.document)
   }
 
   ngOnInit() {

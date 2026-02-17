@@ -5,6 +5,7 @@ export abstract class BaseSaveManager<T> implements IHaveSaveManagerInterface<T>
     _showDialog: boolean;
     isSending: boolean;
     oneObject: T;
+    response: any;
     OnSuccessfulSave: EventEmitter<T> = new EventEmitter<T>();
     BeforeSave: EventEmitter<T> = new EventEmitter<T>();
 

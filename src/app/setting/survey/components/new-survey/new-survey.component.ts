@@ -45,7 +45,7 @@ export class NewSurveyComponent extends BaseSurveyDetailComponent{
     super(manager, surveyService, loading, activeRoute);
 
     manager.OnSuccessfulSave.subscribe((i)=>{
-      router.navigate([`../questions/${i.id}` ],{ relativeTo: activeRoute })
+      router.navigate([`../questions/${manager.response}`],{ relativeTo: activeRoute })
       // router.navigate(['./'], {relativeTo: activeRoute.parent})
     });
 

@@ -47,8 +47,9 @@ export class BaseNewManager<T extends GenericType<T>> extends BaseSaveManager<T>
         this.loading.hide();
         return;
       }
-      this.service.create<T>(this.TClass, this.oneObject).subscribe(()=>{
+      this.service.create<T>(this.TClass, this.oneObject).subscribe((out)=>{
         this.loading.hide()
+        this.response = out.raw; // خروجی وب سرویس
         this.OnSuccessfulSave.emit(this.oneObject);
       },() => {
         this.loading.hide()
