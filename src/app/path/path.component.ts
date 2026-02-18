@@ -502,8 +502,12 @@ export class PathComponent implements OnInit, AfterViewInit{
     this.router.navigate(['dashboard/workItem/', id])
   }
 
-  navigateToConfig(item){
-    this.router.navigate(['setting/caries/config', this.pathId, item.id])
+  navigateToEventStep(item){
+    this.router.navigate(['setting/caries/event-step', this.pathId, item.id])
+  }
+
+  navigateToEventPath(){
+    this.router.navigate(['setting/caries/event-caries', this.pathId])
   }
 
   openModal(id:number) {

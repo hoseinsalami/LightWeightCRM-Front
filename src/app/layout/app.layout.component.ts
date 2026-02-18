@@ -109,7 +109,7 @@ export class AppLayoutComponent implements OnDestroy {
             'layout-static': this.layoutService.config().menuMode === 'static',
             'layout-static-inactive': this.layoutService.config().menuMode === 'static',
           // غیرفعال کردن منو سمت راست کد زیر کامنت شد و خط بالا ایجاد شد
-            // 'layout-static-inactive': this.layoutService.state.staticMenuDesktopInactive && this.layoutService.config().menuMode === 'static',
+            // 'layout-static-inactive': this.layoutService.state.staticMenuDesktopInactive && this.layoutService.base-event-step().menuMode === 'static',
             'layout-overlay-active': this.layoutService.state.overlayMenuActive,
             'layout-mobile-active': this.layoutService.state.staticMenuMobileActive,
             'p-input-filled': this.layoutService.config().inputStyle === 'filled',

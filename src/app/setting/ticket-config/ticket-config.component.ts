@@ -18,6 +18,8 @@ import {CustomMessageService} from "../../_services/custom-message.service";
 
 @Component({
   selector: 'app-ticket-config',
+  templateUrl: './ticket-config.component.html',
+  styleUrl: './ticket-config.component.scss',
   standalone: true,
   imports: [
     CommonModule,
@@ -28,9 +30,7 @@ import {CustomMessageService} from "../../_services/custom-message.service";
     MultiSelectModule,
     InputTextModule,
     KeyFilterModule
-  ],
-  templateUrl: './ticket-config.component.html',
-  styleUrl: './ticket-config.component.scss'
+  ]
 })
 export class TicketConfigComponent implements OnInit{
 
