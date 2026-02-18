@@ -1,0 +1,314 @@
+<div class="mx-auto max-w-60rem">
+  <header class="surface-card border-bottom-1 border-200 absolute right-0 z-5 w-full"
+    style="top:55px">
+    <div class="max-w-6xl mx-auto px-4 h-4rem flex align-items-center justify-content-between">
+
+      <!-- Breadcrumb -->
+      <nav class="flex align-items-center gap-2 text-sm text-600">
+
+        <!-- Home -->
+        <a routerLink="/activities" class="flex align-items-center text-600 hover:text-primary transition-duration-200">
+          <i class="pi pi-home text-base"></i>
+        </a>
+
+        <i class="pi pi-angle-left text-xs text-400"></i>
+
+        <!-- Path -->
+        <a *ngIf="pathInfo" [routerLink]="['/path', pathInfo.id]"
+           class="text-600 hover:text-primary transition-duration-200">
+          {{ pathInfo.title }}
+        </a>
+
+        <i *ngIf="stepInfo" class="pi pi-angle-left text-xs text-400"></i>
+
+        <!-- Step -->
+        <span *ngIf="stepInfo" class="text-600">{{ stepInfo.title }}</span>
+
+        <i class="pi pi-angle-left text-xs text-400"></i>
+
+        <!-- Current Page -->
+        <span class="text-900 font-medium">ثبت رویداد</span>
+
+      </nav>
+
+    </div>
+  </header>
+  <div class="grid">
+
+<!--    <div class="col-12">-->
+<!--      <div *ngIf="pathInfo && stepInfo"-->
+<!--        class="flex align-items-center gap-2 px-4 py-3 border-round-xl bg-white shadow-1 border-1 border-gray-100 mb-4">-->
+<!--        <i class="pi pi-home text-primary"></i>-->
+
+<!--        <span class="cursor-pointer text-gray-500 hover:text-primary" routerLink="/activities">داشبورد</span>-->
+
+<!--        <i class="pi pi-angle-left text-xs text-gray-400"></i>-->
+
+<!--        <span class="cursor-pointer text-gray-600 hover:text-primary" [routerLink]="['/path', pathInfo.id]">{{ pathInfo.title }}</span>-->
+
+<!--        <i class="pi pi-angle-left text-xs text-gray-400"></i>-->
+
+<!--        <span class="text-gray-900">{{ stepInfo.title }}</span>-->
+
+<!--        <i class="pi pi-angle-left text-xs text-gray-400"></i>-->
+
+<!--        <span class="text-gray-900 font-semibold">ثبت رویداد</span>-->
+<!--      </div>-->
+<!--    </div>-->
+
+
+    <div class="col-12 ">
+
+      <div class="surface-ground px-4 py-6">
+        <div class="max-w-4xl mx-auto">
+
+          <!-- Header -->
+          <div class="my-6 text-center">
+            <h1 class="text-2xl font-bold text-900 mb-2">ثبت رویداد جدید</h1>
+            <p class="text-600 text-sm">لطفاً نوع رویداد مورد نظر خود را برای ثبت در سیستم انتخاب کنید.</p>
+          </div>
+
+          <!-- Event List -->
+          <div class="flex flex-column gap-4">
+
+            <!-- Item -->
+            <div *ngFor="let event of events"
+              class="surface-card border-1 border-200 border-round-xl p-4 flex align-items-center justify-content-between hover:shadow-2 transition-duration-200">
+
+              <div class="flex align-items-center gap-3">
+                <div class="w-3rem h-3rem border-circle flex align-items-center justify-content-center"
+                     [class]="event.name === 'Step_EnterStep' ? 'bg-primary-100' :
+                      event.name === 'Step_ExitStep' ? 'bg-yellow-100' :
+                      event.name === 'Step_Sinter' ? 'bg-blue-100' :
+                      event.name === 'Step_AddWorkItem' ? 'bg-indigo-100' :
+                      event.name === 'Step_WorkItemSuccess' ? 'bg-green-100' :
+                      event.name === 'Step_WorkItemFail' ? 'bg-red-100' :
+                      event.name === 'Step_AddDocument_factor' ? 'bg-purple-100' : ''">
+
+                  <i class=" text-xl"
+                    [class]="event.name === 'Step_EnterStep' ? 'pi pi-sign-in text-primary' :
+                     event.name === 'Step_ExitStep' ? 'pi pi-sign-out text-yellow-600' :
+                     event.name === 'Step_Sinter' ? 'pi pi-wallet text-blue-600' :
+                     event.name === 'Step_AddWorkItem' ? 'pi pi-pencil text-indigo-600' :
+                     event.name === 'Step_WorkItemSuccess' ? 'pi pi-check-circle text-green-600' :
+                     event.name === 'Step_WorkItemFail' ? 'pi pi-times-circle text-red-600' :
+                     event.name === 'Step_AddDocument_factor' ? 'pi pi-inbox text-purple-600' : ''"></i>
+
+                </div>
+                <div>
+                  <div class="font-bold text-900">{{event.title}}</div>
+                  @if(event.name === 'Step_EnterStep'){
+                    <small class="text-600">ثبت زمان ورود پرسنل به سیستم</small>
+                  } @else if(event.name === 'Step_ExitStep'){
+                    <small class="text-600">ثبت زمان پایان فعالیت روزانه</small>
+                  } @else if (event.name === 'Step_Sinter'){
+                    <small class="text-600">مدیریت وجوه نقد و موجودی‌ها</small>
+                  } @else if(event.name === 'Step_AddWorkItem') {
+                  <small class="text-600">تعریف وظیفه جدید در چرخه عملیاتی</small>
+                  } @else if(event.name === 'Step_WorkItemSuccess'){
+                  <small class="text-600">تایید نهایی و تکمیل موفقیت آمیز</small>
+                  } @else if(event.name === 'Step_WorkItemFail'){
+                    <small class="text-600">لغو یا عدم موفقیت در اجرای وظیفه</small>
+                  } @else if(event.name === 'Step_AddDocument_factor'){
+                    <small class="text-600">صدور صورت‌حساب جدید برای مشتری</small>
+                  } @else {
+                  test
+                  }
+                </div>
+              </div>
+
+              <div class="flex align-items-center">
+
+                <div class="flex flex-wrap align-items-center gap-2">
+                  <!-- لیست اکشن ها -->
+                  <div *ngFor="let action of event.actions"
+                        class="action-chip flex align-items-center text-sm border-round p-2 cursor-pointer">
+
+                    <button type="button" class="border-1 border-solid border-round p-2 cursor-pointer"
+                            [class]="action.type === StepEventActionType.SendSms ? 'pi pi-send text-primary border-primary hover:bg-primary-100' :
+                            action.type === StepEventActionType.CreateWorkItem ? 'pi pi-briefcase border-yellow-600 text-yellow-600 hover:bg-yellow-100' :
+                            action.type === StepEventActionType.ChangeStep ? 'pi pi-wallet border-pink-600 text-pink-600 hover:bg-pink-100' :
+                            action.type === StepEventActionType.SendSurveyActionRequest ? 'pi pi-asterisk border-teal-600 text-teal-600 hover:bg-teal-100' : ''"
+                            style="background:none"
+                            (click)="openEventModal(event,'edit',action)">
+                      {{StepEventActionTypeEnum2LabelMapping[action.type]}}
+                      <i class="pi pi-trash text-red-500 text-sm" (click)="removeAction(action.eventId); $event.stopPropagation()"></i>
+                    </button>
+
+                  </div>
+                </div>
+
+
+                <p-menu #menu [model]="options" [popup]="true" />
+                <button pButton type="button" icon="pi pi-plus" class="p-button-sm"
+                        pTooltip="اکشن جدید" tooltipPosition="top"
+                        (click)="openMenu($event, event)">
+                </button>
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!--************************** begin Action modal *************************************-->
+<p-dialog
+  [styleClass]="'modal-medium'"
+  [style]="{direction:'rtl'}"
+  [(visible)]="showDialog"
+  [appendTo]="'body'"
+  header="اکشن"
+  [modal]="true">
+
+  <div class="grid">
+    <div class="col-12">
+
+      <div *ngIf="selectedEvent" class="">
+        <div class="flex flex-column">
+
+          <div class="grid">
+
+            <div class="col-12 p-3 border-round surface-100 mt-4" *ngFor="let action of selectedEvent.actions; let ai = index; let lastAction = last">
+              <ng-container [ngSwitch]="action.type">
+
+                <!-- ارسال پیام -->
+                <div *ngSwitchCase="StepEventActionType.SendSms">
+                  <label>متن پیام</label>
+                  <ul class="flex align-items-center gap-2 list-none p-0">
+                    <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
+                        (click)="appendPlaceholder(action, item, 'message')">{{item.caption}}</li>
+                  </ul>
+                  <textarea [name]="'message'+ai" pInputTextarea
+                            [(ngModel)]="action.data.message"
+                            rows="3" class="p-fieldset w-full"></textarea>
+                </div>
+
+                <!-- تغییر گام -->
+                <div *ngSwitchCase="StepEventActionType.ChangeStep">
+                  <div class="flex flex-column">
+                    <label>انتخاب گام</label>
+                    <p-dropdown
+                      [options]="steps"
+                      optionLabel="title"
+                      optionValue="id"
+                      [(ngModel)]="action.data.stepId"
+                      [style]="{'width':'250px'}"
+                      appendTo="body"
+                      placeholder="گام مورد نظر را انتخاب نمایید">
+                    </p-dropdown>
+                  </div>
+                </div>
+
+                <!-- ایجاد معامله -->
+                <div *ngSwitchCase="StepEventActionType.CreateWorkItem">
+                  <label>نام معامله</label>
+                  <ul class="flex align-items-center gap-2 list-none p-0">
+                    <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
+                        (click)="appendPlaceholder(action, item, 'title')">{{item.caption}}</li>
+                  </ul>
+                  <input type="text" pInputText [(ngModel)]="action.data.title" class="w-full mb-3">
+
+                  <label>توضیحات</label>
+                  <ul class="flex align-items-center gap-2 list-none p-0">
+                    <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
+                        (click)="appendPlaceholder(action, item, 'description')">{{item.caption}}</li>
+                  </ul>
+
+                  <textarea [name]="'description'+ai" class="p-fieldset" pInputTextarea [(ngModel)]="action.data.description" rows="3" class="w-full"></textarea>
+
+                  <div class="flex gap-3">
+
+                    <div class="flex-1">
+                      <label>جریان</label>
+                      <p-dropdown
+                        [options]="paths"
+                        optionLabel="title"
+                        optionValue="id"
+                        [(ngModel)]="action.data.pathId"
+                        [style]="{'width':'100%'}"
+                        appendTo="body"
+                        placeholder="جریان مورد نظر را انتخاب نمایید"
+                        (onChange)="onGetStepsByCaries($event.value)">
+                      </p-dropdown>
+                    </div>
+
+                    <div class="flex-1">
+                      <label>گام</label>
+                      <p-dropdown
+                        [style]="{'width':'100%'}"
+                        [options]="stepsByPath"
+                        [(ngModel)]="action.data.stepId"
+                        [disabled]="!action.data.pathId"
+                        optionLabel="title"
+                        optionValue="id"
+                        appendTo="body"
+                        placeholder="گام مورد نظر را انتخاب نمایید">
+                      </p-dropdown>
+                    </div>
+
+                  </div>
+
+
+                </div>
+
+                <!-- نظرسنجی -->
+                <div *ngSwitchCase="StepEventActionType.SendSurveyActionRequest">
+                  <div class="my-1">
+                    <label>نظرسنجی</label>
+                    <div class="field">
+                      <p-dropdown
+                        [options]="survays"
+                        optionLabel="title"
+                        optionValue="id"
+                        [(ngModel)]="action.data.surveyId"
+                        [style]="{'width':'250px'}"
+                        appendTo="body"
+                        placeholder="نظرسنجی مورد نظر را انتخاب نمایید">
+                      </p-dropdown>
+                    </div>
+                  </div>
+
+                  <div class="my-1">
+                    <label>پیام</label>
+                    <div class="field">
+                      <textarea [name]="'descriptionSurvey'+ai" class="p-fieldset" pInputTextarea [(ngModel)]="action.data.message" rows="3" class="w-full"></textarea>
+                    </div>
+                  </div>
+
+                </div>
+
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="ثبت"
+      class="p-button-success p-mr-2"
+      (click)="saveCurrentEventDirect(selectedEvent)"></button>
+
+    <button
+      pButton
+      pRipple
+      label="انصراف"
+      class="p-button-danger p-mr-2"
+      (click)="showDialog = false"></button>
+  </ng-template>
+
+</p-dialog>
+<!--************************** end Action modal *************************************-->

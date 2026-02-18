@@ -8,7 +8,8 @@ import {CariesComponent} from "./caries.component";
 import {NewCariesComponent} from "./components/new-caries/new-caries.component";
 import {EditCariesComponent} from "./components/edit-caries/edit-caries.component";
 import {AuthGuard} from "../../_guard/auth.guard";
-import {ConfigComponent} from "./config/config.component";
+import {BaseEventStepComponent} from "./base-event-step/base-event-step.component";
+import {BaseEventCariesComponent} from "./base-event-caries/base-event-caries.component";
 
 const routes: Routes = [
   {
@@ -30,11 +31,18 @@ const routes: Routes = [
     data: {permission: 'everyOne'}
   },
   {
-    path: 'config/:pathId/:stepId',
-    component: ConfigComponent ,
+    path: 'event-step/:pathId/:stepId',
+    component: BaseEventStepComponent ,
     canActivate: [AuthGuard],
     data: {permission: 'everyOne'}
   },
+  {
+    path: 'event-caries/:pathId',
+    component: BaseEventCariesComponent ,
+    canActivate: [AuthGuard],
+    data: {permission: 'everyOne'}
+  },
+
   { path: 'notfound', component: NotfoundComponent },
   { path: '**', redirectTo: '/notfound' },
 ];

@@ -136,7 +136,7 @@
             </div>
 
 
-            <span class="pi pi-cog" pTooltip="اسناد" tooltipPosition="top" [routerLink]="['document', object.id]"></span>
+            <span class="pi pi-cog" pTooltip="اسناد" tooltipPosition="top" (click)="navigateToDocument(object)"></span>
           </h2>
           <p class="text-sm text-600 mt-2 ">
             <span class="pi pi pi-building text-base text-gray-400 ml-2"></span>

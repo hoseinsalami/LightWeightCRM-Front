@@ -1,7 +1,8 @@
 import {GenericType} from "../../_types/genericType.type";
 
 export class CreateStepEventDTO extends GenericType<CreateStepEventDTO>{
-  stepId?: number;
+  stepId?: number;  // زمان ساخت اونت برای گام مقدار میگیرد
+  pathId?: number; // زمان ساخت اونت برای جریان مقدار میگیرد
   eventName?: string;
   actions?: CreateActionDTO[];
   constructor(model?: Partial<CreateStepEventDTO>) {
@@ -72,16 +73,22 @@ export interface CreateWorkItemActionInputDTO {
   pathId?: number;
   stepId?: number;
 }
-export enum StepEventActionType {
+export enum StepEventActionTypeEnum {
   SendSms = 0,
   ChangeStep = 1,
   CreateWorkItem = 2,
   SendSurveyActionRequest
 }
 
-export const StepEventActionTypeEnum2LabelMapping : Record<StepEventActionType,string> ={
-  [StepEventActionType.SendSms]: 'ارسال پیام',
-  [StepEventActionType.ChangeStep]: 'تغییر گام',
-  [StepEventActionType.CreateWorkItem]: 'ایجاد معامله در کاریز',
-  [StepEventActionType.SendSurveyActionRequest]: 'ارسال لینک نظرسنجی به مشتری',
+export const StepEventActionTypeEnum2LabelMapping : Record<StepEventActionTypeEnum,string> ={
+  [StepEventActionTypeEnum.SendSms]: 'ارسال پیام',
+  [StepEventActionTypeEnum.ChangeStep]: 'تغییر گام',
+  [StepEventActionTypeEnum.CreateWorkItem]: 'ایجاد معامله در کاریز',
+  [StepEventActionTypeEnum.SendSurveyActionRequest]: 'ارسال لینک نظرسنجی به مشتری',
+}
+
+
+export interface IGenericTitle{
+  id?: number;
+  title?: string;
 }

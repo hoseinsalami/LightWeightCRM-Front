@@ -66,6 +66,7 @@ export class QuestionsComponent extends BaseListComponent<{id:number, title:numb
   ) {
     super(surveyService, confirmationService, messageService);
     this.id = this.route.snapshot.params['id']
+    console.log(this.id)
   }
 
 

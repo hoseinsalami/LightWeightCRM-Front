@@ -41,14 +41,14 @@ const routes: Routes = [
     data: {permission: 'everyOne'}
   },
   {
-    path: 'ticket-config',
+    path: 'ticket-base-event-step',
     loadChildren: () => import('./ticket-config/ticket-config.module').then(t => t.TicketConfigModule),
     canActivate: [AuthGuard],
     data: {permission: 'Ticket'}
   },
 
   {
-    path: 'sms-config',
+    path: 'sms-base-event-step',
     loadChildren: () => import('./sms-config/sms-config.module').then(s => s.SmsConfigModule),
     canActivate: [AuthGuard],
     data: {permission: 'everyOne'}

@@ -9,7 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { SidebarModule } from 'primeng/sidebar';
 
 @Component({
-    selector: 'app-config',
+    selector: 'app-base-event-step',
     templateUrl: './app.config.component.html',
     standalone: true,
     imports: [

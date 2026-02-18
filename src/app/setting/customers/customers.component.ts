@@ -289,4 +289,8 @@ export class CustomersComponent extends BaseListComponent<CustomerSpecification>
     })
   }
 
+  navigateToDocument(object: any) {
+    console.log()
+    this.router.navigate(['document', object.id],{ relativeTo: this.route, state: {document: object } })
+  }
 }

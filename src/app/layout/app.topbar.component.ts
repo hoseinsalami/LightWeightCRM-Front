@@ -242,15 +242,15 @@ export class AppTopBarComponent implements OnInit{
         label: 'تنظیمات تیکت',
         icon: 'pi pi-box',
         permission: ['Ticket'],
-        routerLink: ['/setting/ticket-config'],
-        command: () => {this.clearTableDataInLocalStorage('ticket-config')},
+        routerLink: ['/setting/ticket-base-event-step'],
+        command: () => {this.clearTableDataInLocalStorage('ticket-base-event-step')},
       },
       {
         label: 'تنظیمات پیامک',
         icon: 'pi pi-comment',
         permission: ['everyOne'],
-        routerLink: ['/setting/sms-config'],
-        command: () => {this.clearTableDataInLocalStorage('sms-config')},
+        routerLink: ['/setting/sms-base-event-step'],
+        command: () => {this.clearTableDataInLocalStorage('sms-base-event-step')},
       },
       {
         label: 'فیلتر',
@@ -507,7 +507,7 @@ export class AppTopBarComponent implements OnInit{
       case 'accustom':
         localStorage.removeItem('accustomTable');
         break;
-        case 'sms-config':
+        case 'sms-base-event-step':
         localStorage.removeItem('smsTable');
         break;
       case 'failures':
