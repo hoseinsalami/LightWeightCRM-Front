@@ -83,7 +83,8 @@
                       event.name === 'Step_AddWorkItem' ? 'bg-indigo-100' :
                       event.name === 'Step_WorkItemSuccess' ? 'bg-green-100' :
                       event.name === 'Step_WorkItemFail' ? 'bg-red-100' :
-                      event.name === 'Step_AddDocument_factor' ? 'bg-purple-100' : ''">
+                      event.name === 'Step_AddDocument_factor' ? 'bg-purple-100' :
+                      event.name === 'Step_AddDocument_price' ? 'bg-gray-100' : ''">
 
                   <i class=" text-xl"
                     [class]="event.name === 'Step_EnterStep' ? 'pi pi-sign-in text-primary' :
@@ -92,7 +93,8 @@
                      event.name === 'Step_AddWorkItem' ? 'pi pi-pencil text-indigo-600' :
                      event.name === 'Step_WorkItemSuccess' ? 'pi pi-check-circle text-green-600' :
                      event.name === 'Step_WorkItemFail' ? 'pi pi-times-circle text-red-600' :
-                     event.name === 'Step_AddDocument_factor' ? 'pi pi-inbox text-purple-600' : ''"></i>
+                     event.name === 'Step_AddDocument_factor' ? 'pi pi-inbox text-purple-600' :
+                     event.name === 'Step_AddDocument_price' ? 'pi pi-dollar text-gray-600' : ''"></i>
 
                 </div>
                 <div>
@@ -111,9 +113,9 @@
                     <small class="text-600">لغو یا عدم موفقیت در اجرای وظیفه</small>
                   } @else if(event.name === 'Step_AddDocument_factor'){
                     <small class="text-600">صدور صورت‌حساب جدید برای مشتری</small>
-                  } @else {
-                  test
-                  }
+                  } @else if(event.name === 'Step_AddDocument_factor') {
+                  صدور اسناد مالی جدید برای مشتری
+                  } @else { }
                 </div>
               </div>
 
@@ -142,7 +144,7 @@
                 <p-menu #menu [model]="options" [popup]="true" />
                 <button pButton type="button" icon="pi pi-plus" class="p-button-sm"
                         pTooltip="اکشن جدید" tooltipPosition="top"
-                        (click)="openMenu($event, event)">
+                        (click)="openMenu($event, event, event.id)">
                 </button>
               </div>
 
@@ -182,10 +184,20 @@
                 <!-- ارسال پیام -->
                 <div *ngSwitchCase="StepEventActionType.SendSms">
                   <label>متن پیام</label>
-                  <ul class="flex align-items-center gap-2 list-none p-0">
-                    <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
-                        (click)="appendPlaceholder(action, item, 'message')">{{item.caption}}</li>
-                  </ul>
+
+                  <ng-container *ngIf="selectedEvent.name === 'Step_AddDocument_factor' || selectedEvent.name === 'Step_AddDocument_price';else palceHolder">
+                    <ul class="flex align-items-center gap-2 list-none p-0">
+                      <li *ngFor="let item of documentPlaceHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
+                          (click)="appendDocumentPlaceholder(action, item, 'message')">{{item.caption}}</li>
+                    </ul>
+                  </ng-container>
+                  <ng-template #palceHolder>
+                    <ul class="flex align-items-center gap-2 list-none p-0">
+                      <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
+                          (click)="appendPlaceholder(action, item, 'message')">{{item.caption}}</li>
+                    </ul>
+                  </ng-template>
+
                   <textarea [name]="'message'+ai" pInputTextarea
                             [(ngModel)]="action.data.message"
                             rows="3" class="p-fieldset w-full"></textarea>
@@ -209,19 +221,37 @@
 
                 <!-- ایجاد معامله -->
                 <div *ngSwitchCase="StepEventActionType.CreateWorkItem">
+
                   <label>نام معامله</label>
-                  <ul class="flex align-items-center gap-2 list-none p-0">
-                    <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
-                        (click)="appendPlaceholder(action, item, 'title')">{{item.caption}}</li>
-                  </ul>
+                  <ng-container *ngIf="selectedEvent.name === 'Step_AddDocument_factor' || selectedEvent.name === 'Step_AddDocument_price';else palceHolder">
+                    <ul class="flex align-items-center gap-2 list-none p-0">
+                      <li *ngFor="let item of documentPlaceHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
+                          (click)="appendDocumentPlaceholder(action, item, 'title')">{{item.caption}}</li>
+                    </ul>
+                  </ng-container>
+                  <ng-template #palceHolder>
+                    <ul class="flex align-items-center gap-2 list-none p-0">
+                      <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
+                          (click)="appendPlaceholder(action, item, 'title')">{{item.caption}}</li>
+                    </ul>
+                  </ng-template>
                   <input type="text" pInputText [(ngModel)]="action.data.title" class="w-full mb-3">
 
-                  <label>توضیحات</label>
-                  <ul class="flex align-items-center gap-2 list-none p-0">
-                    <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
-                        (click)="appendPlaceholder(action, item, 'description')">{{item.caption}}</li>
-                  </ul>
 
+
+                  <label>توضیحات</label>
+                  <ng-container *ngIf="selectedEvent.name === 'Step_AddDocument_factor' || selectedEvent.name === 'Step_AddDocument_price';else palceHolder">
+                    <ul class="flex align-items-center gap-2 list-none p-0">
+                      <li *ngFor="let item of documentPlaceHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
+                          (click)="appendDocumentPlaceholder(action, item, 'description')">{{item.caption}}</li>
+                    </ul>
+                  </ng-container>
+                  <ng-template #palceHolder>
+                    <ul class="flex align-items-center gap-2 list-none p-0">
+                      <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
+                          (click)="appendPlaceholder(action, item, 'description')">{{item.caption}}</li>
+                    </ul>
+                  </ng-template>
                   <textarea [name]="'description'+ai" class="p-fieldset" pInputTextarea [(ngModel)]="action.data.description" rows="3" class="w-full"></textarea>
 
                   <div class="flex gap-3">

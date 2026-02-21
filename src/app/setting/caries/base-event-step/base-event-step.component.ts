@@ -78,6 +78,7 @@ export class BaseEventStepComponent implements OnInit, AfterViewInit, AfterViewC
   showDialog:boolean = false
 
   placeHolders: IPlaceHolders[] = []
+  documentPlaceHolders: IPlaceHolders[] = []
   steps:IStepUI[] = [];
 
   paths:IGenericTitle[] = [];
@@ -88,6 +89,7 @@ export class BaseEventStepComponent implements OnInit, AfterViewInit, AfterViewC
 
   events:IStepEventUI[] = [];
   selectedEvent:any = null;
+  selectedEventId?:number;
 
   StepEventActionType = StepEventActionTypeEnum
   StepEventActionTypeEnum2LabelMapping = StepEventActionTypeEnum2LabelMapping
@@ -200,6 +202,20 @@ export class BaseEventStepComponent implements OnInit, AfterViewInit, AfterViewC
       next: (out) => {
         this.loading.hide();
         this.placeHolders = out
+      },
+      error: (err) =>{
+        this.loading.hide();
+      }
+    })
+  }
+
+  getDocumentPlaceHolders(id:number){
+    this.loading.show();
+    this.documentPlaceHolders = []
+    this.service.getDocumentPlaceholders(id).subscribe({
+      next:(out) =>{
+        this.loading.hide();
+        this.documentPlaceHolders = out
       },
       error: (err) =>{
         this.loading.hide();
@@ -343,6 +359,15 @@ export class BaseEventStepComponent implements OnInit, AfterViewInit, AfterViewC
     }
   }
 
+  appendDocumentPlaceholder(action: IStepEventAction, item: IPlaceHolders, field: 'title' | 'description' | 'message'){
+    const value = `<?${item.caption}?>`;
+    if (!action.data[field]) {
+      action.data[field] = value;
+    } else {
+      action.data[field] += value;
+    }
+  }
+
   // UI --> back
   convertMessageToBackend(msg:string){
     let res = msg;
@@ -439,12 +464,15 @@ export class BaseEventStepComponent implements OnInit, AfterViewInit, AfterViewC
     // اکشن جدید را به آرایه اضافه کنید
     this.selectedEvent.actions.push(newAction);
 
+    if (this.selectedEventId) this.getDocumentPlaceHolders(this.selectedEventId)
+
     this.showDialog = true;
     console.log(this.selectedEvent)
   }
 
-  openMenu(event, item){
+  openMenu(event, item, eventId?:number){
     this.menu.toggle(event)
+    this.selectedEventId = eventId ?? null
     this.selectedEvent = {
       id: null,
       name: item.name,

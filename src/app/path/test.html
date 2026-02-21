@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Modern CRM Kanban Board</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;400;700&amp;display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#2ECC71",
+            "background-light": "#F8FAFC",
+            "background-dark": "#0F172A",
+            "card-light": "#FFFFFF",
+            "card-dark": "#1E293B",
+          },
+          fontFamily: {
+            display: ["Vazirmatn", "sans-serif"],
+          },
+          borderRadius: {
+            DEFAULT: "8px",
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+    }
+    .pipeline-step {
+       position: relative;
+       background: white;
+       padding: 8px 30px 8px 20px;
+       margin-left: 15px;
+       clip-path: polygon(15px 0%, 100% 0%, calc(100% - 15px) 50%, 100% 100%, 15px 100%, 0% 50%);
+       border: 1px solid #E2E8F0;
+     }
+    .pipeline-step:first-child {
+      clip-path: polygon(15px 0%, 100% 0%, 100% 100%, 15px 100%, 0% 50%);
+    }
+    .pipeline-step:last-child {
+      margin-left: 0;
+      clip-path: polygon(0% 0%, 100% 0%, calc(100% - 15px) 50%, 100% 100%, 0% 100%);
+    }
+    .dark .pipeline-step {
+      background: #1E293B;
+      border-color: #334155;
+    }.no-scrollbar::-webkit-scrollbar {
+       display: none;
+     }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen transition-colors duration-200">
+
+  <header class="bg-white dark:bg-card-dark border-b border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-4 flex-1">
+      <div class="relative w-full max-w-2xl">
+        <span class="material-icons absolute right-3 top-2.5 text-slate-400">search</span>
+        <input class="w-full pr-10 pl-4 py-2 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary focus:border-primary transition-all" placeholder="جستجو بر اساس قلم کاری | مشتری | شرکت" type="text"/>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+        <button class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded text-slate-500 transition-all">
+          <span class="material-icons text-xl">bolt</span>
+        </button>
+        <button class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded text-primary transition-all">
+          <span class="material-icons text-xl">edit</span>
+        </button>
+      </div>
+      <div class="relative group">
+        <button class="flex items-center gap-3 px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
+          <span class="text-sm font-medium">فروش پاییزه</span>
+          <span class="material-icons text-slate-400">expand_more</span>
+        </button>
+      </div>
+      <button class="p-2 text-slate-500 hover:text-primary" onclick="document.documentElement.classList.toggle('dark')">
+        <span class="material-icons">dark_mode</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="p-6">
+    <div class="flex mb-8 overflow-x-auto no-scrollbar pb-2">
+      <div class="flex-1 min-w-[280px] pipeline-step flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-icons text-sm text-yellow-500">bolt</span>
+          <span class="material-icons text-sm text-primary">edit</span>
+          <span class="text-sm font-bold">ثبت سفارش</span>
+        </div>
+      </div>
+      <div class="flex-1 min-w-[280px] pipeline-step flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-icons text-sm text-yellow-500">bolt</span>
+          <span class="material-icons text-sm text-primary">edit</span>
+          <span class="text-sm font-bold">خرید آپارتمان</span>
+        </div>
+      </div>
+      <div class="flex-1 min-w-[280px] pipeline-step flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-icons text-sm text-yellow-500">bolt</span>
+          <span class="material-icons text-sm text-primary">edit</span>
+          <span class="text-sm font-bold">خرید خودرو</span>
+        </div>
+      </div>
+      <div class="flex-1 min-w-[280px] pipeline-step flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-icons text-sm text-yellow-500">bolt</span>
+          <span class="material-icons text-sm text-primary">edit</span>
+          <span class="text-sm font-bold">جمع آوری سفارشات</span>
+        </div>
+      </div>
+      <div class="flex-1 min-w-[280px] pipeline-step flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-icons text-sm text-yellow-500">bolt</span>
+          <span class="material-icons text-sm text-primary">edit</span>
+          <span class="text-sm font-bold">ارسال به مشتری</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex gap-6 overflow-x-auto no-scrollbar min-h-[calc(100vh-250px)]">
+
+      <div class="flex-1 min-w-[300px] flex flex-col gap-4">
+        <button class="w-full py-2 border-2 border-dashed border-primary/40 text-primary bg-primary/5 hover:bg-primary/10 rounded-lg transition-all text-sm font-medium">
+          + قلم کاری جدید
+        </button>
+        <div class="space-y-4">
+        </div>
+      </div>
+
+      <div class="flex-1 min-w-[300px] flex flex-col gap-4">
+        <button class="w-full py-2 border-2 border-dashed border-primary/40 text-primary bg-primary/5 hover:bg-primary/10 rounded-lg transition-all text-sm font-medium">
+          + قلم کاری جدید
+        </button>
+        <div class="space-y-4">
+
+          <div class="bg-white dark:bg-card-dark p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-all group cursor-pointer">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="font-bold text-slate-900 dark:text-white mb-1">شماره 10</h3>
+                <p class="text-xs text-slate-500">حسین رحمیان</p>
+                <p class="text-xs text-slate-400 mt-1">09357256657</p>
+              </div>
+              <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
+                <span class="material-icons text-blue-500">apartment</span>
+              </div>
+            </div>
+            <div class="flex justify-between items-center pt-3 border-t border-slate-50 dark:border-slate-800">
+              <div class="flex gap-2">
+                <span class="material-icons text-sm text-pink-400">email</span>
+                <span class="material-icons text-sm text-red-500">error</span>
+              </div>
+              <div class="flex -space-x-2 space-x-reverse">
+                <div class="w-6 h-6 rounded-full bg-slate-200 border-2 border-white dark:border-card-dark"></div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-card-dark p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-all group cursor-pointer">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="font-bold text-slate-900 dark:text-white mb-1">شماره 9</h3>
+                <p class="text-xs text-slate-500">حسین رحمیان</p>
+                <p class="text-xs text-slate-400 mt-1">09357256657</p>
+              </div>
+              <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center justify-center">
+                <span class="material-icons text-amber-500">domain</span>
+              </div>
+            </div>
+            <div class="flex justify-between items-center pt-3 border-t border-slate-50 dark:border-slate-800">
+              <div class="flex gap-2">
+                <span class="material-icons text-sm text-pink-400">email</span>
+                <span class="material-icons text-sm text-red-500">error</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-card-dark p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-all group cursor-pointer">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="font-bold text-slate-900 dark:text-white mb-1">خرید البسه</h3>
+                <p class="text-xs text-slate-500">علی دایی</p>
+                <p class="text-xs text-slate-400 mt-1">05132599872</p>
+              </div>
+              <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg flex items-center justify-center">
+                <span class="material-icons text-emerald-500">store</span>
+              </div>
+            </div>
+            <div class="flex justify-between items-center pt-3 border-t border-slate-50 dark:border-slate-800">
+              <div class="flex gap-2">
+                <span class="material-icons text-sm text-pink-400">email</span>
+                <span class="material-icons text-sm text-red-500">error</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 min-w-[300px] flex flex-col gap-4">
+        <button class="w-full py-2 border-2 border-dashed border-primary/40 text-primary bg-primary/5 hover:bg-primary/10 rounded-lg transition-all text-sm font-medium">
+          + قلم کاری جدید
+        </button>
+        <div class="space-y-4">
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 text-center">
+            <p class="text-slate-400 text-sm">موردی برای نمایش وجود ندارد</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 min-w-[300px] flex flex-col gap-4">
+        <button class="w-full py-2 border-2 border-dashed border-primary/40 text-primary bg-primary/5 hover:bg-primary/10 rounded-lg transition-all text-sm font-medium">
+          + قلم کاری جدید
+        </button>
+      </div>
+      <div class="flex-1 min-w-[300px] flex flex-col gap-4">
+        <button class="w-full py-2 border-2 border-dashed border-primary/40 text-primary bg-primary/5 hover:bg-primary/10 rounded-lg transition-all text-sm font-medium">
+          + قلم کاری جدید
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <div class="fixed inset-y-0 left-4 flex items-center pointer-events-none">
+    <button class="pointer-events-auto w-10 h-10 bg-white dark:bg-card-dark rounded-full shadow-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
+      <span class="material-icons text-slate-600 dark:text-slate-300">chevron_left</span>
+    </button>
+  </div>
+
+  <div class="fixed inset-y-0 right-4 flex items-center pointer-events-none">
+    <button class="pointer-events-auto w-10 h-10 bg-white dark:bg-card-dark rounded-full shadow-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
+      <span class="material-icons text-slate-600 dark:text-slate-300">chevron_right</span>
+    </button>
+  </div>
+
+</body>
+
+</html>

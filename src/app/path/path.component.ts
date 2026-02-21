@@ -896,4 +896,11 @@ export class PathComponent implements OnInit, AfterViewInit{
   }
 
 
+  getDefaultPhone(customer: any): string {
+    if (!customer?.customerPhones?.length) return '';
+
+    const defaultPhone = customer.customerPhones.find(p => p.isDefault);
+    return defaultPhone?.phoneNumber || '';
+  }
+
 }

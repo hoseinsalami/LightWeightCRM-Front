@@ -1,11 +1,11 @@
 <!--<div class="grid">-->
 <!--  <div class="col-12">-->
 
-    <p class="top-right-button text-white cursor-pointer"
-       (click)="showModalSearchWorkItem=true" pTooltip="جستجو قلم کاری"
-       tooltipPosition="left">
-      <i class="pi pi-search text-lg"></i>
-    </p>
+<!--    <p class="top-right-button text-white cursor-pointer"-->
+<!--       (click)="showModalSearchWorkItem=true" pTooltip="جستجو قلم کاری"-->
+<!--       tooltipPosition="left">-->
+<!--      <i class="pi pi-search text-lg"></i>-->
+<!--    </p>-->
 
 <div class="relative">
 
@@ -19,7 +19,7 @@
   </button>
 
   <div class="grid">
-    <div class="col-2">
+    <div class="col-6">
       <div class="flex align-items-center gap-2">
         <!--        <label class="block">کاریز</label>-->
         <p-dropdown
@@ -40,6 +40,73 @@
            (click)="navigateToEventPath()"></i>
       </div>
     </div>
+
+    <div class="col-6">
+      <div class="field">
+        <p-autoComplete
+          [inputStyle]="{'width':'100%'}"
+          [style]="{'width':'100%'}"
+          [suggestions]="filteredWorkItem"
+          (completeMethod)="filterWorkItems($event)"
+          (onSelect)="selectWorkItem($event)"
+          [showClear]="true"
+          [autofocus]="true"
+          [showEmptyMessage]="true"
+          emptyMessage="موردی یافت نشد"
+          appendTo="body"
+          optionLabel="title"
+          styleClass="w-full mx-auto"
+          scrollHeight="400px"
+          class="p-autocomplete w-full mx-auto"
+          placeholder="جستجو براساس قلم کاری | مشتری | شرکت">
+
+          <ng-template let-filteredCustomers pTemplate="item">
+            <div class="grid align-items-end justify-content-between" style="direction: rtl">
+
+
+              <div class="col-12 overflow-hidden flex gap-2">
+                <p class=" my-0 ">
+                  <span class="font-light">قلم کاری:</span>
+                  {{filteredCustomers.title}}</p>
+                <p
+                  class=" my-0 white-space-nowrap overflow-hidden  text-overflow-ellipsis">
+                  -
+                  <span class="font-light">مشتری:</span>
+                  {{filteredCustomers.customer.family}} ({{filteredCustomers.customer.companyName ? filteredCustomers.customer.companyName :''}})
+                </p>
+              </div>
+
+
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="empty">
+            <div class="text-center px-2 flex align-items-baseline justify-content-between" style="direction: rtl">
+              <p class="mb-2">موردی یافت نشد</p>
+            </div>
+          </ng-template>
+
+        </p-autoComplete>
+      </div>
+
+
+      <!--            <div class="field">-->
+      <!--              <p-dropdown-->
+      <!--                [styleClass]="'clear-icon'"-->
+      <!--                [showClear]="true"-->
+      <!--                [options]="expertUsers"-->
+      <!--                [(ngModel)]="selectedExpertUser"-->
+      <!--                class="mt-2"-->
+      <!--                [style]="{'width':'250px'}"-->
+      <!--                optionLabel="fullName"-->
+      <!--                optionValue="id"-->
+      <!--                placeholder="کارشناسان">-->
+      <!--              </p-dropdown>-->
+      <!--            </div>-->
+
+    </div>
+
+
   </div>
 
 
@@ -62,15 +129,15 @@
               class="tooltip-hover icon-edit "
               [cdkDragData]="step"
               cdkDrag>
-        <div class="white-space-nowrap overflow-hidden text-overflow-ellipsis">{{ step?.title }}</div>
-        <i class="pi pi-pencil edit text-green-500 hover:bg-green-500 hover:text-white border-round-3xl"
-           pTooltip="ویرایش گام" tooltipPosition="top"
-           (click)="openModalEditCaries(step)"></i>
-        <i class="pi pi-plus new hover:bg-gray-500 hover:text-white border-round-3xl" pTooltip="افزودن گام" tooltipPosition="top"
-           (click)="openModalNewCaries(step)"></i>
-        <i class="pi pi-bolt edit text-base text-yellow-500 hover:bg-yellow-500 hover:text-white border-round-3xl"
+
+        <i class="pi pi-bolt edit text-base text-yellow-500 hover:bg-yellow-500 hover:text-white border-round-3xl text-sm font-medium m-0"
            pTooltip="رویداد گام" tooltipPosition="top"
            (click)="navigateToEventStep(step)"></i>
+        <i class="pi pi-pencil edit text-green-500 hover:bg-green-500 hover:text-white border-round-3xl text-sm font-medium mx-1"
+           pTooltip="ویرایش گام" tooltipPosition="top" (click)="openModalEditCaries(step)"></i>
+        <span class="text-sm font-bold white-space-nowrap">{{ step?.title }}</span>
+        <i class="pi pi-plus new hover:bg-gray-500 hover:text-white border-round-3xl" pTooltip="افزودن گام" tooltipPosition="top"
+           (click)="openModalNewCaries(step)"></i>
         <span class="arrow-prg-L"></span>
         <span class="arrow-prg-R"></span>
       </header>
@@ -96,14 +163,45 @@
 
       <!--          <section class="pipeline-item-cntr">-->
       <div (click)="openModal(step.id)"
-           class="border-2 border-dashed border-green-500 bg-transparent text-green-500 text-center cursor-pointer my-2 py-2 px-5 sticky z-100 top-1vh bg-success-btn">
-        قلم کاری جدید
+           class="border-2 border-dashed border-round border-green-300 bg-green-100 text-green-500 text-center cursor-pointer my-2 py-2 px-5 sticky z-100 top-1vh text-sm font-medium">
+        + قلم کاری جدید
       </div>
 
       <article class="relative flex flex-column gap-3">
 
+<!--        <div class="bg-white surface-card p-4 border-round-xl border-1 border-200 hover:shadow-2 transition-duration-200 cursor-pointer">-->
+
+<!--          <div class="flex justify-content-between align-items-start mb-4">-->
+<!--            <div>-->
+<!--              <h3 class="font-bold text-900 mb-1">شماره 10</h3>-->
+<!--              <p class="text-xs text-500 m-0">حسین رحمیان</p>-->
+<!--              <p class="text-xs text-400 mt-1 mb-0">09357256657</p>-->
+<!--            </div>-->
+
+<!--            <div class="w-3rem h-3rem bg-blue-50 border-round-lg flex align-items-center justify-content-center">-->
+<!--              <i class="pi pi-building text-blue-500 text-xl"></i>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="flex justify-content-between align-items-center pt-3 border-top-1 border-100">-->
+<!--            <div class="flex gap-2">-->
+<!--              <i class="pi pi-envelope text-pink-400 text-sm"></i>-->
+<!--              <i class="pi pi-exclamation-triangle text-red-500 text-sm"></i>-->
+<!--            </div>-->
+
+<!--            <div class="flex">-->
+<!--              <div-->
+<!--                class="w-2rem h-2rem border-circle bg-200 border-2 border-white"-->
+<!--                style="margin-right:-0.5rem"-->
+<!--              ></div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--        </div>-->
+
+<!--        flex justify-content-between-->
         <div *ngFor="let workItem of step.workItems"
-             class="card cursor-pointer p-2 border-round flex flex-column justify-content-around m-0"
+             class="bg-white flex flex-column justify-content-between surface-card p-4 border-round-xl border-1 border-200 hover:shadow-2 transition-duration-200 cursor-pointer"
              cdkDrag
              (cdkDragStarted)="onDragStarted()"
              (cdkDragEnded)="onDragEnded()"
@@ -111,25 +209,28 @@
              [style]="{'height': '190px'}"
              [routerLink]="'/workItem/' + workItem.id">
 
-          <p class="m-0">{{ workItem?.title }}</p>
+          <div class="flex justify-content-between align-items-center">
 
-          <div class="overlay" *ngIf="workItemStatesEnum[workItem?.status]?.value == 1">
-            <img src="./assets/images/successfull.png">
+            <div class="flex flex-column">
+              <p class="font-bold text-900 m-0">{{ workItem?.title }}</p>
+              <div class="div">
+                <p class="text-xs text-400 m-0">
+                  {{ workItem?.customer?.name ? workItem.customer.name : '' }}
+                  {{ workItem?.customer?.family ? ' ' + workItem.customer.family : '' }}
+                </p>
+                <p class="text-xs text-400 m-0">{{ getDefaultPhone(workItem?.customer) || 'شماره‌ای ثبت نشده' }}</p>
+              </div>
+            </div>
+
+            <div class="w-3rem h-3rem bg-blue-50 border-round-lg flex align-items-center justify-content-center">
+              <i class="pi pi-building text-blue-500 text-xl"></i>
+            </div>
+            <!-- <img src="./assets/images/icon-company-100.png" style="width:75px" alt=""> -->
+
           </div>
-          <div class="overlay" *ngIf="workItemStatesEnum[workItem?.status]?.value == 2">
-            <img src="./assets/images/failure.png">
-          </div>
 
-          <div class="flex align-items-center gap-2">
-            <img src="./assets/images/icon-company-100.png" style="width:75px" alt="">
-
-
-            <div class="flex flex-column gap-1" (mouseleave)="showListPhoneNumberFor = null">
-              <p class="m-0 text-sm">
-                {{ workItem?.customer?.name ? workItem.customer.name : '' }}
-                {{ workItem?.customer?.family ? ' ' + workItem.customer.family : '' }}
-              </p>
-
+          <div class="flex justify-content-between align-items-center pt-3 border-top-1 border-100">
+<!--            <div class="flex gap-2">-->
               <div *ngIf="workItem.customer?.customerPhones?.length" class="flex align-items-center gap-1">
 
                 <div class="phone-dropdown" (click)="$event.stopPropagation()">
@@ -152,21 +253,68 @@
 
                 <i class="pi pi-envelope text-pink-500 cursor-pointer mr-1" pTooltip="ارسال پیامک" tooltipPosition="top"
                    (click)="openDialogSms(workItem) ; $event.stopPropagation()"></i>
-<!--                <img src="assets/images/chat-25.png" style="width:20px; height:20px" class="mr-1"-->
-<!--                     (click)="openDialogSms(workItem) ; $event.stopPropagation()">-->
-
               </div>
 
-
-            </div>
-
+              <p *ngIf="workItem.isStagnant" class="text-xs text-left text-gray-400 mt-2">
+                <img src="assets/images/exclamation-25.png" alt=""
+                     pTooltip="راکد"
+                     tooltipPosition="top">
+              </p>
+<!--            </div>-->
           </div>
 
-          <p *ngIf="workItem.isStagnant" class="text-xs text-left text-gray-400 mt-2">
-            <img src="assets/images/exclamation-25.png" alt=""
-                 pTooltip="راکد"
-                 tooltipPosition="top">
-          </p>
+
+          <div class="overlay" *ngIf="workItemStatesEnum[workItem?.status]?.value == 1">
+            <img src="./assets/images/successfull.png">
+          </div>
+          <div class="overlay" *ngIf="workItemStatesEnum[workItem?.status]?.value == 2">
+            <img src="./assets/images/failure.png">
+          </div>
+
+<!--          <div class="flex align-items-center gap-2">-->
+<!--            <img src="./assets/images/icon-company-100.png" style="width:75px" alt="">-->
+
+
+<!--            <div class="flex flex-column gap-1" (mouseleave)="showListPhoneNumberFor = null">-->
+<!--              <p class="m-0 text-sm">-->
+<!--                {{ workItem?.customer?.name ? workItem.customer.name : '' }}-->
+<!--                {{ workItem?.customer?.family ? ' ' + workItem.customer.family : '' }}-->
+<!--              </p>-->
+
+<!--              <div *ngIf="workItem.customer?.customerPhones?.length" class="flex align-items-center gap-1">-->
+
+<!--                <div class="phone-dropdown" (click)="$event.stopPropagation()">-->
+<!--                  <div class="phone-display" (click)="getFilteredPhones(workItem)?.length && op.toggle($event)">-->
+<!--                    <span class="text-sm">{{ getSelectedPhone(workItem) }}</span>-->
+<!--                    &lt;!&ndash;                        <span>{{ workItem?.customer?.customerPhones[0].phoneNumber }}</span>&ndash;&gt;-->
+<!--                    <i class="pi pi-chevron-down hover-block"></i>-->
+<!--                  </div>-->
+
+<!--                  <p-overlayPanel #op [showCloseIcon]="false" appendTo="body" class="p-0" styleClass="p-0">-->
+<!--                    <ul class="m-0 p-0 list-none flex flex-column gap-2">-->
+<!--                      <li *ngFor="let phone of getFilteredPhones(workItem)"-->
+<!--                          (click)="selectPhone(workItem, phone); op.hide()"-->
+<!--                          class="cursor-pointer border-round hover:bg-gray-400 hover:text-white p-2">-->
+<!--                        {{ phone.phoneNumber }}-->
+<!--                      </li>-->
+<!--                    </ul>-->
+<!--                  </p-overlayPanel>-->
+<!--                </div>-->
+
+<!--                <i class="pi pi-envelope text-pink-500 cursor-pointer mr-1" pTooltip="ارسال پیامک" tooltipPosition="top"-->
+<!--                   (click)="openDialogSms(workItem) ; $event.stopPropagation()"></i>-->
+<!--              </div>-->
+
+
+<!--            </div>-->
+
+<!--          </div>-->
+
+<!--          <p *ngIf="workItem.isStagnant" class="text-xs text-left text-gray-400 mt-2">-->
+<!--            <img src="assets/images/exclamation-25.png" alt=""-->
+<!--                 pTooltip="راکد"-->
+<!--                 tooltipPosition="top">-->
+<!--          </p>-->
 
           <!--              <p *ngIf="workItem?.deadline; else noDate" class="text-xs text-left text-gray-400 mt-2">-->
           <!--                تاریخ: {{ workItem?.deadline | jalaliDate:'date' }}-->

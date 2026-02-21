@@ -255,8 +255,12 @@ export class BaseDocumentDetailComponent implements OnInit{
   openDialog(state:'new'|'edit',index?:number){
     this.dialogState = state;
     if (state == 'new'){
+      const hasCaption = this.manager.oneObject.properties
+        ?.some(item => item.isCaption === true);
       this.tempProperties = new CreatePropertyDTO({})
-      // this.parameter = [{title:null}]
+
+      this.tempProperties.isCaption = !hasCaption;
+
     } else {
       //Edit Mode
       this.parameter = [];

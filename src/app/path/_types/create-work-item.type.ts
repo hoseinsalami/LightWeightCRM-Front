@@ -129,6 +129,7 @@ export class CustomerSpecification extends GenericType<CustomerSpecification>{
 export class CreateCustomerPhone extends GenericType<CreateCustomerPhone> {
   title?: string;
   phoneNumber?: string;
+  isDefault?: boolean;
 
   constructor(model?: Partial<CreateCustomerPhone>) {
     super(model)

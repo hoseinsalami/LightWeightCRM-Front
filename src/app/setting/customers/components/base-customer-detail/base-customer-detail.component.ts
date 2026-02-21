@@ -198,7 +198,7 @@ export class BaseCustomerDetailComponent{
       this.customerJson.customerPhones = [{title:'', phoneNumber:''}]
     }
 
-    if (this.customerJson.introducer.id === this.customerJson.introducerId) {
+    if (this.customerJson.introducer && this.customerJson.introducer.id === this.customerJson.introducerId) {
       this.filteredCustomer = [this.customerJson.introducer];
       this.customerJson.introducerId = this.customerJson.introducer.id;
     }
