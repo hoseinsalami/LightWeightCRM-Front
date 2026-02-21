@@ -60,6 +60,10 @@ export class StepEventService extends BaseCrudService{
     return this.http.get(this.baseUrl + '/PlaceHolders');
   }
 
+  getDocumentPlaceholders(id:number): Observable<IPlaceHolders[]>{
+    return this.http.get(this.baseUrl + `/DocumentPlaceHolders/${id}`);
+  }
+
   getSurvays():Observable<IGenericTitle[]>{
     return this.http.get(this.baseUrl + '/survays')
   }

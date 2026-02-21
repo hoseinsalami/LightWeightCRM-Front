@@ -37,7 +37,10 @@ import {CommonModule} from "@angular/common";
 export class SurveyComponent extends BaseListComponent<SurveyType>{
 
   showDialog:boolean = false;
+  showDialogNewQuestion:boolean = false;
   oneObject:ShowAllQuestions = new ShowAllQuestions({})
+
+  survey:SurveyType = new SurveyType({})
 
   constructor(
     private surveyService: SurveyService,
@@ -55,6 +58,20 @@ export class SurveyComponent extends BaseListComponent<SurveyType>{
   }
 
 
+  saveNewSurvey(){
+    this.loading.show();
+    this.surveyService.postCreateSurvey(this.survey).subscribe({
+      next:(out) =>{
+        this.loading.hide();
+        this.showDialogNewQuestion = false;
+      },
+      error:(err) =>{
+        this.loading.hide()
+      }
+
+    })
+  }
+
   showPreviewQuestions(id:number){
     this.loading.show();
     this.surveyService.getPreviewQuestions(id).subscribe({
@@ -67,6 +84,11 @@ export class SurveyComponent extends BaseListComponent<SurveyType>{
         this.loading.hide();
       }
     })
+  }
+
+  openDialog(){
+    this.showDialogNewQuestion = true;
+    this.survey = new SurveyType({});
   }
 
 

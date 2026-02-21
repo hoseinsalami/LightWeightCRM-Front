@@ -84,6 +84,8 @@
             class="absolute left-0 text-green-700" [class]="item.showInList ? 'pi pi-eye': ''"></i>
           <i pTooltip="اجباری" tooltipPosition="top" style="left:25px"
              class="absolute text-red-500" [class]="item.isMandatory ? 'pi pi-exclamation-circle': ''"></i>
+          <i pTooltip="ویژگی نماینده" tooltipPosition="top" style="left:50px"
+             class="absolute text-purple-500" [class]="item.isCaption ? 'pi pi-at': ''"></i>
         </p>
       </div>
 
@@ -619,7 +621,11 @@
 
         <div class="col-12 md:col-4">
           <div class="form-group ">
-            <label class="block mb-2 text-900">کپشن</label>
+            <label class="block mb-2 text-900">
+              کپشن
+              <i class="pi pi-question-circle text-red-500 cursor-pointer"
+                 pTooltip="ویژگی نماینده" tooltipPosition="top"></i>
+            </label>
             <div class="field">
               <p-inputSwitch [(ngModel)]="tempProperties.isCaption" (onChange)="onCaptionChange()"/>
             </div>

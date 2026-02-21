@@ -90,8 +90,8 @@ export class CustomerDocumentComponent implements OnInit{
   ) {
     this.customerId = this.activeRoute.snapshot.params['id'];
     const nav = this.router.getCurrentNavigation()
-    this.document = nav.extras.state['document']
-    console.log(this.customerId , this.document)
+    // this.document = nav.extras.state['document']
+    // console.log(this.customerId , this.document)
   }
 
   ngOnInit() {
@@ -567,9 +567,16 @@ export class CustomerDocumentComponent implements OnInit{
         out.items.forEach(item => {
           item.propertiesValue.forEach(prop => {
             if (prop.property.isCaption) {
+
+              let title = prop.value;
+              try{
+                const parsed = JSON.parse(prop.value);
+                if (parsed && typeof parsed === 'object'){title = parsed.value}
+              } catch (e) {}
+
               // اضافه کردن فقط اگر قبلاً اضافه نشده باشد
               if (!newOptions.some(o => o.value === item.id)) {
-                newOptions.push({ title: prop.value, value: item.id });
+                newOptions.push({ title: title, value: item.id });
               }
             }
           });

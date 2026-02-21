@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {BaseCrudService} from "../../_services/base-crud.service";
 import {environment} from "../../../environments/environment";
 import {FatapHttpClientService} from "../../_services/fatap-http-client.service";
-import {ShowAllQuestions, SurveyQuestions} from "../_types/survey.type";
+import {ShowAllQuestions, SurveyQuestions, SurveyType} from "../_types/survey.type";
 import {Observable} from "rxjs";
 import {OutType} from "../../_classes/base-list.manager";
 
@@ -15,6 +15,10 @@ export class SurveyService extends BaseCrudService {
 
   constructor(private http: FatapHttpClientService) {
     super(http , '')
+  }
+
+  postCreateSurvey(input:SurveyType){
+    return this.http.post(this.baseUrl, input);
   }
 
   getQuestions(survayId:number, from?:number, rows?:number):Observable<OutType<{id:number, title}>>{
