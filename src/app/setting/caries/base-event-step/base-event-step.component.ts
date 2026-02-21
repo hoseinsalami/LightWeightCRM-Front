@@ -110,6 +110,7 @@ export class BaseEventStepComponent implements OnInit, AfterViewInit, AfterViewC
     private loading: LoadingService,
     private router: Router,
     private activeRoute: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {
     this.pathId = this.activeRoute.snapshot.params['pathId'];
     this.stepId = this.activeRoute.snapshot.params['stepId'];
@@ -211,11 +212,23 @@ export class BaseEventStepComponent implements OnInit, AfterViewInit, AfterViewC
 
   getDocumentPlaceHolders(id:number){
     this.loading.show();
-    this.documentPlaceHolders = []
+    this.documentPlaceHolders = [];
     this.service.getDocumentPlaceholders(id).subscribe({
       next:(out) =>{
         this.loading.hide();
-        this.documentPlaceHolders = out
+        // this.documentPlaceHolders = out.map((item,index) => ({
+        //   ...item,
+        //   __uid: `${item.name}-${index}-${Math.random()}`
+        // }));
+
+        this.documentPlaceHolders = [];
+
+        // در یک tick جدید Angular آیتم‌ها را اضافه می‌کنیم
+        Promise.resolve().then(() => {
+          this.documentPlaceHolders = out.map(item => ({ ...item }));
+        });
+
+        this.cdr.detectChanges();
       },
       error: (err) =>{
         this.loading.hide();
@@ -507,6 +520,10 @@ export class BaseEventStepComponent implements OnInit, AfterViewInit, AfterViewC
     console.log(this.selectedEvent)
   }
 
+
+  trackByNameAndCaption(index: number, item: any) {
+    return item.__uid;
+  }
 
 
 }

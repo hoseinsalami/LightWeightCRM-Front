@@ -185,7 +185,7 @@
                 <div *ngSwitchCase="StepEventActionType.SendSms">
                   <label>متن پیام</label>
 
-                  <ng-container *ngIf="selectedEvent.name === 'Step_AddDocument_factor' || selectedEvent.name === 'Step_AddDocument_price';else palceHolder">
+                  <ng-container *ngIf="selectedEvent.name === 'Step_AddDocument_factor' || selectedEvent.name === 'Step_AddDocument_price'; else palceHolder">
                     <ul class="flex align-items-center gap-2 list-none p-0">
                       <li *ngFor="let item of documentPlaceHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
                           (click)="appendDocumentPlaceholder(action, item, 'message')">{{item.caption}}</li>
