@@ -152,7 +152,11 @@ export class BaseEventCariesComponent implements OnInit{
     this.service.getDocumentPlaceholders(id).subscribe({
       next:(out) =>{
         this.loading.hide();
-        this.documentPlaceHolders = out
+        // this.documentPlaceHolders = out
+        const newItems = out.map(item => ({ ...item }));
+
+        // الحاق به placeHolders
+        this.placeHolders = [...this.placeHolders, ...newItems];
       },
       error: (err) =>{
         this.loading.hide();

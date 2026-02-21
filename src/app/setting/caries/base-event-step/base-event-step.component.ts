@@ -216,17 +216,15 @@ export class BaseEventStepComponent implements OnInit, AfterViewInit, AfterViewC
     this.service.getDocumentPlaceholders(id).subscribe({
       next:(out) =>{
         this.loading.hide();
-        // this.documentPlaceHolders = out.map((item,index) => ({
-        //   ...item,
-        //   __uid: `${item.name}-${index}-${Math.random()}`
-        // }));
-
-        this.documentPlaceHolders = [];
-
         // در یک tick جدید Angular آیتم‌ها را اضافه می‌کنیم
-        Promise.resolve().then(() => {
-          this.documentPlaceHolders = out.map(item => ({ ...item }));
-        });
+        // Promise.resolve().then(() => {
+        //   this.documentPlaceHolders = out.map(item => ({ ...item }));
+        // });
+
+        const newItems = out.map(item => ({ ...item }));
+
+        // الحاق به placeHolders
+        this.placeHolders = [...this.placeHolders, ...newItems];
 
         this.cdr.detectChanges();
       },

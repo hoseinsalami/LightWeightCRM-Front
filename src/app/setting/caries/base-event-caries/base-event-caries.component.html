@@ -152,18 +152,18 @@
                 <div *ngSwitchCase="StepEventActionType.SendSms">
                   <label>متن پیام</label>
 
-                  <ng-container *ngIf="selectedEvent.name === 'Path_AddDocument_factor' || selectedEvent.name === 'Path_AddDocument_price';else palceHolder">
-                    <ul class="flex align-items-center gap-2 list-none p-0">
-                      <li *ngFor="let item of documentPlaceHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
-                          (click)="appendDocumentPlaceholder(action, item, 'message')">{{item.caption}}</li>
-                    </ul>
-                  </ng-container>
-                  <ng-template #palceHolder>
-                    <ul class="flex align-items-center gap-2 list-none p-0">
+<!--                  <ng-container *ngIf="selectedEvent.name === 'Path_AddDocument_factor' || selectedEvent.name === 'Path_AddDocument_price';else palceHolder">-->
+<!--                    <ul class="flex align-items-center gap-2 list-none p-0">-->
+<!--                      <li *ngFor="let item of documentPlaceHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"-->
+<!--                          (click)="appendDocumentPlaceholder(action, item, 'message')">{{item.caption}}</li>-->
+<!--                    </ul>-->
+<!--                  </ng-container>-->
+<!--                  <ng-template #palceHolder>-->
+                    <ul class="flex flex-wrap align-items-center gap-2 list-none p-0">
                       <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
                           (click)="appendPlaceholder(action, item, 'message')">{{item.caption}}</li>
                     </ul>
-                  </ng-template>
+<!--                  </ng-template>-->
 
                   <textarea [name]="'message'+ai" pInputTextarea
                             [(ngModel)]="action.data.message"
@@ -190,36 +190,36 @@
                 <div *ngSwitchCase="StepEventActionType.CreateWorkItem">
 
                   <label>نام معامله</label>
-                  <ng-container *ngIf="selectedEvent.name === 'Path_AddDocument_factor' || selectedEvent.name === 'Path_AddDocument_price';else palceHolder">
-                    <ul class="flex align-items-center gap-2 list-none p-0">
-                      <li *ngFor="let item of documentPlaceHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
-                          (click)="appendDocumentPlaceholder(action, item, 'title')">{{item.caption}}</li>
-                    </ul>
-                  </ng-container>
-                  <ng-template #palceHolder>
-                    <ul class="flex align-items-center gap-2 list-none p-0">
+<!--                  <ng-container *ngIf="selectedEvent.name === 'Path_AddDocument_factor' || selectedEvent.name === 'Path_AddDocument_price';else palceHolder">-->
+<!--                    <ul class="flex align-items-center gap-2 list-none p-0">-->
+<!--                      <li *ngFor="let item of documentPlaceHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"-->
+<!--                          (click)="appendDocumentPlaceholder(action, item, 'title')">{{item.caption}}</li>-->
+<!--                    </ul>-->
+<!--                  </ng-container>-->
+<!--                  <ng-template #palceHolder>-->
+                    <ul class="flex flex-wrap align-items-center gap-2 list-none p-0">
                       <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
                           (click)="appendPlaceholder(action, item, 'title')">{{item.caption}}</li>
                     </ul>
-                  </ng-template>
+<!--                  </ng-template>-->
                   <input type="text" pInputText [(ngModel)]="action.data.title" class="w-full mb-3">
 
                   <!--************************-->
 
                   <label>توضیحات</label>
 
-                  <ng-container *ngIf="selectedEvent.name === 'Path_AddDocument_factor' || selectedEvent.name === 'Path_AddDocument_price';else palceHolder">
-                    <ul class="flex align-items-center gap-2 list-none p-0">
-                      <li *ngFor="let item of documentPlaceHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
-                          (click)="appendDocumentPlaceholder(action, item, 'description')">{{item.caption}}</li>
-                    </ul>
-                  </ng-container>
-                  <ng-template #palceHolder>
-                    <ul class="flex align-items-center gap-2 list-none p-0">
+<!--                  <ng-container *ngIf="selectedEvent.name === 'Path_AddDocument_factor' || selectedEvent.name === 'Path_AddDocument_price';else palceHolder">-->
+<!--                    <ul class="flex align-items-center gap-2 list-none p-0">-->
+<!--                      <li *ngFor="let item of documentPlaceHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"-->
+<!--                          (click)="appendDocumentPlaceholder(action, item, 'description')">{{item.caption}}</li>-->
+<!--                    </ul>-->
+<!--                  </ng-container>-->
+<!--                  <ng-template #palceHolder>-->
+                    <ul class="flex flex-wrap align-items-center gap-2 list-none p-0">
                       <li *ngFor="let item of placeHolders" class="text-sm bg-bluegray-300 text-white px-2 border-round cursor-pointer"
                           (click)="appendPlaceholder(action, item, 'description')">{{item.caption}}</li>
                     </ul>
-                  </ng-template>
+<!--                  </ng-template>-->
                   <textarea [name]="'description'+ai" class="p-fieldset" pInputTextarea [(ngModel)]="action.data.description" rows="3" class="w-full"></textarea>
 
                   <!--*****************************-->
