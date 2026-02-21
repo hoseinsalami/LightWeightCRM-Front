@@ -361,8 +361,9 @@ export class BaseEventStepComponent implements OnInit, AfterViewInit, AfterViewC
   }
 
 
-  appendPlaceholder(action: IStepEventAction, item: IPlaceHolders, field: 'title' | 'description' | 'message'){
-    const value = `<!${item.caption}!>`;
+  appendPlaceholder(action: IStepEventAction, item: IPlaceHolders,
+                    field: 'title' | 'description' | 'message', selectedEvent:any){
+    const value =  selectedEvent.name === 'Step_AddDocument_factor' || selectedEvent.name === 'Step_AddDocument_price' ? `<?${item.caption}?>` :`<!${item.caption}!>`;
     if (!action.data[field]) {
       action.data[field] = value;
     } else {
